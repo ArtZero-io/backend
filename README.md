@@ -68,21 +68,24 @@ WSSPROVIDER=wss://ws.test.azero.dev
 REACT_APP_API_BASE_URL=https://api.artzero.io
 TELEGRAM_URL=https://api.telegram.org/<bot_id_key>
 TELEGRAM_ID_CHAT=<chat_key>
-MONGODB_URL=mongodb://db.artzero.io:27017/artzero
+MONGODB_URL=mongodb://<Acc>:<Password>@<host_db>:<port_db>/<database_name>
+# Example
+# MONGODB_URL=mongodb://AccTest:AccPass@localhost:27017/DbTest
 ```
 
 #### API services
 
+Go to the Api folder and create new .env file with this config:
 ```
 PORT=3410
 DB_NAME=ArtZeroDB
 DB_CONNECTOR=mongodb
 DB_URL=
-DB_HOST=db.art-zero.testnet
-DB_PORT=27071
-DB_USER=ArtZeroAccTest
-DB_PASSWORD=
-DB_DATABASE=
+DB_HOST=<host_db>
+DB_PORT=<port_db>
+DB_USER=<Acc>
+DB_PASSWORD=<Password>
+DB_DATABASE=<database_name>
 DB_USE_NEW_URL_PARSER=true
 SSL_KEY=
 SSL_PEM=
@@ -92,12 +95,37 @@ WSSPROVIDER=wss://ws.test.azero.dev
 REACT_APP_API_BASE_URL=https://api.artzero.io
 TELEGRAM_URL=https://api.telegram.org/<bot_id_key>
 TELEGRAM_ID_CHAT=<chat_key>
-MONGODB_URL=mongodb://db.artzero.io:27017/artzero
+MONGODB_URL=mongodb://<Acc>:<Password>@<host_db>:<port_db>/<database_name>
+
+# Example
+# DB_NAME=ArtZeroDB # Get from art-zero-db.datasource.ts
+# DB_HOST=localhost
+# DB_PORT=27017
+# DB_USER=AccTest
+# DB_PASSWORD=AccPass
+# DB_DATABASE=DbTest
+# MONGODB_URL=mongodb://AccTest:AccPass@localhost:27017/DbTest
 ```
 
 ### MongoDB
 
-MongoDB needs to be setup on the server or local machine to be able to run the services.
+MongoDB needs to be setup on the server or local machine to be able to run the services. You should create new user from terminal:
+```
+use DbTest;
+db.dropUser("AccTest")
+db.runCommand({
+		"createUser" : "AccTest",
+		"pwd" : "AccPass",
+		"customData" : {
+		},
+		"roles" : [
+			{
+				"role" : "dbOwner",
+				"db" : "DbTest"
+			}
+		]
+	});
+```
 
 ### Run Backend Job
 
