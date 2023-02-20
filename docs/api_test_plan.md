@@ -10,9 +10,7 @@
     - [updateNFT](#updateNFT)
     - [updateBids](#updateBids)
     - [getBidsByBidderAddress](#getBidsByBidderAddress)
-    - [cacheImage](#cacheImage)
-    - [cacheImage](#cacheImage)?
-    - [cacheJSON](#cacheJSON)
+    - [getJSON](#getJSON)
     - [getImage](#getImage)
     - [getCollectionContract](#getCollectionContract)
     - [getCollectionCount](#getCollectionCount)
@@ -43,25 +41,62 @@
     - [getClaimRewardHistory](#getClaimRewardHistory)
       
 ## Introduction
-> Add introduction and guide here
+The purpose of this test plan is to ensure the correct functionality and reliability of the NFT marketplace API. The NFT marketplace API provides a set of endpoints that allow users to buy, sell, mint and trade NFTs. This test plan will cover the testing of all API endpoints, HTTP methods, parameters, and payloads.
+
+The scope of testing will include the following:
+> - Testing of all the endpoints, HTTP methods, parameters and payloads that are part of the NFT marketplace API.
+> - Verification of the data that is sent and received through the API.
+> - Testing of the input validation and error handling of the API.
+> - Testing of the API's security features, including authentication and authorization.
+
+By testing the API, we aim to ensure that the functionality of the NFT marketplace is correctly implemented and meets the requirements of the users. This testing plan will provide an accurate measure of the system's performance, as well as identify any issues, defects, and vulnerabilities in the system.
+
 ---
 ## Test cases
 
 ### updateCollection
-+ Test case ID: updateCollection_001
-+ Test case Name: ....
-Pre-requisite: ....
-+ Expectations: write the expected result here.
+
++ Test case ID: updateCollection_001   ??
++ Test case Name:  Update Collection 
++ Test case Description: Test the Update Collection to ??
++ Pre-requisites: The database should have minting events and project mint fees.  
++ Test Steps:  
+  1. Send a POST request to the API endpoint `/updateCollection` with data :
+      ```json
+          {
+            "collection_address":"5DKUvAvm7QA36WLj7BD5bua92jN1XoyBrK2Prjbc6gFt2tW8"
+          }
+      ```
+  2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".        
+  3. Verify the "ret" field in the response body contains the expected  ??
+  4. Verify the response time is within acceptable limits.
++ Expectations: The API should return a JSON object with status "OK" and ??
 ---
+
 ### updateProject
 
++ Test case ID: updateProject_001   ??
++ Test case Name:  Update Project
++ Test case Description: Test the Update Project 
++ Pre-requisites: The database should have minting events and project mint fees.  
++ Test Steps:  
+  1. Send a POST request to the API endpoint `/updateProject` with data :
+      ```json
+          {
+            "project_address":"5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC"
+          }
+      ```
+  2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".        
+  3. Verify the "ret" field in the response body contains the expected  ??
+  4. Verify the response time is within acceptable limits.
++ Expectations: The API should return a JSON object with status "OK" and ??
 ---
 ### newMintingEvent
 
 + Test case ID: newMintingEvent_001 ??
 + Test case Name:  New Minting Event 
 + Test case Description: Test the New Minting Event  API to retrieve ??
-+ + Pre-requisites: The database should have minting events and project mint fees.  
++ Pre-requisites: The database should have minting events and project mint fees.  
 + Test Steps:  
   1. Send a POST request to the API endpoint `/newMintingEvent` with data :
       ```json
@@ -84,7 +119,7 @@ Pre-requisite: ....
 + Test case ID: updateNFT_001   ??
 + Test case Name:  Update NFT 
 + Test case Description: Test the Update NFT to ??
-+ + Pre-requisites: The database should have minting events and project mint fees.  
++ Pre-requisites: The database should have minting events and project mint fees.  
 + Test Steps:  
   1. Send a POST request to the API endpoint `/updateBids` with data :
       ```json
@@ -103,7 +138,7 @@ Pre-requisite: ....
 + Test case ID: updateBids_001   ??
 + Test case Name:  Update Bids 
 + Test case Description: Test the Update Bids to ??
-+ + Pre-requisites: The database should have minting events and project mint fees.  
++ Pre-requisites: The database should have minting events and project mint fees.  
 + Test Steps:  
   1. Send a POST request to the API endpoint `/updateBids` with data :
       ```json
@@ -139,7 +174,7 @@ Pre-requisite: ....
 + Test case ID: getBidsByBidderAddress_001  
 + Test case Name:  Get Bids By Bidder Address  
 + Test case Description: Test the getBidsByBidderAddress API to retrieve the Bids By Bidder Address  
-+ + Pre-requisites: The database should have minting events and project mint fees.  
++ Pre-requisites: The database should have minting events and project mint fees.  
 + Test Steps:  
   1. Send a POST request to the API endpoint `/getBidsByBidderAddress` with data :
       ```json
@@ -156,13 +191,17 @@ Pre-requisite: ....
 + Expectations: The API should return a JSON object with status "OK" and the details of the Bids By Bidder Address
 
 ---
-### cacheImage
+### getJSON
 
----
-### cacheImage?
-
----
-### cacheJSON
++ Test case ID: getJSON_001
++ Test case Name:  Get JSON
++ Test case Description: Test the get JSON API to retrieve json file
++ Pre-requisites: 
++ Test Steps:
+  1. Send a GET request to the API endpoint `/getJSON?input=/ipfs/QmSdgNQ2zvJvaw8kP8oCJnmuFQUxVDBYrThYvV1C8k5bXU/131.json`
+  2. Verify the HTTP status code is 200 and the response body contains a json file
+  3. Verify the response time is within acceptable limits.
++ Expectations: The API should return a json file
 
 ---
 ### getImage
