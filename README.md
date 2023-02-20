@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is the Backend code to
+This is the Backend code to serve ArtZero NFT Marketplace
 
 ## Code
 
@@ -115,4 +115,4 @@ node az_telegram_bot
 
 ## Run API service
 
-Check ![API doc](Api/README.md) for instructions
+Check [API doc](Api/README.md) for instructions
