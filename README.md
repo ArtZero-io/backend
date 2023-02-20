@@ -143,4 +143,4 @@ node az_telegram_bot
 
 ## Run API service
 
-Check ![API doc](Api/README.md) for instructions
+Check [API doc](Api/README.md) for instructions
