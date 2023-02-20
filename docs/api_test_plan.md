@@ -56,10 +56,10 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 
 ### updateCollection
 
-+ Test case ID: updateCollection_001   ??
++ Test case ID: updateCollection_001 
 + Test case Name:  Update Collection 
-+ Test case Description: Test the Update Collection to ??
-+ Pre-requisites: The database should have minting events and project mint fees.  
++ Test case Description: Test the Update Collection to modify an existing NFT collection
++ Pre-requisites: The database should have an existing NFT collection
 + Test Steps:  
   1. Send a POST request to the API endpoint `/updateCollection` with data :
       ```json
@@ -68,17 +68,16 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
           }
       ```
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".        
-  3. Verify the "ret" field in the response body contains the expected  ??
-  4. Verify the response time is within acceptable limits.
-+ Expectations: The API should return a JSON object with status "OK" and ??
+  3. Verify the response time is within acceptable limits.
++ Expectations: The API should return a JSON object with status "OK" and data is updated in the database.
 ---
 
 ### updateProject
 
-+ Test case ID: updateProject_001   ??
++ Test case ID: API_Test_001
 + Test case Name:  Update Project
-+ Test case Description: Test the Update Project 
-+ Pre-requisites: The database should have minting events and project mint fees.  
++ Test case Description: Test the Update Project to modify an existing Project
++ Pre-requisites: The database should have an existing Project
 + Test Steps:  
   1. Send a POST request to the API endpoint `/updateProject` with data :
       ```json
@@ -87,15 +86,14 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
           }
       ```
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".        
-  3. Verify the "ret" field in the response body contains the expected  ??
-  4. Verify the response time is within acceptable limits.
-+ Expectations: The API should return a JSON object with status "OK" and ??
+  3. Verify the response time is within acceptable limits.
++ Expectations: The API should return a JSON object with status "OK" and data is updated in the database.
 ---
 ### newMintingEvent
 
-+ Test case ID: newMintingEvent_001 ??
++ Test case ID: API_Test_002
 + Test case Name:  New Minting Event 
-+ Test case Description: Test the New Minting Event  API to retrieve ??
++ Test case Description: Test the New Minting Event to add new minting event 
 + Pre-requisites: The database should have minting events and project mint fees.  
 + Test Steps:  
   1. Send a POST request to the API endpoint `/newMintingEvent` with data :
@@ -110,18 +108,17 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
           }
       ```
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".        
-  3. Verify the "ret" field in the response body contains the expected  ??
   4. Verify the response time is within acceptable limits.
-+ Expectations: The API should return a JSON object with status "OK" and ??
++ Expectations: The API should return a JSON object with status "OK" and data is updated in the database.
 ---
 ### updateNFT
 
-+ Test case ID: updateNFT_001   ??
++ Test case ID: API_Test_003
 + Test case Name:  Update NFT 
-+ Test case Description: Test the Update NFT to ??
-+ Pre-requisites: The database should have minting events and project mint fees.  
++ Test case Description: Test the Update NFT to modify an existing NFT
++ Pre-requisites: The database should have list NFT
 + Test Steps:  
-  1. Send a POST request to the API endpoint `/updateBids` with data :
+  1. Send a POST request to the API endpoint `/updateNFT` with data :
       ```json
           {
             "collection_address":"5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC",
@@ -129,16 +126,15 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
           }
       ```
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".        
-  3. Verify the "ret" field in the response body contains the expected  ??
-  4. Verify the response time is within acceptable limits.
-+ Expectations: The API should return a JSON object with status "OK" and ??
+  3. Verify the response time is within acceptable limits.
++ Expectations: The API should return a JSON object with status "OK" and data is updated in the database.
 ---
 ### updateBids
 
-+ Test case ID: updateBids_001   ??
++ Test case ID: API_Test_004
 + Test case Name:  Update Bids 
-+ Test case Description: Test the Update Bids to ??
-+ Pre-requisites: The database should have minting events and project mint fees.  
++ Test case Description: Test the Update Bids to update the highest bid and bidder information.
++ Pre-requisites: The database should have existing bids for a specific NFT in order to update them.
 + Test Steps:  
   1. Send a POST request to the API endpoint `/updateBids` with data :
       ```json
@@ -148,17 +144,16 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
             "token_id":"65"
           }
       ```
-  2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".        
-  3. Verify the "ret" field in the response body contains the expected  ??
-  4. Verify the response time is within acceptable limits.
-+ Expectations: The API should return a JSON object with status "OK" and ??
+  2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK". 
+  3. Verify the response time is within acceptable limits.
++ Expectations: The API should return a JSON object with status "OK" and data  should be updated in the database.
 ---
 ### getTotalVolume
 
-+ Test case ID: getTotalVolume_001
++ Test case ID: API_Test_005
 + Test case Name:  Get Total Volume
 + Test case Description: Test the getTotalVolume API to retrieve the total volume of project mint fees for all NFTs.
-+ Pre-requisites: The database should have minting events and project mint fees.
++ Pre-requisites: The database should have database with transaction history of NFTs.
 + Test Steps:
   1. Send a GET request to the API endpoint `/getTotalVolume`
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".
@@ -171,10 +166,10 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 
 ### getBidsByBidderAddress
 
-+ Test case ID: getBidsByBidderAddress_001  
++ Test case ID: API_Test_006  
 + Test case Name:  Get Bids By Bidder Address  
-+ Test case Description: Test the getBidsByBidderAddress API to retrieve the Bids By Bidder Address  
-+ Pre-requisites: The database should have minting events and project mint fees.  
++ Test case Description: Test the getBidsByBidderAddress API to retrieve the Bids of Bidder Address  
++ Pre-requisites: The database should have transaction history of Bidder Address
 + Test Steps:  
   1. Send a POST request to the API endpoint `/getBidsByBidderAddress` with data :
       ```json
@@ -193,7 +188,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ### getJSON
 
-+ Test case ID: getJSON_001
++ Test case ID: API_Test_007
 + Test case Name:  Get JSON
 + Test case Description: Test the get JSON API to retrieve json file
 + Pre-requisites: 
@@ -206,7 +201,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ### getImage
 
-+ Test case ID: getImage_001
++ Test case ID: API_Test_008
 + Test case Name:  Get Image
 + Test case Description: Test the get image API to retrieve the image's url
 + Pre-requisites: 
@@ -219,7 +214,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ### getCollectionContract
 
-+ Test case ID: getCollectionContract_001
++ Test case ID: API_Test_009
 + Test case Name:  Get Collection Contract
 + Test case Description: Test the get Collection Contract to retrieve contract address
 + Pre-requisites: 
@@ -233,7 +228,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ### getCollectionCount
 
-+ Test case ID: getCollectionCount_001
++ Test case ID: API_Test_010
 + Test case Name:  Get Collection Count
 + Test case Description: Test the get Collection Count to retrieve collection count
 + Pre-requisites: 
@@ -246,7 +241,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ### getFeaturedCollections
 
-+ Test case ID: getFeaturedCollections_001
++ Test case ID: API_Test_011
 + Test case Name:  Get Featured Collection 
 + Test case Description: Test the get Featured Collections  to retrieve list Featured Collection
 + Pre-requisites: 
@@ -259,7 +254,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ### getCollections
 
-+ Test case ID: getCollections_001
++ Test case ID: API_Test_012
 + Test case Name:  GetCollection 
 + Test case Description: Test the get Collections  to retrieve list Collections
 + Pre-requisites: 
@@ -277,7 +272,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ### getProjects
 
-+ Test case ID: getProjects_001
++ Test case ID: API_Test_013
 + Test case Name:  Get Projects
 + Test case Description: Test the get Projects to retrieve list Projects
 + Pre-requisites: 
@@ -295,7 +290,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 
 ---
 ### getCollectionsByVolume
-+ Test case ID: getCollectionsByVolume_001
++ Test case ID: API_Test_013
 + Test case Name:  Get Collections By Volume
 + Test case Description: Test the get Collections to retrieve list Collections
 + Pre-requisites: 
@@ -312,7 +307,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 + Expectations: The API should return a JSON object with status "OK" and list Projects
 ---
 ### getCollectionByID
-+ Test case ID: getCollectionByID_001
++ Test case ID: API_Test_014
 + Test case Name:  Get Collection By ID
 + Test case Description: Test the get Collection to retrieve the Collection
 + Pre-requisites: 
@@ -329,7 +324,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 + Expectations: The API should return a JSON object with status "OK" and Collection
 ---
 ### getCollectionsByOwner
-+ Test case ID: getCollectionByOwner_001
++ Test case ID: API_Test_015
 + Test case Name:  Get Collection By Owner
 + Test case Description: Test the get Collection to retrieve list Collection
 + Pre-requisites: 
@@ -348,7 +343,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 + Expectations: The API should return a JSON object with status "OK" and list Collections
 ---
 ### countCollectionsByOwner
-+ Test case ID: countCollectionByOwner_001
++ Test case ID: API_Test_016
 + Test case Name:  Count Collection By Owner
 + Test case Description: Test the Count Collection By Owner to retrieve number of Collection
 + Pre-requisites: 
@@ -366,7 +361,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 + Expectations: The API should return a JSON object with status "OK" and number of Collection
 ---
 ### getCollectionByAddress
-+ Test case ID:  getCollectionByAddress_001
++ Test case ID:  API_Test_017
 + Test case Name:  Get Collection By Address
 + Test case Description: Test the Get Collection By Address to retrieve a collection by address:
 + Pre-requisites: 
@@ -385,7 +380,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ### getFloorPrice
 
-+ Test case ID:  getFloorPrice_001
++ Test case ID:  API_Test_018
 + Test case Name:  Get Floor Price
 + Test case Description: Test the Get Floor Price to retrieve the minimum sale price of a specific NFT collection: 
 + Pre-requisites: 
@@ -403,7 +398,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ### getNFTs
 
-+ Test case ID: getNFTs_001
++ Test case ID: API_Test_019
 + Test case Name:  Get NFTs
 + Test case Description: Test the get NFTs to retrieve by NFTs Collection Address  
 + Pre-requisites: 
@@ -421,7 +416,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ### getListedNFTs
 
-+ Test case ID: getListedNFTs_001
++ Test case ID: API_Test_020
 + Test case Name:  Get Listed NFTs
 + Test case Description: Test the Get Listed NFTs to retrieve Listed NFT
 + Pre-requisites: 
@@ -439,7 +434,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ### getUnlistedNFTs
 
-+ Test case ID: getUnlistedNFTs_001
++ Test case ID: API_Test_021
 + Test case Name:  Get Unlisted NFTs
 + Test case Description: Test the Get Unlisted NFTs to retrieve unlisted NFT
 + Pre-requisites: 
@@ -456,7 +451,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 + Expectations: The API should return a JSON object with status "OK" and unlisted NFT
 ---
 ### getNFTByID
-+ Test case ID: getNFTByID_001 => Fail
++ Test case ID: API_Test_022
 + Test case Name:  Get NFT By ID
 + Test case Description: Test the Get NFT By ID to retrieve an NFT
 + Pre-requisites: 
@@ -475,7 +470,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ### getNFTsByOwner
 
-+ Test case ID: getNFTsByOwner_001
++ Test case ID: API_Test_023
 + Test case Name:  Get NFTs By Owner
 + Test case Description: Test the Get NFTs By Owner to retrieve list NFT
 + Pre-requisites: 
@@ -494,7 +489,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ### getNFTsByOwnerAndCollection
 
-+ Test case ID: getNFTsByOwnerAndCollection_001
++ Test case ID: API_Test_024
 + Test case Name:  Get NFTs By Owner And Collection
 + Test case Description: Test the Get NFTs By Owner And Collection to retrieve list NFT
 + Pre-requisites: 
@@ -514,7 +509,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ### getNFTsByCollectionAddress
 
-+ Test case ID: getNFTsByCollectionAddress_001
++ Test case ID: API_Test_025
 + Test case Name:  Get NFTs By Collection
 + Test case Description: Test the Get NFTs By Collection to retrieve list NFT of Collection
 + Pre-requisites: 
@@ -531,7 +526,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 + Expectations: The API should return a JSON object with status "OK" and list NFT of Collection
 ---
 ### getNewListEvents
-+ Test case ID: getNewListEvents_001
++ Test case ID: API_Test_026
 + Test case Name:  Get New List Events
 + Test case Description: Test the Get New List Events to retrieve new listed 
 + Pre-requisites: 
@@ -548,7 +543,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 + Expectations: The API should return a JSON object with status "OK" and new listed 
 ---
 ### getUnlistEvents
-+ Test case ID: getUnlistEvents_001
++ Test case ID: API_Test_027
 + Test case Name:  Get Unlist Events
 + Test case Description: Test the Get Unlist Events to retrieve unlisted NFT
 + Pre-requisites: 
@@ -565,7 +560,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 + Expectations: The API should return a JSON object with status "OK" and unlisted NFT
 ---
 ### getPurchaseEvents
-+ Test case ID: getPurchaseEvents_001
++ Test case ID: API_Test_028
 + Test case Name:  Get Purchase Events
 + Test case Description: Test the Get Purchase Events to retrieve Purchase Events
 + Pre-requisites: 
@@ -583,7 +578,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ### getBidWinEvents
 
-+ Test case ID: getBidWinEvents_001 => Fail?
++ Test case ID: API_Test_029
 + Test case Name:  Get Bid Win Events
 + Test case Description: Test the Get Bid Win Events to retrieve Bid Win Events
 + Pre-requisites: 
@@ -591,7 +586,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
   1. Send a POST request to the API endpoint `/getBidWinEvents`
       ```json
           {
-            "collection_address":"5DKUvAvm7QA36WLj7BD5bua92jN1XoyBrK2Prjbc6gFt2tW8"
+            "collection_address":"5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC"
           }
       ```    
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".
@@ -600,7 +595,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 + Expectations: The API should return a JSON object with status "OK" and Bid Win Events
 ---
 ### searchCollections
-+ Test case ID: searchCollections_001
++ Test case ID: API_Test_030
 + Test case Name:  Search Collections
 + Test case Description: Test the Search Collections to retrieve list Collection
 + Pre-requisites: 
@@ -617,7 +612,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 + Expectations: The API should return a JSON object with status "OK" and list Collection
 ---
 ### getOwnershipHistory
-+ Test case ID: getOwnershipHistory_001
++ Test case ID: API_Test_031
 + Test case Name:  Get Owner ship History
 + Test case Description: Test the Get Owner ship History to retrieve ??
 + Pre-requisites: 
@@ -636,7 +631,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 + Expectations: The API should return a JSON object with status "OK" and ?
 ---
 ### searchNFTOfCollectionByTraits
-+ Test case ID: searchNFTOfCollectionByTraits_001
++ Test case ID: API_Test_032
 + Test case Name: Search NFT Of Collection By Traits
 + Test case Description: Test the Search NFT Of Collection By Traits retrieve list NFT
 + Pre-requisites: 
@@ -658,7 +653,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 
 ---
 ### getAddRewardHistory
-+ Test case ID: getAddRewardHistory_001
++ Test case ID: API_Test_033
 + Test case Name: Search Get Add Reward History
 + Test case Description: Test Search Get Add Reward History retrieve ??
 + Pre-requisites: 
@@ -677,7 +672,7 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 + Expectations: The API should return a JSON object with status "OK" and ??
 ---
 ### getClaimRewardHistory
-+ Test case ID: getClaimRewardHistory_001
++ Test case ID: API_Test_034
 + Test case Name: Get Claim Reward History
 + Test case Description: Test the Get Claim Reward History retrieve ??
 + Pre-requisites: 
@@ -696,4 +691,3 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
   4. Verify the response time is within acceptable limits.
 + Expectations: The API should return a JSON object with status "OK" and ??
 ---
-> Add more Categories and + Test cases here
