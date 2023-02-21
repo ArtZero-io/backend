@@ -1,5 +1,5 @@
 import BN from "bn.js";
-import {readOnlyGasLimit} from "../utils/utils";
+import {convertNumberWithoutCommas, readOnlyGasLimit} from "../utils/utils";
 import {ContractPromise} from "@polkadot/api-contract";
 
 let az_nft_contract: ContractPromise;
@@ -41,7 +41,7 @@ export async function getLastTokenId(caller_account: string) {
     );
     if (result.isOk && output) {
         // @ts-ignore
-        return new BN(output.toHuman()?.Ok, 10, "le").toNumber();
+        return convertNumberWithoutCommas(output.toHuman().Ok);
     }
     return null;
 }
