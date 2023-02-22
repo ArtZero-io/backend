@@ -75,6 +75,7 @@ const check_new_AZ_NFTs = async () => {
       }
     }
   } catch (e) {
+    console.log("check_new_AZ_NFTs - " + e.message);
     send_telegram_message("check_new_AZ_NFTs - " + e.message);
     global_vars.is_check_new_AZ_NFT = false;
   }
@@ -160,7 +161,7 @@ const check_NFT_queue = async () => {
       console.log("After check owner");
 
       if (!owner) {
-        console.log("NFT not exist, remove from database and queue");
+        console.log("Check owner and remove from database and queue");
         await database.NFTQueue.deleteOne({
           nftContractAddress: nftContractAddress,
           tokenID: tokenID,
@@ -192,8 +193,9 @@ const check_NFT_queue = async () => {
           const { result, output } = await nft_contract.query[
             "psp34Traits::tokenUri"
           ](global_vars.caller, { value: 0, gasLimit: await readOnlyGasLimit(api) }, 1);
-          console.log(output.toHuman().Ok);
+          
           if (result.isOk) {
+            console.log(output.toHuman().Ok);
             tokenUri = output.toHuman().Ok?.replace("1.json", "");
           }
 
@@ -643,9 +645,7 @@ const scanAllNFTs = async () => {
 };
 
 const connectDb = () => {
-  return mongoose.connect(process.env.MONGODB_URL, {
-    useNewUrlParser: true,
-  });
+  return mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true});
 };
 
 var global_vars = {};

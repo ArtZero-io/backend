@@ -1,5 +1,5 @@
 let BN = require("bn.js");
-let  { isValidAddressPolkadotAddress, readOnlyGasLimit } = require("../utils.js");
+let  { isValidAddressPolkadotAddress, readOnlyGasLimit, convertNumberWithoutCommas } = require("../utils.js");
 let az_nft_contract;
 
 module.exports.setContract = function (c) {
@@ -41,7 +41,7 @@ module.exports.getLastTokenId = async function (caller_account) {
     { value: azero_value, gasLimit }
   );
   if (result.isOk) {
-    return new BN(output.toHuman().Ok, 10, "le").toNumber();
+    return convertNumberWithoutCommas(output.toHuman().Ok);
   }
   return null;
 }

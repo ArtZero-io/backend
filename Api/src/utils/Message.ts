@@ -286,7 +286,7 @@ export type ReqGetJSONType = {
 };
 const ReqGetJSONSchema: SchemaObject = {
     type: 'object',
-    required: [''],
+    required: [],
     properties: {
         input: {
             type: 'string',
@@ -344,7 +344,7 @@ export type ReqGetImageType = {
 // };
 const ReqGetImageSchema: SchemaObject = {
     type: 'object',
-    required: [''],
+    required: [],
     properties: {
         input: {
             type: 'string',
@@ -371,7 +371,7 @@ export type ReqGetCollectionContractType = {
 };
 const ReqGetCollectionContractSchema: SchemaObject = {
     type: 'object',
-    required: [''],
+    required: [],
     properties: {
         input: {
             type: 'string',
@@ -390,15 +390,15 @@ export const RequestGetCollectionContractBody = {
 
 // GET COLLECTIONS
 export type ReqGetCollectionsType = {
-    limit: number,
-    offset: number,
-    sort: number,
-    isActive: boolean,
-    ignoreNoNFT: boolean,
+    limit?: number,
+    offset?: number,
+    sort?: number,
+    isActive?: boolean,
+    ignoreNoNFT?: boolean,
 };
 const ReqGetCollectionsSchema: SchemaObject = {
     type: 'object',
-    required: [''],
+    required: [],
     properties: {
         limit: {
             type: 'number',
@@ -427,14 +427,14 @@ export const RequestGetCollectionsBody = {
 
 // GET PROJECTS
 export type ReqGetProjectsType = {
-    limit: number,
-    offset: number,
-    sort: number,
-    isActive: boolean
+    limit?: number,
+    offset?: number,
+    sort?: number,
+    isActive?: boolean
 };
 const ReqGetProjectsSchema: SchemaObject = {
     type: 'object',
-    required: [''],
+    required: [],
     properties: {
         limit: {
             type: 'number',
@@ -460,15 +460,15 @@ export const RequestGetProjectsBody = {
 
 // GET COLLECTIONS BY VOLUME
 export type ReqGetCollectionsByVolumeType = {
-    limit: number,
-    offset: number,
-    sort: number,
-    isActive: boolean,
-    ignoreNoNFT: boolean,
+    limit?: number,
+    offset?: number,
+    sort?: number,
+    isActive?: boolean,
+    ignoreNoNFT?: boolean,
 };
 const ReqGetCollectionsByVolumeSchema: SchemaObject = {
     type: 'object',
-    required: [''],
+    required: [],
     properties: {
         limit: {
             type: 'number',
@@ -501,7 +501,7 @@ export type ReqGetCollectionByIDType = {
 };
 const ReqGetCollectionByIDSchema: SchemaObject = {
     type: 'object',
-    required: [''],
+    required: [],
     properties: {
         id: {
             type: 'number',
@@ -520,13 +520,13 @@ export const RequestGetCollectionByIDBody = {
 // GET COLLECTIONS BY OWNER
 export type ReqGetCollectionsByOwnerType = {
     owner: string,
-    limit: number,
-    sort: number,
-    offset: number,
+    limit?: number,
+    sort?: number,
+    offset?: number,
 };
 const ReqGetCollectionsByOwnerSchema: SchemaObject = {
     type: 'object',
-    required: [''],
+    required: [],
     properties: {
         owner: {
             type: 'string',
@@ -553,11 +553,11 @@ export const RequestGetCollectionsByOwnerBody = {
 // COUNT COLLECTIONS BY OWNER
 export type ReqCountCollectionsByOwnerType = {
     owner: string,
-    noNFT: boolean,
+    noNFT?: boolean,
 };
 const ReqCountCollectionsByOwnerSchema: SchemaObject = {
     type: 'object',
-    required: [''],
+    required: [],
     properties: {
         owner: {
             type: 'string',
@@ -620,9 +620,9 @@ export const RequestGetFloorPriceBody = {
 // GET NFTs
 export type ReqGetNFTsType = {
     collection_address: string,
-    limit: number,
-    offset: number,
-    sort: number,
+    limit?: number,
+    offset?: number,
+    sort?: number,
 };
 const ReqGetNFTsSchema: SchemaObject = {
     type: 'object',
@@ -653,9 +653,9 @@ export const RequestGetNFTsBody = {
 // GET LIST NFTs
 export type ReqGetListedNFTsType = {
     collection_address: string,
-    limit: number,
-    offset: number,
-    sort: number,
+    limit?: number,
+    offset?: number,
+    sort?: number,
 };
 const ReqGetListedNFTsSchema: SchemaObject = {
     type: 'object',
@@ -686,9 +686,9 @@ export const RequestGetListedNFTsBody = {
 // GET UNLISTED NFTs
 export type ReqGetUnlistedNFTsType = {
     collection_address: string,
-    limit: number,
-    offset: number,
-    sort: number,
+    limit?: number,
+    offset?: number,
+    sort?: number,
 };
 const ReqGetUnlistedNFTsSchema: SchemaObject = {
     type: 'object',
@@ -744,9 +744,9 @@ export const RequestGetNFTByIDBody = {
 // GET NFTs BY OWNER
 export type ReqGetNFTsByOwnerType = {
     owner: string,
-    limit: number,
-    offset: number,
-    sort: number,
+    limit?: number,
+    offset?: number,
+    sort?: number,
 };
 const ReqGetNFTsByOwnerSchema: SchemaObject = {
     type: 'object',
@@ -778,9 +778,9 @@ export const RequestGetNFTsByOwnerBody = {
 export type ReqGetNFTsByOwnerAndCollectionType = {
     owner: string,
     collection_address: string,
-    limit: number,
-    offset: number,
-    sort: number,
+    limit?: number,
+    offset?: number,
+    sort?: number,
 };
 const ReqGetNFTsByOwnerAndCollectionSchema: SchemaObject = {
     type: 'object',
@@ -814,9 +814,9 @@ export const RequestGetNFTsByOwnerAndCollectionBody = {
 // GET NFTs BY COLLECTION ADDRESS
 export type ReqGetNFTsByCollectionAddressType = {
     collection_address: string,
-    limit: number,
-    offset: number,
-    sort: number,
+    limit?: number,
+    offset?: number,
+    sort?: number,
 };
 const ReqGetNFTsByCollectionAddressSchema: SchemaObject = {
     type: 'object',
@@ -847,9 +847,9 @@ export const RequestGetNFTsByCollectionAddressBody = {
 // GET NEW LIST EVENTS
 export type ReqGetNewListEventsType = {
     collection_address: string,
-    limit: number,
-    offset: number,
-    sort: number,
+    limit?: number,
+    offset?: number,
+    sort?: number,
 };
 const ReqGetNewListEventsSchema: SchemaObject = {
     type: 'object',
@@ -880,9 +880,9 @@ export const RequestGetNewListEventsBody = {
 // GET UNLISTED EVENTS
 export type ReqGetUnlistEventsType = {
     collection_address: string,
-    limit: number,
-    offset: number,
-    sort: number,
+    limit?: number,
+    offset?: number,
+    sort?: number,
 };
 const ReqGetUnlistEventsSchema: SchemaObject = {
     type: 'object',
@@ -913,9 +913,9 @@ export const RequestGetUnlistEventsBody = {
 // GET PURCHASE EVENTS
 export type ReqGetPurchaseEventsType = {
     collection_address: string,
-    limit: number,
-    offset: number,
-    sort: number,
+    limit?: number,
+    offset?: number,
+    sort?: number,
 };
 const ReqGetPurchaseEventsSchema: SchemaObject = {
     type: 'object',
@@ -946,9 +946,9 @@ export const RequestGetPurchaseEventsBody = {
 // GET BID WIN EVENTS
 export type ReqGetBidWinEventsType = {
     collection_address: string,
-    limit: number,
-    offset: number,
-    sort: number,
+    limit?: number,
+    offset?: number,
+    sort?: number,
 };
 const ReqGetBidWinEventsSchema: SchemaObject = {
     type: 'object',
@@ -981,9 +981,9 @@ export type ReqSearchCollectionsType = {
     keywords: string,
     isActive: boolean,
     ignoreNoNFT: boolean,
-    limit: number,
-    offset: number,
-    sort: number,
+    limit?: number,
+    offset?: number,
+    sort?: number,
 };
 const ReqSearchCollectionsSchema: SchemaObject = {
     type: 'object',
@@ -1050,9 +1050,9 @@ export const RequestGetOwnershipHistoryBody = {
 export type ReqSearchNFTOfCollectionByTraitsType = {
     collectionAddress: string,
     traitFilters: string,
-    limit: number,
-    offset: number,
-    sort: number,
+    limit?: number,
+    offset?: number,
+    sort?: number,
 };
 const ReqSearchNFTOfCollectionByTraitsSchema: SchemaObject = {
     type: 'object',
@@ -1085,9 +1085,9 @@ export const RequestSearchNFTOfCollectionByTraitsBody = {
 
 // GET ADD REWARD HISTORY
 export type ReqGetAddRewardHistoryType = {
-    limit: number,
-    offset: number,
-    sort: number,
+    limit?: number,
+    offset?: number,
+    sort?: number,
 };
 const ReqGetAddRewardHistorySchema: SchemaObject = {
     type: 'object',
@@ -1115,9 +1115,9 @@ export const RequestGetAddRewardHistoryBody = {
 // GET CLAIMED REWARD HISTORY
 export type ReqGetClaimRewardHistoryType = {
     staker_address: string,
-    limit: number,
-    offset: number,
-    sort: number,
+    limit?: number,
+    offset?: number,
+    sort?: number,
 };
 const ReqGetClaimRewardHistorySchema: SchemaObject = {
     type: 'object',

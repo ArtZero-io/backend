@@ -120,10 +120,9 @@ export class collections extends Entity {
   isDuplicationChecked?: boolean;
 
   @property({
-    type: 'array',
-    itemType: 'object',
+    type: 'object',
   })
-  rarityTable?: object[];
+  rarityTable?: object;
 
   @property({
     type: 'object',

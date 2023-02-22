@@ -49,7 +49,7 @@ export class nfts extends Entity {
     type: 'array',
     itemType: 'string',
   })
-  attributesValue?: string;
+  attributesValue?: string[];
 
   @property({
     type: 'number',
