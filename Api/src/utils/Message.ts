@@ -425,6 +425,68 @@ export const RequestGetCollectionsBody = {
     },
 };
 
+// GET ALL COLLECTIONS
+export type ReqGetAllCollectionsType = {
+    limit?: number,
+    offset?: number,
+    sort?: number,
+    isActive?: boolean,
+    ignoreNoNFT?: boolean,
+};
+const ReqGetAllCollectionsSchema: SchemaObject = {
+    type: 'object',
+    required: [],
+    properties: {
+        limit: {
+            type: 'number',
+        },
+        offset: {
+            type: 'number',
+        },
+        sort: {
+            type: 'number',
+        },
+        isActive: {
+            type: 'boolean',
+        },
+        ignoreNoNFT: {
+            type: 'boolean',
+        },
+    },
+};
+export const RequestGetAllCollectionsBody = {
+    description: 'The input of getAllCollections function',
+    required: true,
+    content: {
+        'application/x-www-form-urlencoded': {schema: ReqGetAllCollectionsSchema},
+    },
+};
+
+// UPDATE COLLECTION'S EMAIL
+export type ReqUpdateCollectionEmailType = {
+    collection_address?: string,
+    email?: string,
+};
+const ReqUpdateCollectionEmailSchema: SchemaObject = {
+    type: 'object',
+    required: ['collection_address', 'email'],
+    properties: {
+        collection_address: {
+            type: 'string',
+        },
+        email: {
+            type: 'string',
+        },
+    },
+};
+export const RequestUpdateCollectionEmailBody = {
+    description: 'The input of updateCollectionEmail function',
+    required: true,
+    content: {
+        'application/x-www-form-urlencoded': {schema: ReqUpdateCollectionEmailSchema},
+    },
+};
+
 // GET PROJECTS
 export type ReqGetProjectsType = {
     limit?: number,

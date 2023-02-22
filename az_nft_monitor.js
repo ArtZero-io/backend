@@ -645,7 +645,9 @@ const scanAllNFTs = async () => {
 };
 
 const connectDb = () => {
-  return mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true});
+  return mongoose.connect(process.env.MONGODB_URL, {
+    useNewUrlParser: true,
+  });
 };
 
 var global_vars = {};

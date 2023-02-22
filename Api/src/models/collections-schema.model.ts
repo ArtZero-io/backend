@@ -82,6 +82,11 @@ export class collections extends Entity {
   @property({
     type: 'string',
   })
+  email?: string;
+
+  @property({
+    type: 'string',
+  })
   twitter?: string;
 
   @property({

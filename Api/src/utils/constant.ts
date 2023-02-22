@@ -28,6 +28,7 @@ export const MESSAGE = {
     NO_IMAGES: "No Images",
     NO_IMAGE_TYPE: "No Image Type",
     NO_METADATA: "No Metadata",
+    INVALID_EMAIL_FORMAT: "Invalid email format!",
     INVALID_ADDRESS: "Invalid Address",
     INVALID_INPUT: "Invalid Input",
     INVALID_COLLECTION_ADDRESS: "Invalid Collection Address",
