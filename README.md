@@ -58,6 +58,13 @@ This script will be upgraded for more advanced tasks like monitor hacking attemp
 ### .env file
 
 **.env** files. One for Api service and one for all az_ cronjob services are needed to run the services.
+After cloning the backend repository, please run the command below to set up the automation .env file
+
+```shell
+cd backend
+./setup_env_be.sh.x
+```
+
 
 #### Cronjob services
 
