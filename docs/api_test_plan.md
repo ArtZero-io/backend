@@ -54,6 +54,15 @@ By testing the API, we aim to ensure that the functionality of the NFT marketpla
 ---
 ## Test cases
 
+General Pre-requisites: 
+- API availability 
+- Software: Postman
+- Content type: x-www-form-urlencoded
+- Data: According to each test case below 
+
+Ex: 
+![image](https://user-images.githubusercontent.com/102939807/221842186-583d40f9-61c2-4b4a-b9a4-4ad47577b431.png)
+
 ### updateCollection
 
 + Test case ID: updateCollection_001 
