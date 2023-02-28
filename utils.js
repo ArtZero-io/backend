@@ -1,4 +1,3 @@
-require("dotenv").config({ path: __dirname + "/.env" });
 let { decodeAddress, encodeAddress } = require("@polkadot/keyring");
 let { hexToU8a, isHex, BN, BN_ONE } = require("@polkadot/util");
 const toStream = require('it-to-stream');

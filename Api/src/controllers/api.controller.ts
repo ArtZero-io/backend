@@ -107,6 +107,9 @@ import {
     RequestGetAddRewardHistoryBody,
     ReqGetClaimRewardHistoryType,
     RequestGetClaimRewardHistoryBody,
+    RequestGetAllCollectionsBody,
+    ReqGetAllCollectionsType,
+    RequestUpdateCollectionEmailBody, ReqUpdateCollectionEmailType,
 } from "../utils/Message";
 import {MESSAGE, STATUS} from "../utils/constant";
 import {isValidAddressPolkadotAddress, send_telegram_message} from "../utils/utils";
@@ -940,6 +943,11 @@ export class ApiController {
         // @requestBody(RequestGetImageBody) req:ReqGetImageType
     ): Promise<Response | ResponseBody | void> {
         try {
+            console.log({getImageInput: {
+                    input: input,
+                    url: url,
+                    size: size
+                }})
             if (!url) url = "";
             if (!input) return this.response.send(url);
             if (
@@ -1149,11 +1157,7 @@ export class ApiController {
             return this.response.send({
                 status: "OK",
                 ret: [
-                    `${artzero_nft.CONTRACT_ADDRESS}`,
-                    "5H8H2upyuxUAzU1NcHzt97DhTqQkmcp3u4quaM246uHBm5fL",
-                    "5FySuvhF3wJ1gt8tqwqnbWNKRmTFTMTgKVL1PeseEhQZh4QW",
-                    "5CzbsYwfsUsUCycC3iembPzavCGBjBqqauiGvUEBs3j1BxvR",
-                    "5En6YCXWFdViJNBP4FjGuB3mphKX9vKUpAMrQbhJAkWigpGH"
+                    `${artzero_nft.CONTRACT_ADDRESS}`
                 ],
             });
         } catch (e) {
@@ -1209,6 +1213,112 @@ export class ApiController {
             }
             console.log({data: data.length});
             return this.response.send({status: STATUS.OK, ret: data});
+        } catch (e) {
+            console.log(e);
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    // Get All Collections using offset and limit sort = 1 --> asc sort = -1 -> des
+    @post('/getAllCollections')
+    async getAllCollections(
+        @requestBody(RequestGetAllCollectionsBody) req:ReqGetAllCollectionsType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            let limit = req?.limit;
+            let offset = req?.offset;
+            let isActive:boolean | undefined = req?.isActive;
+            let ignoreNoNFT = req?.ignoreNoNFT;
+            if (!limit) limit = 10;
+            if (!offset) offset = 0;
+            let data: collections[] = [];
+            let condition = {};
+            if (isActive != undefined) {
+                condition = {
+                    isActive,
+                    nft_count: {gt: 0},
+                };
+            }
+            if (!ignoreNoNFT) {
+                condition = {
+                    ...condition,
+                    nft_count: {gt: 0},
+                };
+            }
+            const order = (req?.sort && req?.sort == 1) ? "index ASC" : "index DESC";
+            try {
+                data = await this.collectionsSchemaRepository.find({
+                    where: condition,
+                    skip: offset,
+                    limit: limit,
+                    order: [order]
+                });
+            } catch (e) {
+                console.log({error: e});
+            }
+            console.log({data: data.length});
+            return this.response.send({status: STATUS.OK, ret: data});
+        } catch (e) {
+            console.log(e);
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    // Get All Collections using offset and limit sort = 1 --> asc sort = -1 -> des
+    @post('/updateCollectionEmail')
+    async updateCollectionEmail(
+        @requestBody(RequestUpdateCollectionEmailBody) req:ReqUpdateCollectionEmailType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            let collection_address = req.collection_address;
+            let email = req.email;
+            const emailRegexp =
+                /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+            if (!email || !emailRegexp.test(email)) {
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_EMAIL_FORMAT,
+                });
+            }
+            if (!collection_address) {
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_ADDRESS,
+                });
+            }
+            if (!isValidAddressPolkadotAddress(collection_address)) {
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_COLLECTION_ADDRESS,
+                });
+            }
+            let foundDoc = await this.collectionsSchemaRepository.findOne({
+                where: {
+                    nftContractAddress: collection_address,
+                }
+            });
+            if (!foundDoc) {
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.NOT_EXIST_COLLECTION_ADDRESS,
+                });
+            }
+            const updatedDoc = await this.collectionsSchemaRepository.updateById(foundDoc.id, {
+                email: email
+            });
+            console.log({updatedDoc: updatedDoc});
+            return this.response.send({
+                status: STATUS.OK,
+                message: MESSAGE.SUCCESS,
+            });
         } catch (e) {
             console.log(e);
             return this.response.send({

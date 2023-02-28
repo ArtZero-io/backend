@@ -53,6 +53,9 @@ const CollectionsSchema = new mongoose.Schema({
   website: {
     type: String,
   },
+  email: {
+    type: String,
+  },
   twitter: {
     type: String,
   },
