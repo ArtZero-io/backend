@@ -7,7 +7,7 @@ export class newlistevents extends Entity {
     id: true,
     generated: true,
   })
-  id?: string;
+  _id?: string;
 
   @property({
     type: 'number',
