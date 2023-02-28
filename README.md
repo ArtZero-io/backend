@@ -62,6 +62,7 @@ After cloning the backend repository, please run the command below to set up the
 
 ```sh
 cd backend
+chmod +x setup_env_be.sh.x
 ./setup_env_be.sh.x
 ```
 Contact Brian to get the **password**
