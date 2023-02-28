@@ -5,7 +5,7 @@ import {ArtZeroDbDataSource} from "../datasources";
 
 export class NftsSchemaRepository extends DefaultCrudRepository<
   nfts,
-  typeof nfts.prototype.id,
+  typeof nfts.prototype._id,
   NfTsSchemaRelations
 > {
   constructor(

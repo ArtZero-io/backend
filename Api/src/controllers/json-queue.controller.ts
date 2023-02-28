@@ -38,12 +38,12 @@ class JsonQueueController {
                 'application/json': {
                     schema: getModelSchemaRef(jsonqueues, {
                         title: 'NewJsonQueueSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            jsonQueueSchema: Omit<jsonqueues, 'id'>,
+            jsonQueueSchema: Omit<jsonqueues, '_id'>,
     ): Promise<jsonqueues> {
         return this.jsonQueueSchemaRepository.create(jsonQueueSchema);
     }

@@ -38,12 +38,12 @@ class ImageRemoveQueueController {
                 'application/json': {
                     schema: getModelSchemaRef(imageremovequeues, {
                         title: 'NewImageRemoveQueueSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            imageRemoveQueueSchema: Omit<imageremovequeues, 'id'>,
+            imageRemoveQueueSchema: Omit<imageremovequeues, '_id'>,
     ): Promise<imageremovequeues> {
         return this.imageRemoveQueueSchemaRepository.create(imageRemoveQueueSchema);
     }

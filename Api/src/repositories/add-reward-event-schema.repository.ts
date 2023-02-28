@@ -5,7 +5,7 @@ import {addrewardevents, AddRewardEventSchemaRelations} from '../models';
 
 export class AddRewardEventSchemaRepository extends DefaultCrudRepository<
   addrewardevents,
-  typeof addrewardevents.prototype.id,
+  typeof addrewardevents.prototype._id,
   AddRewardEventSchemaRelations
 > {
   constructor(

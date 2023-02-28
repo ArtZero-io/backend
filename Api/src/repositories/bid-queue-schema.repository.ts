@@ -5,7 +5,7 @@ import {ArtZeroDbDataSource} from "../datasources";
 
 export class BidQueueSchemaRepository extends DefaultCrudRepository<
   bidqueues,
-  typeof bidqueues.prototype.id,
+  typeof bidqueues.prototype._id,
   BidQueueSchemaRelations
 > {
   constructor(

@@ -38,12 +38,12 @@ class StakingEventController {
                 'application/json': {
                     schema: getModelSchemaRef(stakingevents, {
                         title: 'NewStakingEventSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            stakingEventSchema: Omit<stakingevents, 'id'>,
+            stakingEventSchema: Omit<stakingevents, '_id'>,
     ): Promise<stakingevents> {
         return this.stakingEventSchemaRepository.create(stakingEventSchema);
     }

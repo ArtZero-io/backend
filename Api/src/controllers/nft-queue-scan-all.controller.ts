@@ -38,12 +38,12 @@ class NftQueueScanAllController {
                 'application/json': {
                     schema: getModelSchemaRef(nftqueuealls, {
                         title: 'NewNftQueueScanAllSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            nftQueueScanAllSchema: Omit<nftqueuealls, 'id'>,
+            nftQueueScanAllSchema: Omit<nftqueuealls, '_id'>,
     ): Promise<nftqueuealls> {
         return this.nftQueueScanAllSchemaRepository.create(nftQueueScanAllSchema);
     }

@@ -5,7 +5,7 @@ import {ArtZeroDbDataSource} from "../datasources";
 
 export class NftQueueSchemaRepository extends DefaultCrudRepository<
   nftqueues,
-  typeof nftqueues.prototype.id,
+  typeof nftqueues.prototype._id,
   NftQueueSchemaRelations
 > {
   constructor(

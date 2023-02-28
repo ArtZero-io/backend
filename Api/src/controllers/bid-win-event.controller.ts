@@ -38,12 +38,12 @@ class BidWinEventController {
                 'application/json': {
                     schema: getModelSchemaRef(bidwinevents, {
                         title: 'NewBidWinEventSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            bidWinEventSchema: Omit<bidwinevents, 'id'>,
+            bidWinEventSchema: Omit<bidwinevents, '_id'>,
     ): Promise<bidwinevents> {
         return this.bidWinEventSchemaRepository.create(bidWinEventSchema);
     }

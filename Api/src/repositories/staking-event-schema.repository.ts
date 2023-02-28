@@ -5,7 +5,7 @@ import {ArtZeroDbDataSource} from "../datasources";
 
 export class StakingEventSchemaRepository extends DefaultCrudRepository<
   stakingevents,
-  typeof stakingevents.prototype.id,
+  typeof stakingevents.prototype._id,
   StakingEventSchemaRelations
 > {
   constructor(

@@ -38,12 +38,12 @@ class ProjectsController {
                 'application/json': {
                     schema: getModelSchemaRef(projects, {
                         title: 'NewProjectsSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            projectsSchema: Omit<projects, 'id'>,
+            projectsSchema: Omit<projects, '_id'>,
     ): Promise<projects> {
         return this.projectsSchemaRepository.create(projectsSchema);
     }

@@ -38,12 +38,12 @@ class CollectionEventController {
                 'application/json': {
                     schema: getModelSchemaRef(collectionevents, {
                         title: 'NewCollectionEventSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            collectionEventSchema: Omit<collectionevents, 'id'>,
+            collectionEventSchema: Omit<collectionevents, '_id'>,
     ): Promise<collectionevents> {
         return this.collectionEventSchemaRepository.create(collectionEventSchema);
     }

@@ -5,7 +5,7 @@ import {ArtZeroDbDataSource} from "../datasources";
 
 export class MintingEventSchemaRepository extends DefaultCrudRepository<
   mintingevents,
-  typeof mintingevents.prototype.id,
+  typeof mintingevents.prototype._id,
   MintingEventSchemaRelations
 > {
   constructor(

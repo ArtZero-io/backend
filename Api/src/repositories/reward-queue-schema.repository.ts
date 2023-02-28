@@ -5,7 +5,7 @@ import {ArtZeroDbDataSource} from "../datasources";
 
 export class RewardQueueSchemaRepository extends DefaultCrudRepository<
   rewardqueues,
-  typeof rewardqueues.prototype.id,
+  typeof rewardqueues.prototype._id,
   RewardQueueSchemaRelations
 > {
   constructor(

@@ -5,7 +5,7 @@ import {ArtZeroDbDataSource} from "../datasources";
 
 export class TraitSchemaRepository extends DefaultCrudRepository<
   traits,
-  typeof traits.prototype.id,
+  typeof traits.prototype._id,
   TraitSchemaRelations
 > {
   constructor(

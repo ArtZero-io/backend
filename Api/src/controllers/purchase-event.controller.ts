@@ -38,12 +38,12 @@ class PurchaseEventController {
                 'application/json': {
                     schema: getModelSchemaRef(purchaseevents, {
                         title: 'NewPurchaseEventSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            purchaseEventSchema: Omit<purchaseevents, 'id'>,
+            purchaseEventSchema: Omit<purchaseevents, '_id'>,
     ): Promise<purchaseevents> {
         return this.purchaseEventSchemaRepository.create(purchaseEventSchema);
     }

@@ -5,7 +5,7 @@ import {ArtZeroDbDataSource} from "../datasources";
 
 export class UnListEventSchemaRepository extends DefaultCrudRepository<
   unlistevents,
-  typeof unlistevents.prototype.id,
+  typeof unlistevents.prototype._id,
   UnListEventSchemaRelations
 > {
   constructor(

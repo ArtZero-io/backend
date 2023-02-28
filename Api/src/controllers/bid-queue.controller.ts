@@ -38,12 +38,12 @@ class BidQueueController {
                 'application/json': {
                     schema: getModelSchemaRef(bidqueues, {
                         title: 'NewBidQueueSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            bidQueueSchema: Omit<bidqueues, 'id'>,
+            bidQueueSchema: Omit<bidqueues, '_id'>,
     ): Promise<bidqueues> {
         return this.bidQueueSchemaRepository.create(bidQueueSchema);
     }

@@ -38,12 +38,12 @@ class MintingEventController {
                 'application/json': {
                     schema: getModelSchemaRef(mintingevents, {
                         title: 'NewMintingEventSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            mintingEventSchema: Omit<mintingevents, 'id'>,
+            mintingEventSchema: Omit<mintingevents, '_id'>,
     ): Promise<mintingevents> {
         return this.mintingEventSchemaRepository.create(mintingEventSchema);
     }

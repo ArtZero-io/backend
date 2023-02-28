@@ -5,7 +5,7 @@ import {ArtZeroDbDataSource} from "../datasources";
 
 export class ScannedBlocksSchemaRepository extends DefaultCrudRepository<
   scannedblocks,
-  typeof scannedblocks.prototype.id,
+  typeof scannedblocks.prototype._id,
   ScannedBlocksSchemaRelations
 > {
   constructor(

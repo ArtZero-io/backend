@@ -38,12 +38,12 @@ class RewardQueueController {
                 'application/json': {
                     schema: getModelSchemaRef(rewardqueues, {
                         title: 'NewRewardQueueSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            rewardQueueSchema: Omit<rewardqueues, 'id'>,
+            rewardQueueSchema: Omit<rewardqueues, '_id'>,
     ): Promise<rewardqueues> {
         return this.rewardQueueSchemaRepository.create(rewardQueueSchema);
     }

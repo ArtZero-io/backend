@@ -5,7 +5,7 @@ import {ArtZeroDbDataSource} from "../datasources";
 
 export class JsonQueueSchemaRepository extends DefaultCrudRepository<
   jsonqueues,
-  typeof jsonqueues.prototype.id,
+  typeof jsonqueues.prototype._id,
   JsonQueueSchemaRelations
 > {
   constructor(

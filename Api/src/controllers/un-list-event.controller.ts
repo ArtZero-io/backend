@@ -38,12 +38,12 @@ class UnListEventController {
                 'application/json': {
                     schema: getModelSchemaRef(unlistevents, {
                         title: 'NewUnListEventSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            unListEventSchema: Omit<unlistevents, 'id'>,
+            unListEventSchema: Omit<unlistevents, '_id'>,
     ): Promise<unlistevents> {
         return this.unListEventSchemaRepository.create(unListEventSchema);
     }

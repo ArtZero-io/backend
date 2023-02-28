@@ -38,12 +38,12 @@ class ProjectQueueController {
                 'application/json': {
                     schema: getModelSchemaRef(projectqueues, {
                         title: 'NewProjectQueueSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            projectQueueSchema: Omit<projectqueues, 'id'>,
+            projectQueueSchema: Omit<projectqueues, '_id'>,
     ): Promise<projectqueues> {
         return this.projectQueueSchemaRepository.create(projectQueueSchema);
     }

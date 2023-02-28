@@ -38,12 +38,12 @@ class ClaimRewardEventController {
                 'application/json': {
                     schema: getModelSchemaRef(claimrewardevents, {
                         title: 'NewClaimRewardEventSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            claimRewardEventSchema: Omit<claimrewardevents, 'id'>,
+            claimRewardEventSchema: Omit<claimrewardevents, '_id'>,
     ): Promise<claimrewardevents> {
         return this.claimRewardEventSchemaRepository.create(claimRewardEventSchema);
     }

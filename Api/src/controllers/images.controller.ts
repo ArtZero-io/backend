@@ -38,12 +38,12 @@ class ImagesController {
                 'application/json': {
                     schema: getModelSchemaRef(images, {
                         title: 'NewImagesSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            imagesSchema: Omit<images, 'id'>,
+            imagesSchema: Omit<images, '_id'>,
     ): Promise<images> {
         return this.imagesSchemaRepository.create(imagesSchema);
     }

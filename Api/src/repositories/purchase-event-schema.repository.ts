@@ -5,7 +5,7 @@ import {ArtZeroDbDataSource} from "../datasources";
 
 export class PurchaseEventSchemaRepository extends DefaultCrudRepository<
   purchaseevents,
-  typeof purchaseevents.prototype.id,
+  typeof purchaseevents.prototype._id,
   PurchaseEventSchemaRelations
 > {
   constructor(

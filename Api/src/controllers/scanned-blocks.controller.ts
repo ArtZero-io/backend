@@ -38,12 +38,12 @@ class ScannedBlocksController {
                 'application/json': {
                     schema: getModelSchemaRef(scannedblocks, {
                         title: 'NewScannedBlocksSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            scannedBlocksSchema: Omit<scannedblocks, 'id'>,
+            scannedBlocksSchema: Omit<scannedblocks, '_id'>,
     ): Promise<scannedblocks> {
         return this.scannedBlocksSchemaRepository.create(scannedBlocksSchema);
     }

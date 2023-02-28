@@ -5,7 +5,7 @@ import {ArtZeroDbDataSource} from "../datasources";
 
 export class NewListEventSchemaRepository extends DefaultCrudRepository<
   newlistevents,
-  typeof newlistevents.prototype.id,
+  typeof newlistevents.prototype._id,
   NewListEventSchemaRelations
 > {
   constructor(

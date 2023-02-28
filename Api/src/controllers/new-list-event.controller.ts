@@ -38,12 +38,12 @@ class NewListEventController {
                 'application/json': {
                     schema: getModelSchemaRef(newlistevents, {
                         title: 'NewNewListEventSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            newListEventSchema: Omit<newlistevents, 'id'>,
+            newListEventSchema: Omit<newlistevents, '_id'>,
     ): Promise<newlistevents> {
         return this.newListEventSchemaRepository.create(newListEventSchema);
     }

@@ -38,12 +38,12 @@ class BidsController {
                 'application/json': {
                     schema: getModelSchemaRef(bids, {
                         title: 'NewBidsSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            bidsSchema: Omit<bids, 'id'>,
+            bidsSchema: Omit<bids, '_id'>,
     ): Promise<bids> {
         return this.bidsSchemaRepository.create(bidsSchema);
     }

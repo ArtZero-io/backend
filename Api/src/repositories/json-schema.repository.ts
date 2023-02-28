@@ -5,7 +5,7 @@ import {ArtZeroDbDataSource} from "../datasources";
 
 export class JsonSchemaRepository extends DefaultCrudRepository<
   jsons,
-  typeof jsons.prototype.id,
+  typeof jsons.prototype._id,
   JsonSchemaRelations
 > {
   constructor(

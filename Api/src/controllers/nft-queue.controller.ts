@@ -38,12 +38,12 @@ class NftQueueController {
                 'application/json': {
                     schema: getModelSchemaRef(nftqueues, {
                         title: 'NewNftQueueSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            nftQueueSchema: Omit<nftqueues, 'id'>,
+            nftQueueSchema: Omit<nftqueues, '_id'>,
     ): Promise<nftqueues> {
         return this.nftQueueSchemaRepository.create(nftQueueSchema);
     }

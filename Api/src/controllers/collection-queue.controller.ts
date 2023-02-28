@@ -38,12 +38,12 @@ class CollectionQueueController {
                 'application/json': {
                     schema: getModelSchemaRef(collectionqueues, {
                         title: 'NewCollectionQueueSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            collectionQueueSchema: Omit<collectionqueues, 'id'>,
+            collectionQueueSchema: Omit<collectionqueues, '_id'>,
     ): Promise<collectionqueues> {
         return this.collectionQueueSchemaRepository.create(collectionQueueSchema);
     }

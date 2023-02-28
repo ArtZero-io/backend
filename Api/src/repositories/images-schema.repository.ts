@@ -5,7 +5,7 @@ import {ArtZeroDbDataSource} from "../datasources";
 
 export class ImagesSchemaRepository extends DefaultCrudRepository<
   images,
-  typeof images.prototype.id,
+  typeof images.prototype._id,
   ImagesSchemaRelations
 > {
   constructor(

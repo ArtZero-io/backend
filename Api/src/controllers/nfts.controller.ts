@@ -38,12 +38,12 @@ class NftsController {
                 'application/json': {
                     schema: getModelSchemaRef(nfts, {
                         title: 'NewNfTsSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            nfTsSchema: Omit<nfts, 'id'>,
+            nfTsSchema: Omit<nfts, '_id'>,
     ): Promise<nfts> {
         return this.nfTsSchemaRepository.create(nfTsSchema);
     }
