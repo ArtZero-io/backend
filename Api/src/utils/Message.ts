@@ -228,7 +228,7 @@ export const RequestCacheImageBody = {
 export type ReqCacheImagesMetadata = {
     walletAddress?: string,
     collectionAddress?: string,
-    tokenId?: string,
+    tokenId?: number,
     type?: string,
 };
 export type ReqCacheImages = {
@@ -1109,9 +1109,12 @@ export const RequestGetOwnershipHistoryBody = {
 };
 
 // SEARCH NFT OF COLLECTION BY TRAITS
+export type TraitFilters = {
+    is_for_sale?: boolean
+};
 export type ReqSearchNFTOfCollectionByTraitsType = {
     collectionAddress: string,
-    traitFilters: string,
+    traitFilters?: string,
     limit?: number,
     offset?: number,
     sort?: number,
@@ -1124,7 +1127,7 @@ const ReqSearchNFTOfCollectionByTraitsSchema: SchemaObject = {
             type: 'string',
         },
         traitFilters: {
-            type: 'string',
+            type: 'string'
         },
         limit: {
             type: 'number',
@@ -1204,5 +1207,46 @@ export const RequestGetClaimRewardHistoryBody = {
     required: true,
     content: {
         'application/x-www-form-urlencoded': {schema: ReqGetClaimRewardHistorySchema},
+    },
+};
+
+// REPORT NFT request
+export type ReqReportNFTType = {
+   collection_name: string, 
+   nft_name: string, 
+   message: string,
+   address: string, 
+   signature: string,
+   nft_link: string
+};
+const ReqReportNFTSchema: SchemaObject = {
+    type: 'object',
+    required: [],
+    properties: {
+        collection_name: {
+            type: 'string',
+        },
+        nft_name: {
+            type: 'string',
+        },
+        nft_link: {
+            type: 'string',
+        },
+        message: {
+            type: 'string',
+        },
+        address: {
+            type: 'string',
+        },
+        signature: {
+            type: 'string',
+        },
+    },
+};
+export const RequestReportNFTBody = {
+    description: 'The input of ReportNFT function',
+    required: true,
+    content: {
+        'application/x-www-form-urlencoded': {schema: ReqReportNFTSchema},
     },
 };

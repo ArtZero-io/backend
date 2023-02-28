@@ -29,7 +29,7 @@ export async function getCollectionCount(caller_account: string): Promise<number
     return null;
 }
 
-export async function getContractById(caller_account: string, collection_id: string) {
+export async function getContractById(caller_account: string, collection_id: number) {
     if (!collection_manager_contract || !caller_account) {
         return null;
     }

@@ -46,7 +46,7 @@ export async function getLastTokenId(caller_account: string) {
     return null;
 }
 
-export async function ownerOf(caller_account: string, tokenId: string) {
+export async function ownerOf(caller_account: string, tokenId: {u64: number}) {
     if (!az_nft_contract || !caller_account) {
         return null;
     }

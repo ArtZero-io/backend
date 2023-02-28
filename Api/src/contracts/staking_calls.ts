@@ -1,6 +1,6 @@
 import {ContractPromise} from "@polkadot/api-contract";
 import BN from "bn.js";
-import {readOnlyGasLimit} from "../utils/utils";
+import {getGasLimit, readOnlyGasLimit} from "../utils/utils";
 import {KeyringPair} from "@polkadot/keyring/types";
 
 let staking_contract: ContractPromise;
@@ -103,10 +103,10 @@ export async function getRewardStarted(caller_account: any) {
     return null;
 }
 
-export async function getTotalCountOfStakeholders(caller_account: any) {
+export async function getTotalCountOfStakeholders(caller_account: any): Promise<number> {
     if (!staking_contract || !caller_account) {
         console.log("invalid inputs");
-        return null;
+        return 0;
     }
     const address = caller_account?.address;
     // @ts-ignore
@@ -124,7 +124,7 @@ export async function getTotalCountOfStakeholders(caller_account: any) {
         return new BN(output.toHuman()?.Ok, 10, "le").toNumber();
         // return new BN(output, 10, "le").toNumber();
     }
-    return null;
+    return 0;
 }
 
 export async function getStakedAccountsAccountByIndex(caller_account: any, index: number) {
@@ -151,12 +151,24 @@ export async function getStakedAccountsAccountByIndex(caller_account: any, index
     return null;
 }
 
-export async function setClaimedStatus(keypair: KeyringPair, account: string) {
-    // @ts-ignore
-    const gasLimit = readOnlyGasLimit(staking_contract.api);
+export async function setClaimedStatus(keypair: KeyringPair, caller:string, account: string) {
+    const gasLimitResult = await getGasLimit(
+        staking_contract.api,
+        caller,
+        "setClaimedStatus",
+        staking_contract,
+        {},
+        [account]
+    );
+    if (!gasLimitResult.ok) {
+        // @ts-ignore
+        console.log('gasLimitResult.error', gasLimitResult?.error);
+        return;
+    }
+    const { value: gasLimit } = gasLimitResult;
     const value = 0;
-    await staking_contract.tx
-        .setClaimedStatus({ gasLimit, value },account)
+    // @ts-ignore
+    await staking_contract.tx.setClaimedStatus({ gasLimit, value },account)
         .signAndSend(keypair, result => {
             if (result.status.isInBlock) {
                 console.log('in a block');

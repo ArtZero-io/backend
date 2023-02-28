@@ -109,7 +109,7 @@ import {
     RequestGetClaimRewardHistoryBody,
     RequestGetAllCollectionsBody,
     ReqGetAllCollectionsType,
-    RequestUpdateCollectionEmailBody, ReqUpdateCollectionEmailType,
+    RequestUpdateCollectionEmailBody, ReqUpdateCollectionEmailType, TraitFilters,
 } from "../utils/Message";
 import {MESSAGE, STATUS} from "../utils/constant";
 import {isValidAddressPolkadotAddress, send_telegram_message} from "../utils/utils";
@@ -2155,10 +2155,9 @@ export class ApiController {
     ): Promise<ResponseBody | Response> {
         try {
             if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
-            let params = JSON.parse(req?.traitFilters);
+            let params:TraitFilters | undefined = (req?.traitFilters) ? JSON.parse(req?.traitFilters) : undefined;
             let limit = req?.limit || 24;
             let offset = req?.offset || 0;
-            let sort = req?.sort || -1;
             let collectionAddress = req?.collectionAddress;
             if (!isValidAddressPolkadotAddress(collectionAddress)) {
                 return this.response.send({
@@ -2179,29 +2178,23 @@ export class ApiController {
                 });
             }
             ret = {...ret, ...collectionInfo?.toJSON()};
-            const sortQuery =
-                params.is_for_sale === true
-                    ? {price: sort}
-                    : {tokenID: sort};
-            const nftsCollection = (this.nfTsSchemaRepository.dataSource.connector as any).collection("Nfts");
-            const [result] = await nftsCollection.aggregate([
-                {
-                    $match: {
-                        nftContractAddress: collectionAddress,
-                        ...params,
-                    },
+
+            const order = (params && params.is_for_sale)
+                ? ((req?.sort && req?.sort == 1) ? "price ASC" : "price DESC")
+                : ((req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC");
+            const data = await this.nfTsSchemaRepository.find({
+                where: {
+                    nftContractAddress: collectionAddress,
+                    ...params,
                 },
-                {$sort: sortQuery},
-                {
-                    $facet: {
-                        metadata: [{$count: "totalResults"}],
-                        data: [{$skip: offset}, {$limit: limit}],
-                    },
-                },
-            ]);
+                order: [order],
+                skip: offset,
+                limit: limit
+            })
+
             ret.result = {
-                NFTList: result.data,
-                totalResults: result.metadata[0]?.totalResults || 0,
+                NFTList: data,
+                totalResults: data.length,
             };
             return this.response.send({status: STATUS.OK, ret});
         } catch (e) {

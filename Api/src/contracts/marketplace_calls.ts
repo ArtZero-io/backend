@@ -11,12 +11,12 @@ export function setContract(c: ContractPromise) {
     marketplace_contract = c;
 }
 
-export async function getVolumeByCollection(caller_account: string, nft_contract_address: string) {
+export async function getVolumeByCollection(caller_account: string, nft_contract_address: string): Promise<number> {
     if (!marketplace_contract || !caller_account ||
         !isValidAddressPolkadotAddress(nft_contract_address)
     ) {
         console.log('invalid inputs');
-        return null;
+        return 0;
     }
     const address = caller_account;
     // @ts-ignore
@@ -36,10 +36,10 @@ export async function getVolumeByCollection(caller_account: string, nft_contract
             return 0;
         }
     }
-    return null;
+    return 0;
 }
 
-export async function getNftSaleInfo(caller_account: string, nft_contract_address: string, token_id: string) {
+export async function getNftSaleInfo(caller_account: string, nft_contract_address: string, token_id: {u64: number}) {
     if (!marketplace_contract || !caller_account ||
         !isValidAddressPolkadotAddress(nft_contract_address)
     ) {
@@ -62,7 +62,7 @@ export async function getNftSaleInfo(caller_account: string, nft_contract_addres
     return null;
 }
 
-export async function getAllBids(caller_account: any, nft_contract_address: string, seller: string, token_id: string) {
+export async function getAllBids(caller_account: any, nft_contract_address: string, seller: string, token_id: {u64: number}) {
     if (
         !marketplace_contract ||
         !caller_account ||

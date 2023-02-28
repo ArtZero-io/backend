@@ -4,7 +4,7 @@ import {convertNumberWithoutCommas, readOnlyGasLimit} from "../utils/utils";
 
 export async function getTotalSupply(nft721_psp34_standard_contract: ContractPromise, caller_account: string) {
     if (!nft721_psp34_standard_contract || !caller_account) {
-        return null;
+        return 0;
     }
     const address = caller_account;
     // @ts-ignore
@@ -17,10 +17,10 @@ export async function getTotalSupply(nft721_psp34_standard_contract: ContractPro
         // @ts-ignore
         return new BN(convertNumberWithoutCommas(output.toHuman()?.Ok), 10, "le").toNumber();
     }
-    return null;
+    return 0;
 }
 
-export async function isLockedNft(nft721_psp34_standard_contract: ContractPromise, caller_account: string, tokenId: string) {
+export async function isLockedNft(nft721_psp34_standard_contract: ContractPromise, caller_account: string, tokenId: {u64: number}) {
     if (!nft721_psp34_standard_contract || !caller_account) {
         return null;
     }
@@ -62,7 +62,7 @@ export async function getAttributeName(nft721_psp34_standard_contract: ContractP
 
 export async function getAttributeCount(nft721_psp34_standard_contract: ContractPromise, caller_account: string) {
     if (!nft721_psp34_standard_contract || !caller_account) {
-        return null;
+        return 0;
     }
     const address = caller_account;
     // @ts-ignore
@@ -76,7 +76,7 @@ export async function getAttributeCount(nft721_psp34_standard_contract: Contract
         // @ts-ignore
         return new BN(output.toHuman()?.Ok, 10, "le").toNumber();
     }
-    return null;
+    return 0;
 }
 
 export async function getAttribute(
@@ -107,7 +107,7 @@ export async function getAttribute(
 export async function getAttributes(
     nft721_psp34_standard_contract: ContractPromise,
     caller_account: string,
-    tokenId: { u64: string },
+    tokenId: { u64: number },
     attributes: any[]
 ) {
     if (!nft721_psp34_standard_contract || !caller_account) {
@@ -133,7 +133,7 @@ export async function getAttributes(
 export async function ownerOf(
     nft721_psp34_standard_contract: ContractPromise,
     caller_account: string,
-    tokenId: string
+    tokenId: {u64: number}
 ) {
     if (!nft721_psp34_standard_contract || !caller_account) {
         return null;

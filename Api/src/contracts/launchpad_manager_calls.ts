@@ -10,7 +10,7 @@ export function setContract(c: ContractPromise) {
 
 export async function getProjectCount(caller_account: string) {
     if (!launchpad_manager_contract || !caller_account) {
-        return null;
+        return 0;
     }
     const address = caller_account;
     // @ts-ignore
@@ -25,10 +25,10 @@ export async function getProjectCount(caller_account: string) {
         // @ts-ignore
         return new BN(output.toHuman()?.Ok, 10, "le").toNumber();
     }
-    return null;
+    return 0;
 }
 
-export async function getProjectById(caller_account: string, projectId: string) {
+export async function getProjectById(caller_account: string, projectId: number) {
     if (!launchpad_manager_contract || !caller_account) {
         return null;
     }

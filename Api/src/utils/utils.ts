@@ -1,14 +1,13 @@
-import {BN, BN_ONE, hexToU8a, isHex} from "@polkadot/util";
+import {BN, BN_ONE, hexToU8a, isHex, u8aToHex} from "@polkadot/util";
 import {decodeAddress, encodeAddress} from "@polkadot/keyring";
 import {ApiPromise} from "@polkadot/api";
 import {WeightV2} from "@polkadot/types/interfaces";
 import axios from "axios";
 import {STATUS} from "./constant";
-import {BindingKey} from "@loopback/core";
-import {RequestHandler} from "express-serve-static-core";
-
-export type FileUploadHandler = RequestHandler;
-
+import {signatureVerify} from '@polkadot/util-crypto'
+import {ContractPromise} from "@polkadot/api-contract";
+import {convertWeight} from "@polkadot/api-contract/base/util";
+import {ApiBase} from "@polkadot/api/base";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 
@@ -28,6 +27,24 @@ export function send_telegram_message(message: string) {
         },
     });
 }
+
+export function send_report_telegram_message(message: string) {
+    axios({
+        baseURL: process.env.TELEGRAM_REPORT_URL,
+        url: "/sendMessage",
+        method: "post",
+        data: {
+            "chat_id": process.env.TELEGRAM_REPORT_ID_CHAT,
+            "text": `${message}`
+        },
+        headers: {
+            "Content-Type": "application/json",
+            "cache-control": "no-cache",
+            'Access-Control-Allow-Origin': '*',
+        },
+    });
+}
+
 
 export function convertNumberWithoutCommas(input: string):string {
     return input.replace(/,/g, "");
@@ -51,7 +68,7 @@ export function randomString(length: number): string {
     return result;
 }
 
-export function getFileTypeFromCID() {}
+export async function getFileTypeFromCID() {}
 
 export function isValidAddressPolkadotAddress(address: string): boolean {
     try {
@@ -107,15 +124,33 @@ export async function client(
     return data;
 }
 
+// @ts-ignore
+// @ts-ignore
+// @ts-ignore
+// @ts-ignore
+// @ts-ignore
 export const APICall = {
-    getMetadataOffChain: async (param: { tokenUri:string, tokenID: string }) => {
-        const ret = await client(
-            "GET",
-            `/getJSON?input=${param.tokenUri}${param.tokenID}.json`,
-            {}
-        );
-        console.log("getMetadataOffChain ret", ret);
-        return ret;
+    getMetadataOffChain: async (param: { tokenUri:string, tokenID: number }) => {
+        try {
+            const ret = await client(
+                "GET",
+                `/getJSON?input=${param.tokenUri}${param.tokenID}.json`,
+                {}
+            );
+            console.log("getMetadataOffChain ret", ret);
+            return ret;
+        } catch (e) {
+            return null;
+        }
+    },
+    // NFT Info by Hash API Calls
+    // @ts-ignore
+    getNftInfoByHash: async ({ hash }) => {
+        try {
+            return await client("GET", `/${hash}`, {}, process.env.IPFS_BASE_URL);
+        } catch (e) {
+            return null;
+        }
     },
 }
 
@@ -124,4 +159,60 @@ export function readOnlyGasLimit(api: ApiPromise):WeightV2 {
         refTime: new BN(1_000_000_000_000),
         proofSize: MAX_CALL_WEIGHT,
     });
+}
+
+export const isValidSignature = (signedMessage: string, signature: string, address: string) => {
+    const publicKey = decodeAddress(address);
+    const hexPublicKey = u8aToHex(publicKey);
+  
+    return signatureVerify(signedMessage, signature, hexPublicKey).isValid;
+  };
+
+
+const toContractAbiMessage = (
+    contractPromise: ContractPromise,
+    message: string
+) => {
+    const value = contractPromise.abi.messages.find((m) => m.method === message);
+
+    if (!value) {
+        const messages = contractPromise?.abi.messages.map((m) => m.method).join(', ');
+
+        const error = `"${message}" not found in metadata.spec.messages: [${messages}]`;
+        console.error(error);
+
+        return { ok: false, error };
+    }
+
+    return { ok: true, value };
+};
+
+export async function getGasLimit(
+    api: ApiBase<any>,
+    userAddress: string,
+    message: string,
+    contract: ContractPromise,
+    options = {},
+    args: any[] = []
+    // temporarily type is Weight instead of WeightV2 until polkadot-js type `ContractExecResult` will be changed to WeightV2
+) {
+    const abiMessage = toContractAbiMessage(contract, message)
+    if (!abiMessage.ok) return abiMessage;
+    // @ts-ignore
+    const { value, gasLimit, storageDepositLimit } = options;
+    const result = await api.call.contractsApi.call(
+        userAddress,
+        contract.address,
+        value ?? new BN(0),
+        gasLimit ?? null,
+        storageDepositLimit ?? null,
+        abiMessage?.value?.toU8a(args)
+    );
+    // @ts-ignore
+    const {v2Weight} = convertWeight(result?.gasRequired);
+    const gasRequired = api.registry.createType("WeightV2", {
+        refTime: v2Weight.refTime.add(new BN(25_000_000_000)),
+        proofSize: v2Weight.proofSize,
+    });
+    return { ok: true, value: gasRequired };
 }
