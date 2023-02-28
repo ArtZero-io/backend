@@ -38,12 +38,12 @@ class CollectionsController {
                 'application/json': {
                     schema: getModelSchemaRef(collections, {
                         title: 'NewCollectionsSchema',
-                        exclude: ['id'],
+                        exclude: ['_id'],
                     }),
                 },
             },
         })
-            collectionsSchema: Omit<collections, 'id'>,
+            collectionsSchema: Omit<collections, '_id'>,
     ): Promise<collections> {
         return this.collectionsSchemaRepository.create(collectionsSchema);
     }

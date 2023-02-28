@@ -1311,7 +1311,7 @@ export class ApiController {
                     message: MESSAGE.NOT_EXIST_COLLECTION_ADDRESS,
                 });
             }
-            const updatedDoc = await this.collectionsSchemaRepository.updateById(foundDoc.id, {
+            const updatedDoc = await this.collectionsSchemaRepository.updateById(foundDoc._id, {
                 email: email
             });
             console.log({updatedDoc: updatedDoc});
