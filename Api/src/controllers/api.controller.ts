@@ -1140,7 +1140,7 @@ export class ApiController {
                 isActive: true,
                 nft_count: {gt: 0},
             });
-            return this.response.send({status: "OK", ret: collection_count_db});
+            return this.response.send({status: "OK", ret: collection_count_db.count});
         } catch (e) {
             console.log(e);
             return this.response.send({
