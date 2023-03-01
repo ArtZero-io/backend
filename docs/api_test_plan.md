@@ -469,7 +469,7 @@ Ex:
       ```json
         {
           "collection_address" : "5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC",
-          "tokenID":"937"
+          "token_id":"937"
         }
       ```
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".
@@ -577,7 +577,7 @@ Ex:
   1. Send a POST request to the API endpoint `/getPurchaseEvents`
       ```json
           {
-            "collection_address":"5DKUvAvm7QA36WLj7BD5bua92jN1XoyBrK2Prjbc6gFt2tW8"
+            "collection_address":"5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC"
           }
       ```    
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".
