@@ -459,7 +459,7 @@ const CollectionEventSchema = new mongoose.Schema({
     type: String,
   },
   contractType: {
-    type: Number,
+    type: String,
   },
   isActive: {
     type: Boolean,
