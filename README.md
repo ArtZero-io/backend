@@ -68,6 +68,8 @@ Contact Brian to get the **password**
 
 Get infomation on Cloudflare at **Images** menu
 ![image](https://user-images.githubusercontent.com/102939807/223139266-7ebca3cf-2340-44ac-a8c4-1ef11ffe7ea6.png)
+Create API Token in **My profile**
+![image](https://user-images.githubusercontent.com/102939807/223143555-f60d129e-9978-49c0-a45b-913370177eed.png)
 or follow the instructions https://developers.cloudflare.com/images/cloudflare-images/api-request/
 
 
