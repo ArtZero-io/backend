@@ -59,7 +59,6 @@ This script will be upgraded for more advanced tasks like monitor hacking attemp
 
 **.env** files. One for Api service and one for all az_ cronjob services are needed to run the services.
 After cloning the backend repository, please run the command below to set up the automation .env file
-
 ```sh
 cd backend
 chmod +x setup_env_be.sh.x
@@ -70,17 +69,25 @@ Contact Brian to get the **password**
 #### Cronjob services
 
 Skip if already running script ./setup_env_be.sh.x
+Or using  .env template file
 
 ```
 CALLER= <any address>
 PHRASE=
 WSSPROVIDER=wss://ws.test.azero.dev
-REACT_APP_API_BASE_URL=https://api.artzero.io
-TELEGRAM_URL=https://api.telegram.org/<bot_id_key>
+REACT_APP_API_BASE_URL=http://127.0.0.1:3410
+TELEGRAM_URL=https://api.telegram.org/bot<bot_id_key>
 TELEGRAM_ID_CHAT=<chat_key>
 MONGODB_URL=mongodb://<Acc>:<Password>@<host_db>:<port_db>/<database_name>
+CLOUDFLARE_ACCOUNT_ID=<get infomation on Cloudflare>
+CLOUDFLARE_ACCOUNT_HASH=<get infomation on Cloudflare>
+CLOUDFLARE_API_KEY=<Create API key in Profile Setup>
+TELEGRAM_REPORT_URL=https://api.telegram.org/bot<bot_id_key>
+TELEGRAM_REPORT_ID_CHAT=<chat_key>
+IPFS_BASE_URL=https://artzeronft.infura-ipfs.io/ipfs
 # Example
 # MONGODB_URL=mongodb://AccTest:AccPass@localhost:27017/DbTest
+...
 ```
 
 #### API services
@@ -99,15 +106,19 @@ DB_USER=<Acc>
 DB_PASSWORD=<Password>
 DB_DATABASE=<database_name>
 DB_USE_NEW_URL_PARSER=true
-SSL_KEY=
-SSL_PEM=
 CALLER= <any address>
 PHRASE=
 WSSPROVIDER=wss://ws.test.azero.dev
 REACT_APP_API_BASE_URL=https://api.artzero.io
 TELEGRAM_URL=https://api.telegram.org/<bot_id_key>
 TELEGRAM_ID_CHAT=<chat_key>
-MONGODB_URL=mongodb://<Acc>:<Password>@<host_db>:<port_db>/<database_name>
+CLOUDFLARE_ACCOUNT_ID=<get infomation on Cloudflare>
+CLOUDFLARE_ACCOUNT_HASH=<get infomation on Cloudflare>
+CLOUDFLARE_API_KEY=<Create API key in Profile Setup>
+TELEGRAM_REPORT_URL=https://api.telegram.org/bot<bot_id_key>
+TELEGRAM_REPORT_ID_CHAT=<chat_key>
+IPFS_BASE_URL=https://artzeronft.infura-ipfs.io/ipfs
+
 
 # Example
 # DB_NAME=ArtZeroDB # Get from art-zero-db.datasource.ts
@@ -116,7 +127,11 @@ MONGODB_URL=mongodb://<Acc>:<Password>@<host_db>:<port_db>/<database_name>
 # DB_USER=AccTest
 # DB_PASSWORD=AccPass
 # DB_DATABASE=DbTest
-# MONGODB_URL=mongodb://AccTest:AccPass@localhost:27017/DbTest
+# DB_USE_NEW_URL_PARSER=true
+# WSSPROVIDER=wss://ws.test.azero.dev
+# REACT_APP_API_BASE_URL=http://127.0.0.1:3410
+# IPFS_BASE_URL=https://artzeronft.infura-ipfs.io/ipfs
+...
 ```
 
 ### MongoDB
