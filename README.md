@@ -66,6 +66,11 @@ chmod +x setup_env_be.sh.x
 ```
 Contact Brian to get the **password**
 
+Get infomation on Cloudflare at **Images** menu
+![image](https://user-images.githubusercontent.com/102939807/223139266-7ebca3cf-2340-44ac-a8c4-1ef11ffe7ea6.png)
+or follow the instructions https://developers.cloudflare.com/images/cloudflare-images/api-request/
+
+
 #### Cronjob services
 
 Skip if already running script ./setup_env_be.sh.x
