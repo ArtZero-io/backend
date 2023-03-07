@@ -58,14 +58,7 @@ This script will be upgraded for more advanced tasks like monitor hacking attemp
 ### .env file
 
 **.env** files. One for Api service and one for all az_ cronjob services are needed to run the services.
-After cloning the backend repository, please run the command below to set up the automation .env file
-```sh
-cd backend
-chmod +x setup_env_be.sh.x
-./setup_env_be.sh.x
-```
-Contact Brian to get the **password**
-
+Can use .env template file in repo. Just replace Cloudflare key
 Get infomation on Cloudflare at **Images** menu
 ![image](https://user-images.githubusercontent.com/102939807/223139266-7ebca3cf-2340-44ac-a8c4-1ef11ffe7ea6.png)
 Create API Token in **My profile**
@@ -75,8 +68,7 @@ or follow the instructions https://developers.cloudflare.com/images/cloudflare-i
 
 #### Cronjob services
 
-Skip if already running script ./setup_env_be.sh.x
-Or using  .env template file
+Using .env template file in repo or replace the fields below
 
 ```
 CALLER= <any address>
@@ -99,7 +91,7 @@ IPFS_BASE_URL=https://artzeronft.infura-ipfs.io/ipfs
 
 #### API services
 
-Skip if already running script ./setup_env_be.sh.x
+Using .env template file in repo or replace the fields below
 
 Go to the Api folder and create new .env file with this config:
 ```
