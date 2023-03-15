@@ -157,7 +157,7 @@ db.runCommand({
 
 You can use pm2 to trigger following services:
 ```
-node az_bids_monitors
+node az_bids_monitor
 node az_cache_image
 node az_cloudflare_sync_monitor
 node az_collection_monitor
