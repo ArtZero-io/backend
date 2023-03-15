@@ -906,11 +906,10 @@ export class ApiController {
     @get('/getJSON')
     @oas.response.file()
     async getJSON(
-        @requestBody(RequestGetJSONBody) req:ReqGetJSONType
+        @param.query.string('input') input?: string
     ): Promise<Response | ResponseBody | void> {
         try {
-            let input = this.request.query.input;
-            if (!input || typeof input != 'string') return this.response.send({
+            if (!input) return this.response.send({
                 status: STATUS.FAILED,
                 message: MESSAGE.INVALID_INPUT
             });
