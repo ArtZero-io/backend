@@ -1108,16 +1108,8 @@ export class ApiController {
     // Get Collection Contract Address
     @get('/getCollectionContract')
     async getCollectionContract(
-        @requestBody(RequestGetCollectionContractBody) req:ReqGetCollectionContractType
     ): Promise<ResponseBody | Response> {
         try {
-            const host = this.request.headers.host;
-            const origin = this.request.headers.origin;
-            const userIP = this.request.socket.remoteAddress;
-            console.log(this.request.headers);
-            console.log(`userIP: ${userIP}`);
-            console.log(`host: ${host}`);
-            console.log(`origin: ${origin}`);
             return this.response.send({
                 status: STATUS.OK,
                 ret: collection_manager.CONTRACT_ADDRESS
