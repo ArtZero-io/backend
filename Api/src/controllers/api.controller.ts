@@ -112,7 +112,7 @@ import {
     RequestUpdateCollectionEmailBody, ReqUpdateCollectionEmailType, TraitFilters,
 } from "../utils/Message";
 import {MESSAGE, STATUS} from "../utils/constant";
-import {isValidAddressPolkadotAddress, send_telegram_message} from "../utils/utils";
+import {getFile, isValidAddressPolkadotAddress, send_telegram_message} from "../utils/utils";
 import * as nft721_psp34_standard_calls from "../contracts/nft721_psp34_standard_calls";
 import * as collection_manager_calls from "../contracts/collection_manager_calls";
 import {collection_manager} from "../contracts/collection_manager";
@@ -920,10 +920,10 @@ export class ApiController {
                     input: input
                 }
             });
-            if (!input_data || !input_data?.location) {
+            if (!input_data) {
                 return {status: STATUS.FAILED, message: MESSAGE.JSON_NOT_EXIST};
-            } else {
-                return this.response.sendFile(input_data.location);
+            } else if (input_data?.location) {
+                return getFile(input_data.location, this.response);
             }
         } catch (e) {
             console.log(e);
@@ -988,7 +988,7 @@ export class ApiController {
                         return this.response.send(input_data.location100);
                     } else {
                         if (input_data.location100) {
-                            return this.response.sendFile(input_data.location100);
+                            return getFile(input_data.location100, this.response);
                         }
                     }
                 } catch (e) {
@@ -1010,7 +1010,7 @@ export class ApiController {
                         return this.response.send(input_data.location500);
                     } else {
                         if (input_data.location500) {
-                            return this.response.sendFile(input_data.location500);
+                            return getFile(input_data.location500, this.response);
                         }
                     }
                 } catch (e) {
@@ -1033,7 +1033,7 @@ export class ApiController {
                             return this.response.send(input_data.location1024);
                         } else {
                             if (input_data.location1024) {
-                                return this.response.sendFile(input_data.location1024);
+                                return getFile(input_data.location1024, this.response);
                             }
                         }
                     } catch (e) {
@@ -1056,7 +1056,7 @@ export class ApiController {
                             return this.response.send(input_data.location1440);
                         } else {
                             if (input_data.location1440) {
-                                return this.response.sendFile(input_data.location1440);
+                                return getFile(input_data.location1440, this.response);
                             }
                         }
 
@@ -1080,7 +1080,7 @@ export class ApiController {
                             return this.response.send(input_data.location1920);
                         } else {
                             if (input_data.location1920) {
-                                return this.response.sendFile(input_data.location1920);
+                                return getFile(input_data.location1920, this.response);
                             }
                         }
                     } catch (e) {

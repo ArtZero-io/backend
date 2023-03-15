@@ -8,6 +8,7 @@ import {signatureVerify} from '@polkadot/util-crypto'
 import {ContractPromise} from "@polkadot/api-contract";
 import {convertWeight} from "@polkadot/api-contract/base/util";
 import {ApiBase} from "@polkadot/api/base";
+import {Response} from "@loopback/rest";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 
@@ -215,4 +216,13 @@ export async function getGasLimit(
         proofSize: v2Weight.proofSize,
     });
     return { ok: true, value: gasRequired };
+}
+
+export async function getFile(location: string, res: Response) {
+    await new Promise((resolve: any, reject: any) => {
+        res.download(location, (err: any) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
 }
