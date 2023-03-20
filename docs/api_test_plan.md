@@ -68,14 +68,16 @@ Ex:
 + Test case ID: updateCollection_001 
 + Test case Name:  Update Collection 
 + Test case Description: Test the Update Collection to modify an existing NFT collection
-+ Pre-requisites: The database should have an existing NFT collection
++ Pre-requisites: The database should have an existing NFT collection. Use command in mongo get NFT collection in DB `db.collections.find({},{"nftContractAddress":1, _id:0})`. If result isn't found, pls create new NFT collection from FE
+  
 + Test Steps:  
   1. Send a POST request to the API endpoint `/updateCollection` with data :
       ```json
           {
-            "collection_address":"5DKUvAvm7QA36WLj7BD5bua92jN1XoyBrK2Prjbc6gFt2tW8"
+            "collection_address":"<nftContractAddress>"
           }
       ```
+        
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".        
   3. Verify the response time is within acceptable limits.
 + Expectations: The API should return a JSON object with status "OK" and data is updated in the database.
@@ -86,12 +88,12 @@ Ex:
 + Test case ID: API_Test_001
 + Test case Name:  Update Project
 + Test case Description: Test the Update Project to modify an existing Project
-+ Pre-requisites: The database should have an existing Project
++ Pre-requisites: The database should have an existing Project. Use command in mongo get NFT collection in DB `db.projects.find({},{"nftContractAddress":1, _id:0})`. If result isn't found, pls create new Project from FE
 + Test Steps:  
   1. Send a POST request to the API endpoint `/updateProject` with data :
       ```json
           {
-            "project_address":"5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC"
+            "project_address":"<nftContractAddress>"
           }
       ```
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".        
@@ -103,13 +105,13 @@ Ex:
 + Test case ID: API_Test_002
 + Test case Name:  New Minting Event 
 + Test case Description: Test the New Minting Event to add new minting event 
-+ Pre-requisites: The database should have minting events and project mint fees.  
++ Pre-requisites: The database should have an existing Project. Use command in mongo get NFT collection in DB `db.projects.find({},{"nftContractAddress":1, _id:0})`. If result isn't found, pls create new Project from FE
 + Test Steps:  
   1. Send a POST request to the API endpoint `/newMintingEvent` with data :
       ```json
           {
-            "project": "5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC",
-            "minter": "5EWTsPpsQ35DnyovNSrgvsAEkSeVMyakg4cL27nw6Jikvjd9",
+            "project": "<nftContractAddress>",
+            "minter": "<azero_any_address>",
             "phase_id": "1",
             "mint_amount": "1",
             "price": "1.5",
@@ -125,13 +127,13 @@ Ex:
 + Test case ID: API_Test_003
 + Test case Name:  Update NFT 
 + Test case Description: Test the Update NFT to modify an existing NFT
-+ Pre-requisites: The database should have list NFT
++ Pre-requisites: The database should have an existing Project. Use command in mongo get NFT collection in DB `db.collections.find({},{"nftContractAddress":1, _id:0})`. If result isn't found, pls create new Project from FE
 + Test Steps:  
   1. Send a POST request to the API endpoint `/updateNFT` with data :
       ```json
           {
-            "collection_address":"5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC",
-            "token_id":"65"
+            "collection_address":"<nftContractAddress>",
+            "token_id":"1"
           }
       ```
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".        
@@ -148,8 +150,8 @@ Ex:
   1. Send a POST request to the API endpoint `/updateBids` with data :
       ```json
           {
-            "collection_address":"5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC",
-            "seller":"5EfUESCp28GXw1v9CXmpAL5BfoCNW2y4skipcEoKAbN5Ykfn",
+            "collection_address":"<nftContractAddress>",
+            "seller":"<azero_any_address>",
             "token_id":"65"
           }
       ```
@@ -178,12 +180,12 @@ Ex:
 + Test case ID: API_Test_006  
 + Test case Name:  Get Bids By Bidder Address  
 + Test case Description: Test the getBidsByBidderAddress API to retrieve the Bids of Bidder Address  
-+ Pre-requisites: The database should have transaction history of Bidder Address
++ Pre-requisites: The database should have transaction history of Bidder Address.  Use command in mongo get Bid address in DB `db.bids.find({},{"bidder":1, _id:0})`. If result isn't found, pls create new Bid from FE
 + Test Steps:  
   1. Send a POST request to the API endpoint `/getBidsByBidderAddress` with data :
       ```json
           {
-            "bidder": "5EWTsPpsQ35DnyovNSrgvsAEkSeVMyakg4cL27nw6Jikvjd9",
+            "bidder": "<address_bidder>",
             "limit": "10000",
             "offset": "0",
             "sort": "-1"
@@ -200,9 +202,10 @@ Ex:
 + Test case ID: API_Test_007
 + Test case Name:  Get JSON
 + Test case Description: Test the get JSON API to retrieve json file
-+ Pre-requisites: 
++ Pre-requisites: The database should have json address.  Use command in mongo get Bid address in DB `db.jsons.find({},{"input":1, _id:0})`. If result isn't found, Please Cache data for PMP NFT [Here](https://github.com/ArtZero-io/Contracts/blob/feature/ink-4-version/contract_deployment_and_update_addresses_abis.md#cache-data-for-pmp-nft)
+ 
 + Test Steps:
-  1. Send a GET request to the API endpoint `/getJSON?input=/ipfs/QmSdgNQ2zvJvaw8kP8oCJnmuFQUxVDBYrThYvV1C8k5bXU/131.json`
+  1. Send a GET request to the API endpoint `/getJSON?input=<json_address>`
   2. Verify the HTTP status code is 200 and the response body contains a json file
   3. Verify the response time is within acceptable limits.
 + Expectations: The API should return a json file
@@ -213,9 +216,9 @@ Ex:
 + Test case ID: API_Test_008
 + Test case Name:  Get Image
 + Test case Description: Test the get image API to retrieve the image's url
-+ Pre-requisites: 
++ Pre-requisites: The database should have image hash.  Use command in mongo get Bid address in DB `db.images.find({},{"input":1, _id:0})`. If result isn't found, pls create new NFT
 + Test Steps:
-  1. Send a GET request to the API endpoint `/getImage?input=QmYYEki2zTx4fc5BWW6eVcf8VurZAc9kAebkbhysbvbN2w`
+  1. Send a GET request to the API endpoint `/getImage?input=<image_address>`
   2. Verify the HTTP status code is 200 and the response body contains a image's url
   3. Verify the response time is within acceptable limits.
 + Expectations: The API should return a  image's url
@@ -336,12 +339,12 @@ Ex:
 + Test case ID: API_Test_015
 + Test case Name:  Get Collection By Owner
 + Test case Description: Test the get Collection to retrieve list Collection
-+ Pre-requisites: 
++ Pre-requisites: The database should have collections. Use command in mongo get owner address in DB `db.collections.find({},{"collectionOwner":1, _id:0})`. If result isn't found, pls create new collection
 + Test Steps:
   1. Send a POST request to the API endpoint `/getCollectionsByOwner`
       ```json
         {
-          "owner" : "5EWTsPpsQ35DnyovNSrgvsAEkSeVMyakg4cL27nw6Jikvjd9",
+          "owner" : "<collectionOwner>",
           "limit" : "6",
           "sort" : "-1"
         }
@@ -355,12 +358,12 @@ Ex:
 + Test case ID: API_Test_016
 + Test case Name:  Count Collection By Owner
 + Test case Description: Test the Count Collection By Owner to retrieve number of Collection
-+ Pre-requisites: 
++ Pre-requisites: The database should have collections. Use command in mongo get owner address in DB `db.collections.find({},{"collectionOwner":1, _id:0})`. If result isn't found, pls create new collection
 + Test Steps:
   1. Send a POST request to the API endpoint `/countCollectionsByOwner`
       ```json
         {
-          "owner" : "5EWTsPpsQ35DnyovNSrgvsAEkSeVMyakg4cL27nw6Jikvjd9",
+          "owner" : "<collectionOwner>",
           "noNFT" : "true"
         }
       ``` 
@@ -373,12 +376,12 @@ Ex:
 + Test case ID:  API_Test_017
 + Test case Name:  Get Collection By Address
 + Test case Description: Test the Get Collection By Address to retrieve a collection by address:
-+ Pre-requisites: 
++ Pre-requisites: The database should have an existing collection. Use command in mongo get NFT collection in DB `db.collections.find({},{"nftContractAddress":1, _id:0})`. If result isn't found, pls create new Collection from FE
 + Test Steps:
   1. Send a POST request to the API endpoint `/getCollectionByAddress`
       ```json
         {
-          "collection_address" : "5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC"
+          "collection_address" : "<nftContractAddress>"
         }
       ``` 
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".
@@ -392,12 +395,12 @@ Ex:
 + Test case ID:  API_Test_018
 + Test case Name:  Get Floor Price
 + Test case Description: Test the Get Floor Price to retrieve the minimum sale price of a specific NFT collection: 
-+ Pre-requisites: 
++ Pre-requisites: The database should have an existing collection. Use command in mongo get NFT collection in DB `db.collections.find({},{"nftContractAddress":1, _id:0})`. If a result is not found, please create a new collection from the FE, then activate it in <homepage>/#/admin and sell it.
 + Test Steps:
   1. Send a POST request to the API endpoint `/getFloorPrice`
       ```json
         {
-          "collection_address" : "5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC"
+          "collection_address" : "<nftContractAddress>"
         }
       ```   
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".
@@ -410,12 +413,12 @@ Ex:
 + Test case ID: API_Test_019
 + Test case Name:  Get NFTs
 + Test case Description: Test the get NFTs to retrieve by NFTs Collection Address  
-+ Pre-requisites: 
++ Pre-requisites: The database should have an existing collection. Use command in mongo get NFT collection in DB `db.collections.find({},{"nftContractAddress":1, _id:0})`. If result isn't found, pls create new Collection from FE
 + Test Steps:
   1. Send a POST request to the API endpoint `/getNFTs`
       ```json
         {
-          "collection_address" : "5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC"
+          "collection_address" : "<nftContractAddress>"
         }
       ```   
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".
@@ -428,12 +431,12 @@ Ex:
 + Test case ID: API_Test_020
 + Test case Name:  Get Listed NFTs
 + Test case Description: Test the Get Listed NFTs to retrieve Listed NFT
-+ Pre-requisites: 
++ Pre-requisites: The database should have an existing collection. Use command in mongo get NFT collection in DB `db.collections.find({},{"nftContractAddress":1, _id:0})`. If a result is not found, please create a new collection from the FE, then activate it in <homepage>/#/admin and sell it.
 + Test Steps:
   1. Send a POST request to the API endpoint `/getListedNFTs`
       ```json
         {
-          "collection_address" : "5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC"
+          "collection_address" : "<nftContractAddress>"
         }
       ``` 
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".
@@ -446,12 +449,12 @@ Ex:
 + Test case ID: API_Test_021
 + Test case Name:  Get Unlisted NFTs
 + Test case Description: Test the Get Unlisted NFTs to retrieve unlisted NFT
-+ Pre-requisites: 
++ Pre-requisites: The database should have an existing collection. Use command in mongo get NFT collection in DB `db.collections.find({},{"nftContractAddress":1, _id:0})`.If a result is not found, please create a new NFT from the FE
 + Test Steps:
   1. Send a POST request to the API endpoint `/getUnlistedNFTs`
       ```json
         {
-          "collection_address" : "5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC"
+          "collection_address" : "<nftContractAddress>"
         }
       ``` 
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".
@@ -463,13 +466,13 @@ Ex:
 + Test case ID: API_Test_022
 + Test case Name:  Get NFT By ID
 + Test case Description: Test the Get NFT By ID to retrieve an NFT
-+ Pre-requisites: 
++ Pre-requisites: The database should have an existing collection. Use command in mongo get NFT collection in DB `db.collections.find({},{"nftContractAddress":1, _id:0})`.If a result is not found, please create a new NFT from the FE
 + Test Steps:
    1. Send a POST request to the API endpoint `/getNFTByID`
       ```json
         {
-          "collection_address" : "5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC",
-          "token_id":"937"
+          "collection_address" : "<nftContractAddress>",
+          "token_id":"1"
         }
       ```
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".
@@ -482,12 +485,12 @@ Ex:
 + Test case ID: API_Test_023
 + Test case Name:  Get NFTs By Owner
 + Test case Description: Test the Get NFTs By Owner to retrieve list NFT
-+ Pre-requisites: 
++ Pre-requisites: The database should have an existing collection. Use command in mongo get NFT collection in DB `db.collections.find({},{"collectionOwner":1, _id:0})`.If a result is not found, please create a new NFT from the FE
 + Test Steps:
   1. Send a POST request to the API endpoint `/getNFTsByOwner`
       ```json
           {
-            "owner": "5EWTsPpsQ35DnyovNSrgvsAEkSeVMyakg4cL27nw6Jikvjd9"
+            "owner": "<collectionOwner>"
           }
       ```  
   2. Verify the HTTP status code is 200 and the response body contains a "status" field with value "OK".
