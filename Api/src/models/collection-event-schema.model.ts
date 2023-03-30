@@ -25,9 +25,9 @@ export class collectionevents extends Entity {
   nftContractAddress?: string;
 
   @property({
-    type: 'number',
+    type: 'string',
   })
-  contractType?: number;
+  contractType?: string;
 
   @property({
     type: 'boolean',

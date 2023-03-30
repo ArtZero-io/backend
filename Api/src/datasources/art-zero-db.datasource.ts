@@ -12,7 +12,7 @@ const config = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  useNewUrlParser: process.env.DB_USE_NEW_URL_PARSER,
+  useNewUrlParser: process.env.DB_USE_NEW_URL_PARSER
 };
 
 // Observe application's life cycle to disconnect the datasource when

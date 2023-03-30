@@ -1,6 +1,6 @@
 import {ContractPromise} from "@polkadot/api-contract";
 import BN from "bn.js";
-import {readOnlyGasLimit} from "../utils/utils";
+import {readOnlyGasLimit, send_telegram_message} from "../utils/utils";
 
 let launchpad_manager_contract: ContractPromise;
 
@@ -17,7 +17,7 @@ export async function getProjectCount(caller_account: string) {
     const gasLimit = readOnlyGasLimit(launchpad_manager_contract.api);
     const azero_value = 0;
     const {result, output} =
-        await launchpad_manager_contract.query.getProjectCount(address, {
+        await launchpad_manager_contract.query["artZeroLaunchPadTrait::getProjectCount"](address, {
             value: azero_value,
             gasLimit,
         });
@@ -37,7 +37,7 @@ export async function getProjectById(caller_account: string, projectId: number) 
     const gasLimit = readOnlyGasLimit(launchpad_manager_contract.api);
     const azero_value = 0;
     const {result, output} =
-        await launchpad_manager_contract.query.getProjectById(
+        await launchpad_manager_contract.query["artZeroLaunchPadTrait::getProjectById"](
             address,
             {
                 value: azero_value,
@@ -61,7 +61,7 @@ export async function getProjectByNftAddress(caller_account: string, nftContract
     const gasLimit = readOnlyGasLimit(launchpad_manager_contract.api);
     const azero_value = 0;
     const {result, output} =
-        await launchpad_manager_contract.query.getProjectByNftAddress(
+        await launchpad_manager_contract.query["artZeroLaunchPadTrait::getProjectByNftAddress"](
             address,
             {
                 value: azero_value,

@@ -123,6 +123,9 @@ export async function getAttributes(
         tokenId,
         attributes
     );
+    // console.log(attributes);
+    // console.log({result: result?.toHuman()});
+    // console.log({output: output?.toHuman()});
     if (result.isOk && output) {
         // @ts-ignore
         return output.toHuman()?.Ok;

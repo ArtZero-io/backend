@@ -3,47 +3,83 @@ import {decodeAddress, encodeAddress} from "@polkadot/keyring";
 import {ApiPromise} from "@polkadot/api";
 import {WeightV2} from "@polkadot/types/interfaces";
 import axios from "axios";
-import {STATUS} from "./constant";
+import {BLACK_LIST_TYPE, STATUS} from "./constant";
 import {signatureVerify} from '@polkadot/util-crypto'
 import {ContractPromise} from "@polkadot/api-contract";
 import {convertWeight} from "@polkadot/api-contract/base/util";
 import {ApiBase} from "@polkadot/api/base";
 import {Response} from "@loopback/rest";
+import {ProjectsSchemaRepository} from "../repositories";
+import dotenv from "dotenv";
+dotenv.config();
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 
+export async function send_message(message: string) {
+    try {
+        await axios({
+            baseURL: process.env.TELEGRAM_URL,
+            url: "/sendMessage",
+            method: "post",
+            data: {
+                "chat_id": process.env.TELEGRAM_ID_CHAT,
+                "text": `${process.env.NODE_IP}: ${message}`
+            },
+            headers: {
+                "Content-Type": "application/json",
+                "cache-control": "no-cache",
+                'Access-Control-Allow-Origin': '*',
+            },
+        });
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 export function send_telegram_message(message: string) {
-    axios({
-        baseURL: process.env.TELEGRAM_URL,
-        url: "/sendMessage",
-        method: "post",
-        data: {
-            "chat_id": process.env.TELEGRAM_ID_CHAT,
-            "text": `Internal: ${message}`
-        },
-        headers: {
-            "Content-Type": "application/json",
-            "cache-control": "no-cache",
-            'Access-Control-Allow-Origin': '*',
-        },
-    });
+    try {
+        new Promise(async () => {
+            await axios({
+                baseURL: process.env.TELEGRAM_URL,
+                url: "/sendMessage",
+                method: "post",
+                data: {
+                    "chat_id": process.env.TELEGRAM_ID_CHAT,
+                    "text": `${process.env.NODE_IP}: ${message}`
+                },
+                headers: {
+                    "Content-Type": "application/json",
+                    "cache-control": "no-cache",
+                    'Access-Control-Allow-Origin': '*',
+                },
+            });
+        }).then(() => {});
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 export function send_report_telegram_message(message: string) {
-    axios({
-        baseURL: process.env.TELEGRAM_REPORT_URL,
-        url: "/sendMessage",
-        method: "post",
-        data: {
-            "chat_id": process.env.TELEGRAM_REPORT_ID_CHAT,
-            "text": `${message}`
-        },
-        headers: {
-            "Content-Type": "application/json",
-            "cache-control": "no-cache",
-            'Access-Control-Allow-Origin': '*',
-        },
-    });
+    try {
+        new Promise(async () => {
+            axios({
+                baseURL: process.env.TELEGRAM_REPORT_URL,
+                url: "/sendMessage",
+                method: "post",
+                data: {
+                    "chat_id": process.env.TELEGRAM_REPORT_ID_CHAT,
+                    "text": `${process.env.NODE_IP}: ${message}`
+                },
+                headers: {
+                    "Content-Type": "application/json",
+                    "cache-control": "no-cache",
+                    'Access-Control-Allow-Origin': '*',
+                },
+            });
+        }).then(()=>{});
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 
@@ -71,6 +107,14 @@ export function randomString(length: number): string {
 
 export async function getFileTypeFromCID() {}
 
+export function isValidTypeName(typeName:string):boolean {
+    try {
+        return (Object.values(BLACK_LIST_TYPE).indexOf(typeName) > -1);
+    } catch (e){
+        console.log(e.message);
+    }
+    return false;
+}
 export function isValidAddressPolkadotAddress(address: string): boolean {
     try {
         encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
@@ -218,6 +262,27 @@ export async function getGasLimit(
     return { ok: true, value: gasRequired };
 }
 
+export function convertStringToPrice(stringPrice: string) {
+    try {
+        const a = stringPrice.replace(/\,/g, "");
+        return parseInt(a) / 10 ** 12;
+    } catch (error) {
+        console.log(error);
+        return 0;
+    }
+}
+
+export function formatNumberOutput(o:any) {
+    const frmtRet = o.toHuman().Ok;
+    return parseInt(frmtRet?.replaceAll(",", ""));
+}
+
+export function strToNumber(str:string):number {
+    if (!str) return 0;
+    const number = str.replace(/,/g, "");
+    return parseFloat(number);
+}
+
 export async function getFile(location: string, res: Response) {
     await new Promise((resolve: any, reject: any) => {
         res.download(location, (err: any) => {
@@ -225,4 +290,13 @@ export async function getFile(location: string, res: Response) {
             resolve();
         });
     });
+}
+
+export async function checkProjectSchema(nftContractAddress: string, projectsRepo: ProjectsSchemaRepository):Promise<boolean> {
+    const project = await projectsRepo.findOne({
+        where: {
+            nftContractAddress: nftContractAddress
+        }
+    });
+    return !!project;
 }

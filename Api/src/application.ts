@@ -10,6 +10,8 @@ import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
 import dotenv from "dotenv";
+import {CronComponent} from "@loopback/cron";
+import {IS_ENABLE_DOCS} from "./utils/constant";
 
 export {ApplicationConfig};
 
@@ -23,14 +25,16 @@ export class ApiApplication extends BootMixin(
     // Set up the custom sequence
     this.sequence(MySequence);
 
-    // Set up default home page
-    this.static('/', path.join(__dirname, '../public'));
-
     // Customize @loopback/rest-explorer configuration here
-    this.configure(RestExplorerBindings.COMPONENT).to({
-      path: '/explorer',
-    });
-    this.component(RestExplorerComponent);
+    if (IS_ENABLE_DOCS) {
+      // Set up default home page
+      this.static('/', path.join(__dirname, '../public'));
+      this.configure(RestExplorerBindings.COMPONENT).to({
+        path: '/explorer',
+      });
+      this.component(RestExplorerComponent);
+    }
+    this.component(CronComponent);
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here

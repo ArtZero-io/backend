@@ -82,9 +82,19 @@ export class nfts extends Entity {
   is_locked?: boolean;
 
   @property({
+    type: 'object',
+  })
+  traits?: object;
+
+  @property({
     type: 'string',
   })
-  traits?: string;
+  hash?: string;
+
+  @property({
+    type: 'string',
+  })
+  flag?: string;  // FLAG typeData
 
   @property({
     type: 'object',

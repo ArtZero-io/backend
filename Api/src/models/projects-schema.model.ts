@@ -1,4 +1,6 @@
 import {Entity, model, property} from '@loopback/repository';
+import {WhiteListUserData} from "./white-list-data.model";
+import {ProjectWhitelistData} from "./project-whitelist-data.model";
 
 @model()
 export class projects extends Entity {
@@ -108,6 +110,17 @@ export class projects extends Entity {
     type: 'string',
   })
   nftSymbol?: string;
+
+  @property({
+    type: 'array',
+    itemType: 'object',
+  })
+  whiteList?: ProjectWhitelistData[];
+
+  @property({
+    type: 'number',
+  })
+  availableTokenAmount?: number;
 
   @property({
     type: 'object',
