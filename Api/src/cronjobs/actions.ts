@@ -1097,7 +1097,7 @@ export async function check_NFT_queue(
                     tokenID: tokenID,
                 }
             });
-            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR}:`, {found: found});
+            // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR}:`, {found: found});
             if (found) {
                 console.log(
                     `${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Updating new NFT Information to DB: `,
@@ -1155,7 +1155,7 @@ export async function check_NFT_queue(
                     });
                 }
             });
-            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR}: `, {rarityTable: JSON.stringify(rarityTable)});
+            // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR}: `, {rarityTable: JSON.stringify(rarityTable)});
             /**
              * Expect:
              *  "rarityTable": {
