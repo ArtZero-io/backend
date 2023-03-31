@@ -848,7 +848,7 @@ export async function check_NFT_queue(
             queue_data = await nftQueueRepo.find({});
         }
         let records_length = queue_data.length;
-        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Start debug NFT Queue`);
+        // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Start debug NFT Queue`);
         console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - NFT Queue length: `, records_length);
         for (let j = 0; j < records_length; j++) {
             let nftContractAddress: string | undefined = queue_data[j].nftContractAddress;
@@ -893,19 +893,19 @@ export async function check_NFT_queue(
                     {u64: tokenID}
                 );
             }
-            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - After check is_clocked`);
-            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Before check totalSupply`);
+            // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - After check is_clocked`);
+            // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Before check totalSupply`);
             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - nftContractAddress: `, nftContractAddress);
             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - global_vars.caller: `, global_vars.caller);
-            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Before totalSupply`);
+            // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Before totalSupply`);
             //Check total Supply
             let totalSupply = await nft721_psp34_standard_calls.getLastTokenId(
                 nft_contract,
                 global_vars.caller
             );
             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - totalSupply: ${totalSupply}, tokenID: ${tokenID}`);
-            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - After check totalSupply`);
-            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Before check tokenID > totalSupply`);
+            // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - After check totalSupply`);
+            // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Before check tokenID > totalSupply`);
             if (totalSupply && tokenID > totalSupply) {
                 await nftQueueRepo.deleteAll({
                     nftContractAddress: nftContractAddress,
@@ -913,19 +913,19 @@ export async function check_NFT_queue(
                 });
                 continue;
             }
-            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - After check tokenID > totalSupply`);
+            // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - After check tokenID > totalSupply`);
             //check if the token exists, if not delete from the database as token can be burnt
             //Get Owner
-            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Before check owner`);
+            // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Before check owner`);
             let owner = await nft721_psp34_standard_calls.ownerOf(
                 nft_contract,
                 global_vars.caller,
                 {u64: tokenID}
             );
             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - owner: `, owner);
-            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - After check owner`);
+            // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - After check owner`);
             if (!owner) {
-                console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Check owner and remove from database and queue`);
+                // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Check owner and remove from database and queue`);
                 await nftQueueRepo.deleteAll({
                     nftContractAddress: nftContractAddress,
                     tokenID: tokenID,
@@ -971,8 +971,8 @@ export async function check_NFT_queue(
                         // @ts-ignore
                         tokenUri = output.toHuman()?.Ok?.replace("1.json", "");
                     }
-                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - xx >> tokenUri: `, tokenUri);
-                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - xx >> tokenID: `, tokenID);
+                    // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - xx >> tokenUri: `, tokenUri);
+                    // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - xx >> tokenID: `, tokenID);
                     // - getNftAttrsType1
                     const offChainData = await APICall.getMetadataOffChain({
                         tokenUri,
@@ -1145,7 +1145,7 @@ export async function check_NFT_queue(
             const rarityTable: any = {};
             allNFTsFound.map((item: any) => {
                 const traitsMap = item.traits;
-                console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR}: `, {traitsMap: traitsMap});
+                // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR}: `, {traitsMap: traitsMap});
                 if (traitsMap) {
                     const traitsMapObj: any = item.traits;
                     Object.entries(traitsMapObj).map(([k, v]) => {
@@ -2149,15 +2149,15 @@ export async function processEventRecords(
             // Extract the phase, event and the event types
             const {phase, event: {data, method, section}} = record;
             if (section == "contracts" && method == "ContractEmitted") {
-                console.log({record: {
-                        section: section,
-                        method: method
-                    }});
+                // console.log({record: {
+                //         section: section,
+                //         method: method
+                //     }});
                 const [accId, bytes] = data.map((data: any, _: any) => data).slice(0, 2);
                 const contract_address = accId.toString();
                 if (contract_address == marketplace.CONTRACT_ADDRESS) {
                     try {
-                        console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Event from Marketplace Contract...`);
+                        // console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Event from Marketplace Contract...`);
                         const decodedEvent = abi_marketplace_contract.decodeEvent(bytes);
                         let event_name = decodedEvent.event.identifier;
                         const eventValues = [];
