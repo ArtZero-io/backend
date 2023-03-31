@@ -2939,43 +2939,69 @@ export async function push_to_cloudflare(
     global_vars.is_push_to_cloudflare_status = false;
 }
 
-export async function setClaimedStatus() {
-    if (!process.env.CALLER) return;
-    const staking_contract = new ContractPromise(
-        globalApi,
-        staking.CONTRACT_ABI,
-        staking.CONTRACT_ADDRESS
-    );
-    staking_calls.setContract(staking_contract);
+export async function setClaimedStatus():Promise<object> {
+    try {
+        if (!process.env.CALLER) return {
+            count: 0,
+            listAddress: []
+        };
+        const staking_contract = new ContractPromise(
+            globalApi,
+            staking.CONTRACT_ABI,
+            staking.CONTRACT_ADDRESS
+        );
+        staking_calls.setContract(staking_contract);
 
-    // let admin_address = await staking_calls.getAdminAddress(process.env.CALLER);
-    // console.log("admin_address",admin_address);
-    let is_locked = await staking_calls.getIsLocked(process.env.CALLER);
-    console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - is_locked: `, is_locked);
-    let is_reward_started = await staking_calls.getRewardStarted(process.env.CALLER);
-    console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - is_reward_started `, is_reward_started);
-    console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - is_reward_started must be FALSE and is_locked must be TRUE to set Claimable`);
-    //is_reward_started must be FALSE and is_locked must be TRUE to set Claimable
-    const keyring = new Keyring({type: 'sr25519'});
-    const keypair = keyring.createFromUri((process.env.PHRASE) ? process.env.PHRASE : '');
-    console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - Caller: `, keypair.address);
-    let is_admin = await staking_calls.isAdmin(process.env.CALLER, keypair.address);
-    console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - is_admin: `, is_admin);
-    if (!is_admin) {
-        console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - Caller: ${keypair.address} is not admin`);
-        return;
-    }
-    if (is_locked && !is_reward_started) {
-        let staker_count = await staking_calls.getTotalCountOfStakeholders(process.env.CALLER);
-        console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE}:`, staker_count);
-        for (let i = 0; i < staker_count; i++) {
-            let staker = await staking_calls.getStakedAccountsAccountByIndex(process.env.CALLER, i);
-            let isClaimed = await staking_calls.isClaimed(process.env.CALLER, staker);
-            console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE}: `, i + 1, "staker", staker, "is claimed", isClaimed);
-            console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - set isClaimed to FALSE for`, staker);
-            await staking_calls.setClaimedStatus(keypair, process.env.CALLER, staker);
-            isClaimed = await staking_calls.isClaimed(process.env.CALLER, staker);
-            console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE}:`, i + 1, "staker", staker, "is claimed", isClaimed);
+        // let admin_address = await staking_calls.getAdminAddress(process.env.CALLER);
+        // console.log("admin_address",admin_address);
+        let is_locked = await staking_calls.getIsLocked(process.env.CALLER);
+        console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - is_locked: `, is_locked);
+        let is_reward_started = await staking_calls.getRewardStarted(process.env.CALLER);
+        console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - is_reward_started `, is_reward_started);
+        console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - is_reward_started must be FALSE and is_locked must be TRUE to set Claimable`);
+        //is_reward_started must be FALSE and is_locked must be TRUE to set Claimable
+        const keyring = new Keyring({type: 'sr25519'});
+        const keypair = keyring.createFromUri((process.env.PHRASE) ? process.env.PHRASE : '');
+        console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - Caller: `, keypair.address);
+        let is_admin = await staking_calls.isAdmin(process.env.CALLER, keypair.address);
+        console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - is_admin: `, is_admin);
+        if (!is_admin) {
+            console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - Caller: ${keypair.address} is not admin`);
+            return {
+                count: 0,
+                listAddress: []
+            };
         }
+        if (is_locked && !is_reward_started) {
+            let listAddress: string[] = [];
+            let staker_count = await staking_calls.getTotalCountOfStakeholders(process.env.CALLER);
+            console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE}:`, staker_count);
+            for (let i = 0; i < staker_count; i++) {
+                try {
+                    let staker = await staking_calls.getStakedAccountsAccountByIndex(process.env.CALLER, i);
+                    let isClaimed = await staking_calls.isClaimed(process.env.CALLER, staker);
+                    console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE}: `, i + 1, "staker", staker, "is claimed", isClaimed);
+                    console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - set isClaimed to FALSE for`, staker);
+                    await staking_calls.setClaimedStatus(keypair, process.env.CALLER, staker);
+                    isClaimed = await staking_calls.isClaimed(process.env.CALLER, staker);
+                    console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE}:`, i + 1, "staker", staker, "is claimed", isClaimed);
+                    if (staker) {
+                        listAddress.push(staker);
+                    }
+                } catch (e) {
+                    console.log(`ERROR: ${e.messages}`);
+                }
+            }
+            return {
+                count: staker_count,
+                listAddress: listAddress
+            }
+        }
+    } catch (e) {
+        console.log(`ERROR: ${e.messages}`);
+    }
+    return {
+        count: 0,
+        listAddress: []
     }
 }

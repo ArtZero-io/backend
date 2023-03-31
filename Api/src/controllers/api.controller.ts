@@ -2795,10 +2795,11 @@ export class ApiController {
                     message: MESSAGE.INVALID_AUTHENTICATION,
                 });
             }
-            await setClaimedStatus();
+            const ret = await setClaimedStatus();
             return this.response.send({
                 status: STATUS.OK,
-                message: MESSAGE.SUCCESS
+                message: MESSAGE.SUCCESS,
+                ret: ret
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
