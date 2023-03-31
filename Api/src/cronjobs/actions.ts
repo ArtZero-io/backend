@@ -2034,6 +2034,7 @@ export async function scanBlocks(
         // console.log('Process latest block: ', blocknumber);
         const blockHash = await api.rpc.chain.getBlockHash(blocknumber);
         const eventRecords = await api.query.system.events.at(blockHash);
+        console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Start processEventRecords now: ${convertToUTCTime(new Date())}`);
         await processEventRecords(
             eventRecords,
             blocknumber,
@@ -2053,6 +2054,7 @@ export async function scanBlocks(
             collectionEventRepo,
             projectsRepo
         );
+        console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Stop processEventRecords now: ${convertToUTCTime(new Date())}`);
         return;
     }
     global_vars.isScanning = true;
@@ -2086,6 +2088,7 @@ export async function scanBlocks(
             }
             const blockHash = await api.rpc.chain.getBlockHash(to_scan);
             const eventRecords = await api.query.system.events.at(blockHash);
+            console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Start processEventRecords now: ${convertToUTCTime(new Date())}`);
             await processEventRecords(
                 eventRecords,
                 to_scan,
@@ -2105,6 +2108,7 @@ export async function scanBlocks(
                 collectionEventRepo,
                 projectsRepo
             );
+            console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Stop processEventRecords now: ${convertToUTCTime(new Date())}`);
             try {
                 await scannedBlocksRepo.updateAll({
                     lastScanned: true,
@@ -2151,11 +2155,6 @@ export async function processEventRecords(
                     }});
                 const [accId, bytes] = data.map((data: any, _: any) => data).slice(0, 2);
                 const contract_address = accId.toString();
-                const check = await checkProjectSchema(contract_address, projectsRepo);
-                console.log({check: {
-                        check: check,
-                        contract_address: contract_address
-                    }});
                 if (contract_address == marketplace.CONTRACT_ADDRESS) {
                     try {
                         console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Event from Marketplace Contract...`);
