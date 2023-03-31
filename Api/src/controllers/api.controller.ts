@@ -3131,7 +3131,7 @@ export class ApiController {
                             }
                         });
                         if (!input_data) {
-                            return {status: STATUS.FAILED, message: MESSAGE.JSON_NOT_EXIST};
+                            console.log(`ERROR: ${input} not found!`);
                         } else if (input_data?.location) {
                             const locationTmp = input_data.location;
                             const bufferString = await fs.promises.readFile(locationTmp);

@@ -2844,7 +2844,7 @@ export async function push_to_cloudflare(
                         if (location500 && fs.existsSync(location500)) await fs.unlinkSync(location500);
                         if (location100 && fs.existsSync(location100)) await fs.unlinkSync(location100);
                         if (fs.existsSync(originImage)) await fs.unlinkSync(originImage);
-                        send_telegram_message('Updated image ' + originImage + ' on CloudFlare!');
+                        send_telegram_message(`Updated image ${originImage} on CloudFlare!\n` + 'https://imagedelivery.net/' + process.env.CLOUDFLARE_ACCOUNT_HASH + '/' + cloud_flare_image_custom_id + '/100');
                     }
                 } catch (e) {
                     console.log(`${CONFIG_TYPE_NAME.AZ_CLOUDFLARE_SYNC_MONITOR} - File not exist: `, e);
@@ -2896,7 +2896,7 @@ export async function push_to_cloudflare(
                         if (location500 && fs.existsSync(location500)) await fs.unlinkSync(location500);
                         if (location100 && fs.existsSync(location100)) await fs.unlinkSync(location100);
                         if (fs.existsSync(originImage)) await fs.unlinkSync(originImage);
-                        send_telegram_message('Cached image ' + originImage + ' on CloudFlare!');
+                        send_telegram_message(`Cached image ${originImage} on CloudFlare!\n` + 'https://imagedelivery.net/' + process.env.CLOUDFLARE_ACCOUNT_HASH + '/' + cloud_flare_image_custom_id + '/100');
                     } else {
                         send_telegram_message('Cannot cache image ' + originImage);
                     }
@@ -2925,7 +2925,7 @@ export async function push_to_cloudflare(
                         if (location500 && fs.existsSync(location500)) await fs.unlinkSync(location500);
                         if (location100 && fs.existsSync(location100)) await fs.unlinkSync(location100);
                         if (fs.existsSync(originImage)) await fs.unlinkSync(originImage);
-                        send_telegram_message('Updated image ' + originImage + ' on CloudFlare!');
+                        send_telegram_message(`Updated image ${originImage} on CloudFlare!\n` + 'https://imagedelivery.net/' + process.env.CLOUDFLARE_ACCOUNT_HASH + '/' + cloud_flare_image_custom_id + '/100');
                     } else {
                         console.log(`${CONFIG_TYPE_NAME.AZ_CLOUDFLARE_SYNC_MONITOR} - ERROR: ${e.message}`);
                         send_telegram_message("Cache image has input " + originImage + " false: " + e.message);
