@@ -395,7 +395,7 @@ export async function check_NFT_queue_all(
                 isProcessing: true
             });
         } catch (e) {
-            console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - ERROR: ${e.message}`);
+            console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - WARNING: ${e.message}`);
         }
 
         let queue_data = await nftQueueScanAllRepo.find({
@@ -408,9 +408,13 @@ export async function check_NFT_queue_all(
             return;
         }
         for (const queueData of queue_data) {
-            await nftQueueScanAllRepo.updateById(queueData._id, {
-                isProcessing: true
-            });
+            try {
+                await nftQueueScanAllRepo.updateById(queueData._id, {
+                    isProcessing: true
+                });
+            } catch (e) {
+                console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - WARNING: ${e.message}`);
+            }
         }
         console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - Stop find and update status of ${queue_data.length} NFTs in check_NFT_queue_all at ${convertToUTCTime(new Date())}`);
 
@@ -499,22 +503,6 @@ export async function check_NFT_queue_all(
                 global_vars.caller
             );
             console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT}: `, attributeCount);
-            // let attributes = [];
-            // for (let i = 1; i <= attributeCount; i++) {
-            //     let attribute = await nft721_psp34_standard_calls.getAttributeName(
-            //         nft_contract,
-            //         global_vars.caller,
-            //         i
-            //     );
-            //     attributes.push(attribute);
-            // }
-            // //console.log(attributes);
-            // let attributeValues = await nft721_psp34_standard_calls.getAttributes(
-            //     nft_contract,
-            //     global_vars.caller,
-            //     {u64: tokenID},
-            //     attributes
-            // );
 
             let attributes: string[] = [];
             let attributeValues: string[] = [];
@@ -577,7 +565,7 @@ export async function check_NFT_queue_all(
                     const nftInfo = await APICall.getNftInfoByHash({
                         hash: res[0],
                     });
-                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - nftInfo: `, nftInfo);
+                    // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - nftInfo: `, nftInfo);
                     if (!nftInfo) continue;
                     metaData.nftName = nftInfo?.name;
                     metaData.description = nftInfo?.description;
@@ -637,10 +625,6 @@ export async function check_NFT_queue_all(
                 );
                 try {
                     await nftRepo.updateById(found._id, obj);
-                    // await nftRepo.updateAll(
-                    //     obj,
-                    //     {nftContractAddress: nftContractAddress, tokenID: tokenID},
-                    // );
                 } catch (e) {
                     console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - ERROR: ${e.message}`);
                 }

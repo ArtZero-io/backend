@@ -74,7 +74,10 @@
     "mobile-detect": "^1.4.5",
     "save-file-by-url": "^0.4.2",
     "tslib": "^2.0.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "sharp": "^0.30.4",
+    "download": "^8.0.0",
+    "file-type": "^16.5.3"
   },
   "devDependencies": {
     "@loopback/build": "^9.0.8",

@@ -2848,6 +2848,69 @@ export class ApiController {
         }
     }
 
+    @post('/api/config/move-queue')
+    async moveNftQueue(
+        @requestBody(RequestResetAllQueueBody) req:ReqResetAllQueueType
+    ): Promise<ResponseBody | Response> {
+        const currentTime = convertToUTCTime(new Date());
+        console.log("RUN moveNftQueu now: " + currentTime);
+        try {
+            if (!req || !req.userName || !req.password) {
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            const userName = req?.userName;
+            const password = req?.password;
+            if (userName !== process.env.ADMIN_USER_NAME || password !== process.env.ADMIN_PASSWORD) {
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_AUTHENTICATION,
+                });
+            }
+            try {
+                const currentNftQueue = await this.nftQueueSchemaRepository.find({});
+                if (currentNftQueue && currentNftQueue.length > 0) {
+                    for (const nftQueue of currentNftQueue) {
+                        if (nftQueue.type === "update") {
+                            const currentNftQueueAll = await this.nftQueueScanAllSchemaRepository.findOne({
+                                where: {
+                                    nftContractAddress: nftQueue.nftContractAddress,
+                                    tokenID: nftQueue.tokenID,
+                                    type: "update"
+                                }
+                            });
+                            if (currentNftQueueAll) {
+                                console.log(`deleteById: ${nftQueue.nftContractAddress} - tokenID: ${nftQueue.tokenID}`);
+                                await this.nftQueueSchemaRepository.deleteById(nftQueue._id);
+                            } else {
+                                console.log(`create: ${nftQueue.nftContractAddress} - tokenID: ${nftQueue.tokenID}`);
+                                await this.nftQueueScanAllSchemaRepository.create({
+                                    nftContractAddress: nftQueue.nftContractAddress,
+                                    tokenID: nftQueue.tokenID,
+                                    type: "update",
+                                    isProcessing: false,
+                                    createdTime: new Date(),
+                                    updatedTime: new Date()
+                                });
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log(`ERROR: ${e.message}`);
+            }
+            return this.response.send({
+                status: STATUS.OK,
+                message: MESSAGE.SUCCESS
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
     @post('/api/config/update-all-queue')
     async updateAllQueue(
         @requestBody(RequestResetAllQueueBody) req:ReqResetAllQueueType
