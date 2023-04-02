@@ -67,16 +67,12 @@ export class CronJobAzProjectWhitelist implements Provider<CronJob> {
                         if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) return;
                         console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_WHITELIST} - AZ_PROJECT_WHITELIST is active!`);
                         try {
-                            try {
-                                await checkAllWhiteListQueue(
-                                    globalApi,
-                                    projectsRepo,
-                                    projectWhitelistQueuesRepo,
-                                    global_vars.caller
-                                );
-                            } catch (e) {
-                                console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_WHITELIST} - ERROR: ${e.message}`);
-                            }
+                            await checkAllWhiteListQueue(
+                                globalApi,
+                                projectsRepo,
+                                projectWhitelistQueuesRepo,
+                                global_vars.caller
+                            );
                         } catch (e) {
                             console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_WHITELIST} - ERROR: ${e.message}`);
                         }
