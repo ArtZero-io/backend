@@ -16,6 +16,7 @@ export async function getCollectionCount(caller_account: string): Promise<number
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(collection_manager_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await collection_manager_contract.query["artZeroCollectionTrait::getCollectionCount"](
         address,
         {
@@ -40,6 +41,7 @@ export async function getContractById(caller_account: string, collection_id: num
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(collection_manager_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} =
         await collection_manager_contract.query["artZeroCollectionTrait::getContractById"](
             address,
@@ -64,6 +66,7 @@ export async function getCollectionByAddress(caller_account: string, collection_
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(collection_manager_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} =
         await collection_manager_contract.query["artZeroCollectionTrait::getCollectionByAddress"](
             caller_account,
@@ -85,6 +88,7 @@ export async function getAttributes(caller_account: string, nft_contract_address
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(collection_manager_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const { result, output } =
         await collection_manager_contract.query["artZeroCollectionTrait::getAttributes"](
             caller_account,

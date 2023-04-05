@@ -16,6 +16,7 @@ export async function totalSupply(caller_account: string) {
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(az_nft_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await az_nft_contract.query["psp34::totalSupply"](
         address,
         {value: azero_value, gasLimit}
@@ -35,6 +36,7 @@ export async function getLastTokenId(caller_account: string) {
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(az_nft_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await az_nft_contract.query["psp34Traits::getLastTokenId"](
         address,
         {value: azero_value, gasLimit}
@@ -54,6 +56,7 @@ export async function ownerOf(caller_account: string, tokenId: {u64: number}) {
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(az_nft_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await az_nft_contract.query["psp34::ownerOf"](
         address,
         {value: azero_value, gasLimit},

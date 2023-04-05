@@ -16,6 +16,7 @@ export async function getProjectCount(caller_account: string) {
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(launchpad_manager_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} =
         await launchpad_manager_contract.query["artZeroLaunchPadTrait::getProjectCount"](address, {
             value: azero_value,
@@ -36,6 +37,7 @@ export async function getProjectById(caller_account: string, projectId: number) 
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(launchpad_manager_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} =
         await launchpad_manager_contract.query["artZeroLaunchPadTrait::getProjectById"](
             address,
@@ -60,6 +62,7 @@ export async function getProjectByNftAddress(caller_account: string, nftContract
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(launchpad_manager_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} =
         await launchpad_manager_contract.query["artZeroLaunchPadTrait::getProjectByNftAddress"](
             address,

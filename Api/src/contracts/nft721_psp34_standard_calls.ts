@@ -10,6 +10,7 @@ export async function getTotalSupply(nft721_psp34_standard_contract: ContractPro
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(nft721_psp34_standard_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await nft721_psp34_standard_contract.query[
         "psp34::totalSupply"
         ](address, {value: azero_value, gasLimit});
@@ -28,6 +29,7 @@ export async function isLockedNft(nft721_psp34_standard_contract: ContractPromis
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(nft721_psp34_standard_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await nft721_psp34_standard_contract.query["psp34Traits::isLockedNft"](
         address,
         {value: azero_value, gasLimit},
@@ -48,6 +50,7 @@ export async function getAttributeName(nft721_psp34_standard_contract: ContractP
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(nft721_psp34_standard_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await nft721_psp34_standard_contract.query["psp34Traits::getAttributeName"](
         address,
         {value: azero_value, gasLimit},
@@ -68,6 +71,7 @@ export async function getAttributeCount(nft721_psp34_standard_contract: Contract
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(nft721_psp34_standard_contract.api)
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await nft721_psp34_standard_contract.query["psp34Traits::getAttributeCount"](
         address,
         {value: azero_value, gasLimit}
@@ -91,6 +95,7 @@ export async function getAttribute(
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(nft721_psp34_standard_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await nft721_psp34_standard_contract.query["psp34Metadata::getAttribute"](
         address,
         {value: azero_value, gasLimit},
@@ -117,6 +122,7 @@ export async function getAttributes(
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(nft721_psp34_standard_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await nft721_psp34_standard_contract.query["psp34Traits::getAttributes"](
         address,
         {value: azero_value, gasLimit},
@@ -145,6 +151,7 @@ export async function ownerOf(
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(nft721_psp34_standard_contract.api)
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await nft721_psp34_standard_contract.query["psp34::ownerOf"](
         address,
         {value: azero_value, gasLimit},
@@ -165,6 +172,7 @@ export async function getLastTokenId(nft721_psp34_standard_contract: ContractPro
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(nft721_psp34_standard_contract.api)
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await nft721_psp34_standard_contract.query["psp34Traits::getLastTokenId"](
         address,
         {value: azero_value, gasLimit}

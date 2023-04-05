@@ -22,6 +22,7 @@ export async function getVolumeByCollection(caller_account: string, nft_contract
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(marketplace_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await marketplace_contract.query["artZeroMarketplaceTrait::getVolumeByCollection"](
         address,
         {value: azero_value, gasLimit},
@@ -50,6 +51,7 @@ export async function getNftSaleInfo(caller_account: string, nft_contract_addres
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(marketplace_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await marketplace_contract.query["artZeroMarketplaceTrait::getNftSaleInfo"](
         address,
         {value: azero_value, gasLimit},
@@ -76,6 +78,7 @@ export async function getAllBids(caller_account: any, nft_contract_address: stri
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(marketplace_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await marketplace_contract.query["artZeroMarketplaceTrait::getAllBids"](
         address,
         {value: azero_value, gasLimit},

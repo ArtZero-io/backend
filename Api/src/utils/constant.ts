@@ -156,3 +156,10 @@ export const CONFIG_TYPE_NAME = {
 export const MAX_NFT_QUEUE_ALL_IN_PROCESSING:number = (process.env.MAX_NFT_QUEUE_ALL_IN_PROCESSING)
     ? parseInt(process.env.MAX_NFT_QUEUE_ALL_IN_PROCESSING)
     : 1000;
+
+export const MAX_NFT_QUEUE_IN_PROCESSING:number = (process.env.MAX_NFT_QUEUE_IN_PROCESSING)
+    ? parseInt(process.env.MAX_NFT_QUEUE_IN_PROCESSING)
+    : 10;
+export const TIME_RESET_NFT_QUEUE_ALL:number = (process.env.TIME_RESET_NFT_QUEUE_ALL)
+    ? parseInt(process.env.TIME_RESET_NFT_QUEUE_ALL)
+    : 0;

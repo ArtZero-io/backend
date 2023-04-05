@@ -64,7 +64,12 @@ import axios from "axios";
 import fs from "fs";
 import isIPFS from "is-ipfs";
 import FileType from "file-type";
-import {CACHE_IMAGE, CONFIG_TYPE_NAME, MAX_NFT_QUEUE_ALL_IN_PROCESSING} from "../utils/constant";
+import {
+    CACHE_IMAGE,
+    CONFIG_TYPE_NAME,
+    MAX_NFT_QUEUE_ALL_IN_PROCESSING,
+    TIME_RESET_NFT_QUEUE_ALL
+} from "../utils/constant";
 import sharp from "sharp";
 import download from "download";
 import {marketplace} from "../contracts/marketplace";
@@ -387,17 +392,18 @@ export async function check_NFT_queue_all(
         collection_manager_calls.setContract(collection_contract);
 
         console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - Start find and update status of ${MAX_NFT_QUEUE_ALL_IN_PROCESSING} NFTs in check_NFT_queue_all at ${convertToUTCTime(new Date())}`);
-
-        try {
-            await nftQueueScanAllRepo.updateAll({
-                isProcessing: false
-            }, {
-                isProcessing: true
-            });
-        } catch (e) {
-            console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - WARNING: ${e.message}`);
-        }
-
+        // const currentTime = new Date();
+        // if (currentTime.getMinutes() === TIME_RESET_NFT_QUEUE_ALL) {
+        //     try {
+        //         await nftQueueScanAllRepo.updateAll({
+        //             isProcessing: false
+        //         }, {
+        //             isProcessing: true
+        //         });
+        //     } catch (e) {
+        //         console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - WARNING: ${e.message}`);
+        //     }
+        // }
         let queue_data = await nftQueueScanAllRepo.find({
             where: {
                 isProcessing: false
@@ -519,6 +525,7 @@ export async function check_NFT_queue_all(
                 // - getBaseTokenUriType1
                 let tokenUri = "";
                 try {
+                    // @ts-ignore
                     const {result, output} = await nft_contract.query[
                         "psp34Traits::tokenUri"
                         ](
@@ -944,6 +951,7 @@ export async function check_NFT_queue(
                 // - getBaseTokenUriType1
                 let tokenUri = "";
                 try {
+                    // @ts-ignore
                     const {result, output} = await nft_contract.query[
                         "psp34Traits::tokenUri"
                         ](
@@ -2017,6 +2025,7 @@ export async function scanBlocks(
         //This to make sure always process the latest block in case still scanning old blocks
         // console.log('Process latest block: ', blocknumber);
         const blockHash = await api.rpc.chain.getBlockHash(blocknumber);
+        // @ts-ignore
         const eventRecords = await api.query.system.events.at(blockHash);
         console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Start processEventRecords now: ${convertToUTCTime(new Date())}`);
         await processEventRecords(
@@ -2071,6 +2080,7 @@ export async function scanBlocks(
                 send_telegram_message("scanBlocks - syncing " + last_scanned_blocknumber + "/" + blocknumber);
             }
             const blockHash = await api.rpc.chain.getBlockHash(to_scan);
+            // @ts-ignore
             const eventRecords = await api.query.system.events.at(blockHash);
             console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Start processEventRecords now: ${convertToUTCTime(new Date())}`);
             await processEventRecords(

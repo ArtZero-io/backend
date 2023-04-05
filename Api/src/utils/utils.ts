@@ -245,6 +245,7 @@ export async function getGasLimit(
     if (!abiMessage.ok) return abiMessage;
     // @ts-ignore
     const { value, gasLimit, storageDepositLimit } = options;
+    // @ts-ignore
     const result = await api.call.contractsApi.call(
         userAddress,
         contract.address,
@@ -285,6 +286,7 @@ export function strToNumber(str:string):number {
 
 export async function getFile(location: string, res: Response) {
     await new Promise((resolve: any, reject: any) => {
+        // @ts-ignore
         res.download(location, (err: any) => {
             if (err) reject(err);
             resolve();

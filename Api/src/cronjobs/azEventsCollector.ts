@@ -151,6 +151,7 @@ export class CronJobAzEventsCollector implements Provider<CronJob> {
                                     const api_launchpad_psp34_nft_standard = new Abi(launchpad_psp34_nft_standard.CONTRACT_ABI);
                                     console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Launchpad Contract ABI is ready`);
 
+                                    // @ts-ignore
                                     await eventApi.rpc.chain.subscribeNewHeads((header: any) => {
                                         try {
                                             scanBlocks(

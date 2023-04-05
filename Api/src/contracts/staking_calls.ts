@@ -18,6 +18,7 @@ export async function getTotalStaked(caller_account: string) {
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await staking_contract.query["artZeroStakingTrait::getTotalStaked"](
         address,
         {
@@ -42,6 +43,7 @@ export async function isClaimed(caller_account: any, account: string) {
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await staking_contract.query["artZeroStakingTrait::isClaimed"](
         address,
         {
@@ -66,6 +68,7 @@ export async function getIsLocked(caller_account: any) {
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await staking_contract.query["artZeroStakingTrait::getIsLocked"](
         address,
         {
@@ -89,6 +92,7 @@ export async function getRewardStarted(caller_account: any) {
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await staking_contract.query["artZeroStakingTrait::getRewardStarted"](
         address,
         {
@@ -112,6 +116,7 @@ export async function getTotalCountOfStakeholders(caller_account: any): Promise<
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await staking_contract.query["artZeroStakingTrait::getStakedAccountsLastIndex"](
         address,
         {
@@ -136,6 +141,7 @@ export async function getStakedAccountsAccountByIndex(caller_account: any, index
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await staking_contract.query["artZeroStakingTrait::getStakedAccountsAccountByIndex"](
         address,
         {
@@ -188,6 +194,7 @@ export async function isAdmin(caller_account: any, account: string) {
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const { result, output } = await staking_contract.query["accessControl::hasRole"](
         address,
         {

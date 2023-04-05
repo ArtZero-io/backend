@@ -18,6 +18,7 @@ export async function getPhaseScheduleById(
     }
     const gasLimit = readOnlyGasLimit(api);
     const azero_value = 0;
+    // @ts-ignore
     const { result, output } = await contract.query["psp34LaunchPadTraits::getPhaseScheduleById"](
         caller_account,
         { value: azero_value, gasLimit },
@@ -42,6 +43,7 @@ export async function getPhaseAccountLastIndex(
     }
     const gasLimit = readOnlyGasLimit(api);
     const azero_value = 0;
+    // @ts-ignore
     const { result, output } = await contract.query["psp34LaunchPadTraits::getPhaseAccountLastIndex"](
         caller_account,
         {
@@ -70,6 +72,7 @@ export async function getPhaseAccountLink(
     }
     const gasLimit = readOnlyGasLimit(api);
     const azero_value = 0;
+    // @ts-ignore
     const { result, output } = await contract.query["psp34LaunchPadTraits::getPhaseAccountLink"](
         caller_account,
         {
@@ -99,6 +102,7 @@ export async function getWhitelistByAccountId(
     }
     const gasLimit = readOnlyGasLimit(api);
     const azero_value = 0;
+    // @ts-ignore
     const { result, output } = await contract.query["psp34LaunchPadTraits::getWhitelistByAccountId"](
         caller_account,
         {
@@ -127,6 +131,7 @@ export async function getAvailableTokenAmount(
     }
     const gasLimit = readOnlyGasLimit(api);
     const azero_value = 0;
+    // @ts-ignore
     const { result, output } = await contract.query["psp34LaunchPadTraits::getAvailableTokenAmount"](
         caller_account,
         {
@@ -151,6 +156,7 @@ export async function getProjectInfo(launchpad_psp34_standard_contract: Contract
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(launchpad_psp34_standard_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await launchpad_psp34_standard_contract.query["psp34LaunchPadTraits::getProjectInfo"](
         address,
         {value: azero_value, gasLimit}
@@ -170,6 +176,7 @@ export async function getOwner(launchpad_psp34_standard_contract: ContractPromis
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(launchpad_psp34_standard_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await launchpad_psp34_standard_contract.query['ownable::owner'](
         address,
         {value: azero_value, gasLimit}
@@ -192,6 +199,7 @@ export async function getLastPhaseId(
     const address = caller_account;
     const gasLimit = readOnlyGasLimit(api);
     const azero_value = 0;
+    // @ts-ignore
     const { result, output } = await launchpad_psp34_standard_contract.query["psp34LaunchPadTraits::getLastPhaseId"](address, {
         value: azero_value,
         gasLimit,
@@ -220,6 +228,7 @@ export async function getPhaseAccountPublicClaimedAmount (
     const address = currentAccount;
     const gasLimit = readOnlyGasLimit(api);
     const azero_value = 0;
+    // @ts-ignore
     const { result, output } =
         await contract.query["psp34LaunchPadTraits::getPhaseAccountPublicClaimedAmount"](
             address,
@@ -245,6 +254,7 @@ export async function getTotalSupply(launchpad_psp34_standard_contract: Contract
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(launchpad_psp34_standard_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} = await launchpad_psp34_standard_contract.query["psp34LaunchPadTraits::getTotalSupply"](
         address,
         {value: azero_value, gasLimit}
