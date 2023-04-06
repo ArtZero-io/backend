@@ -136,9 +136,8 @@ import {
     ReqResetAllQueueType,
     RequestCheckingImagesAndJsonBody, ReqCheckingImagesAndJsonType,
 } from "../utils/Message";
-import {CONFIG_TYPE_NAME, MESSAGE, STATUS} from "../utils/constant";
+import { MESSAGE, STATUS} from "../utils/constant";
 import {
-    APICall,
     getFile,
     isValidAddressPolkadotAddress,
     isValidSignature,
@@ -301,18 +300,21 @@ export class ApiController {
         @requestBody(RequestUpdateCollectionBody) req:ReqUpdateCollectionType
     ): Promise<ResponseBody | Response> {
         try {
+            // @ts-ignore
             if (!req) return this.response.send({
                 status: STATUS.FAILED,
                 message: MESSAGE.NO_INPUT
             });
             let collection_address = req?.collection_address;
             if (!collection_address) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NO_ADDRESS
                 });
             }
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_ADDRESS
@@ -324,6 +326,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NOT_EXIST_ADDRESS
@@ -368,11 +371,13 @@ export class ApiController {
                         console.log(`ERROR: ${e.message}`);
                     }
                 }
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.OK,
                     message: MESSAGE.SUCCESS
                 });
             } else {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     ret: "",
@@ -382,6 +387,7 @@ export class ApiController {
             }
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -395,18 +401,23 @@ export class ApiController {
         @requestBody(RequestUpdateProjectBody) req:ReqUpdateProjectType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({
-                status: STATUS.FAILED,
-                message: MESSAGE.NO_INPUT
-            });
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.NO_INPUT
+                });
+            }
             let project_address = req?.project_address;
             if (!project_address) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NO_ADDRESS
                 });
             }
             if (!isValidAddressPolkadotAddress(project_address)) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_ADDRESS
@@ -419,6 +430,7 @@ export class ApiController {
                 }
             );
             if (!project_data) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NOT_EXIST_ADDRESS
@@ -454,11 +466,13 @@ export class ApiController {
                 } catch (e) {
                     console.log(`ERROR: ${e.message}`);
                 }
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.OK,
                     message: MESSAGE.SUCCESS
                 });
             } else {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.DUPLICATED_ADDRESS,
@@ -466,6 +480,7 @@ export class ApiController {
             }
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -479,6 +494,7 @@ export class ApiController {
         @requestBody(RequestNewMintingEventBody) req:ReqNewMintingEventType
     ): Promise<ResponseBody | Response> {
         try {
+            // @ts-ignore
             if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             let nftContractAddress = req?.project;
             let minter = req?.minter;
@@ -487,12 +503,14 @@ export class ApiController {
             let price = req?.price;
             let projectMintFee = req?.project_mint_fee;
             if (!nftContractAddress || !minter) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_ADDRESS});
             }
             if (
                 !isValidAddressPolkadotAddress(nftContractAddress) ||
                 !isValidAddressPolkadotAddress(minter)
             ) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             try {
@@ -509,12 +527,14 @@ export class ApiController {
             } catch (e) {
                 console.log(`ERROR: ${e.message}`);
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -540,6 +560,7 @@ export class ApiController {
             listData.map((item: any) => {
                 total += item?.projectMintFee
             });
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 ret: total,
@@ -548,6 +569,7 @@ export class ApiController {
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -561,16 +583,22 @@ export class ApiController {
         @requestBody(RequestUpdateNftBody) req:ReqUpdateNftType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             let tokenID = req?.token_id;
             if (!collection_address) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_ADDRESS});
             }
             if (!tokenID) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
             }
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -579,6 +607,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
             }
             let queue_data = await this.nftQueueSchemaRepository.findOne({
@@ -618,7 +647,7 @@ export class ApiController {
                             console.log(`ERROR: ${e.message}`);
                         }
                         try {
-                             check_new_AZ_NFTs(
+                            check_new_AZ_NFTs(
                                 this.nfTsSchemaRepository,
                                 this.nftQueueSchemaRepository
                             );
@@ -627,14 +656,17 @@ export class ApiController {
                         }
                     }
                 }
+                // @ts-ignore
                 return this.response.send({status: STATUS.OK, message: MESSAGE.SUCCESS});
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: MESSAGE.DUPLICATED_RECORD,
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -648,20 +680,26 @@ export class ApiController {
         @requestBody(RequestUpdateBidsBody) req:ReqUpdateBidsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             let seller = req?.seller;
             let tokenID = req?.token_id;
             if (!collection_address || !seller) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_ADDRESS});
             }
             if (!tokenID) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
             }
             if (
                 !isValidAddressPolkadotAddress(collection_address) ||
                 !isValidAddressPolkadotAddress(seller)
             ) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -670,6 +708,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NOT_EXIST_COLLECTION_ADDRESS,
@@ -710,14 +749,17 @@ export class ApiController {
                 } catch (e) {
                     console.log(`ERROR: ${e.message}`);
                 }
+                // @ts-ignore
                 return this.response.send({status: STATUS.OK, message: MESSAGE.SUCCESS});
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: MESSAGE.DUPLICATED_RECORD,
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -731,7 +773,10 @@ export class ApiController {
         @requestBody(RequestGetBidsByBidderAddressBody) req:ReqGetBidsByBidderAddressType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let bidder = req?.bidder;
             let limit = req?.limit;
             let offset = req?.offset;
@@ -739,9 +784,11 @@ export class ApiController {
             if (!offset) offset = 0;
             const order = (req?.sort && req?.sort == 1) ? "bid_date ASC" : "bid_date DESC";
             if (!bidder) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_ADDRESS});
             }
             if (!isValidAddressPolkadotAddress(bidder)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let data = await this.bidsSchemaRepository.find({
@@ -752,6 +799,7 @@ export class ApiController {
                 skip: offset,
                 order: [order]
             });
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS,
@@ -759,6 +807,7 @@ export class ApiController {
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -772,7 +821,10 @@ export class ApiController {
         @requestBody(RequestCacheImageBody) req:ReqCacheImageType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let input = req?.input;
             let is1024 = req?.is1024;
             let is1440 = req?.is1440;
@@ -785,12 +837,15 @@ export class ApiController {
             let is500 = true;
             let is100 = true;
             if (!input) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
             if (!imageType) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_IMAGE_TYPE});
             }
             if (!metadata) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_METADATA});
             }
             input = input.replace("ipfs://", "/ipfs/");
@@ -800,12 +855,18 @@ export class ApiController {
                 }
             });
             if (input_data) {
-                if (is1024 && input_data.location1024 != "")
+                if (is1024 && input_data.location1024 != "") {
+                    // @ts-ignore
                     return this.response.send({status: STATUS.FAILED, message: MESSAGE.INPUT_ALREADY_EXIST});
-                if (is1440 && input_data.location1440 != "")
+                }
+                if (is1440 && input_data.location1440 != "") {
+                    // @ts-ignore
                     return this.response.send({status: STATUS.FAILED, message: MESSAGE.INPUT_ALREADY_EXIST});
-                if (is1920 && input_data.location1920 != "")
+                }
+                if (is1920 && input_data.location1920 != "") {
+                    // @ts-ignore
                     return this.response.send({status: STATUS.FAILED, message: MESSAGE.INPUT_ALREADY_EXIST});
+                }
                 if ((is1024 || is1440 || is1920) && input_data.location100 != "") {
                     is500 = false;
                     is100 = false;
@@ -831,14 +892,17 @@ export class ApiController {
                 } catch (e) {
                     console.log(`ERROR: ${e.message}`);
                 }
+                // @ts-ignore
                 return this.response.send({status: STATUS.OK, message: MESSAGE.SUCCESS});
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: MESSAGE.DUPLICATED_RECORD
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -852,7 +916,10 @@ export class ApiController {
         @requestBody(RequestCacheImagesBody) req:ReqCacheImagesType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let images = JSON.parse(req?.images);
             console.log('Images Request: ', req?.images);
             console.log('Images Request after parse: ', images);
@@ -1013,14 +1080,17 @@ export class ApiController {
                     }
                 }
             } else {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_IMAGES});
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1034,9 +1104,13 @@ export class ApiController {
         @requestBody(RequestCacheJSONBody) req:ReqCacheJSONType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let input = req?.input;
             if (!input) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
             input = input.replace("ipfs://", "/ipfs/");
@@ -1046,6 +1120,7 @@ export class ApiController {
                 }
             });
             if (input_data) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INPUT_ALREADY_EXIST});
             }
             let queue_data = await this.jsonQueueSchemaRepository.findOne({
@@ -1063,14 +1138,17 @@ export class ApiController {
                 } catch (e) {
                     console.log(`ERROR: ${e.message}`);
                 }
+                // @ts-ignore
                 return this.response.send({status: STATUS.OK, message: MESSAGE.SUCCESS});
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: MESSAGE.DUPLICATED_RECORD,
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1085,10 +1163,13 @@ export class ApiController {
         @param.query.string('input') input?: string
     ): Promise<Response | ResponseBody | void> {
         try {
-            if (!input) return this.response.send({
-                status: STATUS.FAILED,
-                message: MESSAGE.INVALID_INPUT
-            });
+            if (!input) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_INPUT
+                });
+            }
             input = input.replace("ipfs://", "/ipfs/");
             let input_data = await this.jsonSchemaRepository.findOne({
                 where: {
@@ -1102,6 +1183,7 @@ export class ApiController {
             }
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1119,7 +1201,10 @@ export class ApiController {
     ): Promise<Response | ResponseBody | void> {
         try {
             if (!url) url = "";
-            if (!input) return this.response.send(url);
+            if (!input) {
+                // @ts-ignore
+                return this.response.send(url);
+            }
             if (
                 size != 100 &&
                 size != 500 &&
@@ -1154,11 +1239,13 @@ export class ApiController {
                         console.log(`ERROR: ${e.message}`);
                     }
                 }
+                // @ts-ignore
                 return this.response.send(url);
             }
             if (size == 100) {
                 try {
                     if (input_data.isCloudFlare) {
+                        // @ts-ignore
                         return this.response.send(input_data.location100);
                     } else {
                         if (input_data.location100) {
@@ -1186,6 +1273,7 @@ export class ApiController {
             } else if (size == 500) {
                 try {
                     if (input_data.isCloudFlare) {
+                        // @ts-ignore
                         return this.response.send(input_data.location500);
                     } else {
                         if (input_data.location500) {
@@ -1214,6 +1302,7 @@ export class ApiController {
                 if (input_data.location1024 != "") {
                     try {
                         if (input_data.isCloudFlare) {
+                            // @ts-ignore
                             return this.response.send(input_data.location1024);
                         } else {
                             if (input_data.location1024) {
@@ -1237,11 +1326,15 @@ export class ApiController {
                             console.log(`ERROR: ${e.message}`);
                         }
                     }
-                } else return this.response.send(url);
+                } else {
+                    // @ts-ignore
+                    return this.response.send(url);
+                }
             } else if (size == 1440) {
                 if (input_data.location1440 != "") {
                     try {
                         if (input_data.isCloudFlare) {
+                            // @ts-ignore
                             return this.response.send(input_data.location1440);
                         } else {
                             if (input_data.location1440) {
@@ -1266,11 +1359,15 @@ export class ApiController {
                             console.log(`ERROR: ${e.message}`);
                         }
                     }
-                } else return this.response.send(url);
+                } else {
+                    // @ts-ignore
+                    return this.response.send(url);
+                }
             } else if (size == 1920) {
                 if (input_data.location1920 != "") {
                     try {
                         if (input_data.isCloudFlare) {
+                            // @ts-ignore
                             return this.response.send(input_data.location1920);
                         } else {
                             if (input_data.location1920) {
@@ -1294,10 +1391,14 @@ export class ApiController {
                             console.log(`ERROR: ${e.message}`);
                         }
                     }
-                } else return this.response.send(url);
+                } else {
+                    // @ts-ignore
+                    return this.response.send(url);
+                }
             }
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1311,19 +1412,25 @@ export class ApiController {
         @requestBody(RequestGetCollectionContractBody) req:ReqGetCollectionContractType
     ): Promise<ResponseBody | Response> {
         try {
+            // @ts-ignore
             const host = this.request.headers.host;
+            // @ts-ignore
             const origin = this.request.headers.origin;
+            // @ts-ignore
             const userIP = this.request.socket.remoteAddress;
+            // @ts-ignore
             console.log(this.request.headers);
             console.log(`userIP: ${userIP}`);
             console.log(`host: ${host}`);
             console.log(`origin: ${origin}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 ret: collection_manager.CONTRACT_ADDRESS
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1339,9 +1446,11 @@ export class ApiController {
                 isActive: true,
                 nft_count: {gt: 0},
             });
+            // @ts-ignore
             return this.response.send({status: "OK", ret: collection_count_db.count});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1360,12 +1469,14 @@ export class ApiController {
                     ret.push(item);
                 });
             }
+            // @ts-ignore
             return this.response.send({
                 status: "OK",
                 ret: ret,
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1379,6 +1490,7 @@ export class ApiController {
         @requestBody(RequestGetCollectionsBody) req:ReqGetCollectionsType
     ): Promise<ResponseBody | Response> {
         try {
+            // @ts-ignore
             if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             let limit = req?.limit;
             let offset = req?.offset;
@@ -1416,9 +1528,11 @@ export class ApiController {
                 console.log({error: e});
             }
             console.log({data: data.length});
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1432,7 +1546,10 @@ export class ApiController {
         @requestBody(RequestGetAllCollectionsBody) req:ReqGetAllCollectionsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let isActive:boolean | undefined = req?.isActive;
@@ -1465,9 +1582,11 @@ export class ApiController {
                 console.log({error: e});
             }
             console.log({data: data.length});
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1481,24 +1600,30 @@ export class ApiController {
         @requestBody(RequestUpdateCollectionEmailBody) req:ReqUpdateCollectionEmailType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req.collection_address;
             let email = req.email;
             const emailRegexp =
                 /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
             if (!email || !emailRegexp.test(email)) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_EMAIL_FORMAT,
                 });
             }
             if (!collection_address) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_ADDRESS,
                 });
             }
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_COLLECTION_ADDRESS,
@@ -1510,6 +1635,7 @@ export class ApiController {
                 }
             });
             if (!foundDoc) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NOT_EXIST_COLLECTION_ADDRESS,
@@ -1522,12 +1648,14 @@ export class ApiController {
             } catch (e) {
                 console.log(`ERROR: ${e.message}`);
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS,
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1541,7 +1669,10 @@ export class ApiController {
         @requestBody(RequestGetProjectsBody) req:ReqGetProjectsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let isActive = req?.isActive;
@@ -1558,9 +1689,11 @@ export class ApiController {
                 limit: limit,
                 order: [order]
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1574,7 +1707,10 @@ export class ApiController {
         @requestBody(RequestGetCollectionsByVolumeBody) req:ReqGetCollectionsByVolumeType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let isActive = req?.isActive;
@@ -1596,9 +1732,11 @@ export class ApiController {
                 limit: limit,
                 order: [order]
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1612,7 +1750,10 @@ export class ApiController {
         @requestBody(RequestGetCollectionByIDBody) req:ReqGetCollectionByIDType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let id = req?.id;
             if (!id) id = 1;
             let data = await this.collectionsSchemaRepository.find({
@@ -1620,9 +1761,11 @@ export class ApiController {
                     index: id
                 }
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1636,13 +1779,17 @@ export class ApiController {
         @requestBody(RequestGetCollectionsByOwnerBody) req:ReqGetCollectionsByOwnerType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let owner = req?.owner;
             let limit = req?.limit;
             let offset = req?.offset;
             if (!limit) limit = 15;
             if (!offset) offset = 0;
             if (!owner) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             const order = (req?.sort && req?.sort == 1) ? "index ASC" : "index DESC";
@@ -1654,9 +1801,11 @@ export class ApiController {
                 limit: limit,
                 order: [order]
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1670,11 +1819,15 @@ export class ApiController {
         @requestBody(RequestCountCollectionsByOwnerBody) req:ReqCountCollectionsByOwnerType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let owner = req?.owner;
             let includeNoneNFT = req?.noNFT;
             if (!includeNoneNFT) includeNoneNFT = false;
             if (!owner) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             if (includeNoneNFT) {
@@ -1682,16 +1835,19 @@ export class ApiController {
                     collectionOwner: owner
                 });
                 console.log({data: data});
+                // @ts-ignore
                 return this.response.send({status: STATUS.OK, ret: data.count});
             } else {
                 let data = await this.collectionsSchemaRepository.count({
                     collectionOwner: owner,
                     nft_count: {gt: 0},
                 });
+                // @ts-ignore
                 return this.response.send({status: STATUS.OK, ret: data.count});
             }
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1705,10 +1861,14 @@ export class ApiController {
         @requestBody(RequestGetCollectionByAddressBody) req:ReqGetCollectionByAddressType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             console.log({collection_address: collection_address});
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -1718,6 +1878,7 @@ export class ApiController {
             });
             // console.log({collection_data: collection_data});
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
             }
             let data = await this.collectionsSchemaRepository.find({
@@ -1725,9 +1886,11 @@ export class ApiController {
                     nftContractAddress: collection_address,
                 }
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1741,9 +1904,13 @@ export class ApiController {
         @requestBody(RequestGetFloorPriceBody) req:ReqGetFloorPriceType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -1753,6 +1920,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NOT_EXIST_ADDRESS_INACTIVE,
@@ -1766,9 +1934,11 @@ export class ApiController {
                 order: ["price ASC"],  // price ASC
                 limit: 1
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1782,13 +1952,17 @@ export class ApiController {
         @requestBody(RequestGetNFTsBody) req:ReqGetNFTsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             let limit = req?.limit;
             let offset = req?.offset;
             if (!limit) limit = 15;
             if (!offset) offset = 0;
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -1797,6 +1971,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
             }
             const order = (req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC";
@@ -1808,9 +1983,11 @@ export class ApiController {
                 skip: offset,
                 limit: limit
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1823,13 +2000,17 @@ export class ApiController {
         @requestBody(RequestGetListedNFTsBody) req:ReqGetListedNFTsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             let limit = req?.limit;
             let offset = req?.offset;
             if (!limit) limit = 15;
             if (!offset) offset = 0;
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -1838,6 +2019,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
             }
             const order = (req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC";
@@ -1850,9 +2032,11 @@ export class ApiController {
                 skip: offset,
                 limit: limit
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1865,13 +2049,17 @@ export class ApiController {
         @requestBody(RequestGetUnlistedNFTsBody) req:ReqGetUnlistedNFTsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             let limit = req?.limit;
             let offset = req?.offset;
             if (!limit) limit = 15;
             if (!offset) offset = 0;
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -1880,6 +2068,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
             }
             const order = (req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC";
@@ -1892,9 +2081,11 @@ export class ApiController {
                 skip: offset,
                 limit: limit
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1908,13 +2099,18 @@ export class ApiController {
         @requestBody(RequestGetNFTByIDBody) req:ReqGetNFTByIDType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let tokenID = req?.token_id;
             let collection_address = req?.collection_address;
             if (!tokenID) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
             }
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -1923,6 +2119,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
             }
             let data = await this.nfTsSchemaRepository.find({
@@ -1931,9 +2128,11 @@ export class ApiController {
                     tokenID: tokenID,
                 }
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1947,7 +2146,10 @@ export class ApiController {
         @requestBody(RequestGetNFTsByOwnerBody) req:ReqGetNFTsByOwnerType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let owner = req?.owner;
             let limit = req?.limit;
             let offset = req?.offset;
@@ -1956,6 +2158,7 @@ export class ApiController {
             if (!offset) offset = 0;
             if (!sort) sort = -1;
             if (!owner) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             const order = (req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC";
@@ -1991,9 +2194,11 @@ export class ApiController {
                     })
                     .slice(0, limit);
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: result});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2007,7 +2212,10 @@ export class ApiController {
         @requestBody(RequestGetNFTsByOwnerAndCollectionBody) req:ReqGetNFTsByOwnerAndCollectionType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let owner = req?.owner;
             let collection_address = req?.collection_address;
             let limit = req?.limit;
@@ -2017,6 +2225,7 @@ export class ApiController {
             if (!offset) offset = 0;
             if (!sort) sort = -1;
             if (!owner || !collection_address) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             const order = (req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC";
@@ -2054,9 +2263,11 @@ export class ApiController {
                     })
                     .slice(0, limit);
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: result});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2070,13 +2281,17 @@ export class ApiController {
         @requestBody(RequestGetNFTsByCollectionAddressBody) req:ReqGetNFTsByCollectionAddressType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             let limit = req?.limit;
             let offset = req?.offset;
             if (!limit) limit = 15;
             if (!offset) offset = 0;
             if (!collection_address) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             const order = (req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC";
@@ -2088,9 +2303,11 @@ export class ApiController {
                 skip: offset,
                 limit: limit
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2104,7 +2321,10 @@ export class ApiController {
         @requestBody(RequestGetNewListEventsBody) req:ReqGetNewListEventsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let collection_address = req?.collection_address;
@@ -2129,9 +2349,11 @@ export class ApiController {
                     limit: limit
                 });
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2145,7 +2367,10 @@ export class ApiController {
         @requestBody(RequestGetUnlistEventsBody) req:ReqGetUnlistEventsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let collection_address = req?.collection_address;
@@ -2170,9 +2395,11 @@ export class ApiController {
                     limit: limit
                 });
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2186,7 +2413,10 @@ export class ApiController {
         @requestBody(RequestGetPurchaseEventsBody) req:ReqGetPurchaseEventsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let collection_address = req?.collection_address;
@@ -2211,9 +2441,11 @@ export class ApiController {
                     limit: limit
                 });
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2227,7 +2459,10 @@ export class ApiController {
         @requestBody(RequestGetBidWinEventsBody) req:ReqGetBidWinEventsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let collection_address = req?.collection_address;
@@ -2252,9 +2487,11 @@ export class ApiController {
                     limit: limit
                 });
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2268,7 +2505,10 @@ export class ApiController {
         @requestBody(RequestSearchCollectionsBody) req:ReqSearchCollectionsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let keywords = req?.keywords;
             let limit = req?.limit;
             let isActive = req?.isActive;
@@ -2295,9 +2535,11 @@ export class ApiController {
                     limit: limit
                 });
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2310,11 +2552,15 @@ export class ApiController {
         @requestBody(RequestGetOwnershipHistoryBody) req:ReqGetOwnershipHistoryType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             let tokenID = req?.token_id;
             let owner = req?.owner;
             if (!collection_address || !tokenID || !owner) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_INPUT});
             }
             let bid_win = await this.bidWinEventSchemaRepository.find({
@@ -2345,9 +2591,11 @@ export class ApiController {
             result = result.sort(function (a: any, b: any) {
                 return parseInt(b.blockNumber) - parseInt(a.blockNumber);
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: result});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2361,12 +2609,16 @@ export class ApiController {
         @requestBody(RequestSearchNFTOfCollectionByTraitsBody) req:ReqSearchNFTOfCollectionByTraitsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let params:TraitFilters | undefined = (req?.traitFilters) ? JSON.parse(req?.traitFilters) : undefined;
             let limit = req?.limit || 24;
             let offset = req?.offset || 0;
             let collectionAddress = req?.collectionAddress;
             if (!isValidAddressPolkadotAddress(collectionAddress)) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_COLLECTION_ADDRESS,
@@ -2379,6 +2631,7 @@ export class ApiController {
                 }
             });
             if (!collectionInfo) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NOT_EXIST_COLLECTION_ADDRESS,
@@ -2407,9 +2660,11 @@ export class ApiController {
                 NFTList: data,
                 totalResults: countNft.count,
             };
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2423,7 +2678,10 @@ export class ApiController {
         @requestBody(RequestGetAddRewardHistoryBody) req:ReqGetAddRewardHistoryType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             if (!limit) limit = 15;
@@ -2435,9 +2693,11 @@ export class ApiController {
                 skip: offset,
                 limit: limit
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2451,7 +2711,10 @@ export class ApiController {
         @requestBody(RequestGetClaimRewardHistoryBody) req:ReqGetClaimRewardHistoryType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let staker_address = req?.staker_address;
@@ -2476,9 +2739,11 @@ export class ApiController {
                     limit: limit
                 });
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2491,20 +2756,26 @@ export class ApiController {
         @requestBody(RequestReportNFTBody) req:ReqReportNFTType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             const isValid = isValidSignature(
                 MESSAGE.SIGN,
                 req?.signature,
                 req?.address
-              );
-              if(isValid) {
+            );
+            if(isValid) {
                 send_report_telegram_message(`${req?.address}\nReported NFT : ${req?.nft_name} \n with message: ${req?.message} \n of collection ${req?.collection_name}\nLink: ${req?.nft_link}`);
+                // @ts-ignore
                 return this.response.send({status: STATUS.OK});
-              } else {
+            } else {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED});
-              }
+            }
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2517,10 +2788,13 @@ export class ApiController {
         @requestBody(RequestGetPhaseInfoBody) req:ReqGetPhaseInfoType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req || !req.phaseId || !req.nftContractAddress)
+            if (!req || !req.phaseId || !req.nftContractAddress) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let nftContractAddress = req?.nftContractAddress;
             if (!isValidAddressPolkadotAddress(nftContractAddress)) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_NFT_ADDRESS,
@@ -2543,18 +2817,21 @@ export class ApiController {
                         }
                     });
                 }
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.OK,
                     ret: retData,
                     message: MESSAGE.SUCCESS
                 });
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: MESSAGE.INVALID_INPUT
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2597,7 +2874,7 @@ export class ApiController {
     ): Promise<collections[]> {
         return this.collectionsSchemaRepository.find(filter);
     }
-    
+
     @get('/api/projects-schemas')
     @response(200, {
         description: 'Array of ProjectsSchema model instances',
@@ -2625,6 +2902,7 @@ export class ApiController {
         @param.where(projects) where?: Where<projects>,
     ): Promise<Count | Response> {
         const projectCountDb = await this.collectionsSchemaRepository.count(where);
+        // @ts-ignore
         return this.response.send({status: "OK", ret: projectCountDb.count});
     }
 
@@ -2633,26 +2911,31 @@ export class ApiController {
         @requestBody(RequestCreateBlackListBody) req:ReqCreateBlackListType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req || !req.typeName || !req.nftContractAddress || !req.userName || !req.password)
+            if (!req || !req.typeName || !req.nftContractAddress || !req.userName || !req.password) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             const nftContractAddress = req?.nftContractAddress;
             const typeName = req?.typeName;
             const isActive:boolean = (req?.isActive !== undefined) ? req.isActive : true;
             const userName = req?.userName;
             const password = req?.password;
             if (userName !== process.env.BLACK_LIST_USER_NAME || password !== process.env.BLACK_LIST_PASSWORD) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_AUTHENTICATION,
                 });
             }
             if (!isValidAddressPolkadotAddress(nftContractAddress)) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_NFT_ADDRESS,
                 });
             }
             if (!isValidTypeName(typeName)) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_BLACKLIST_TYPE_NAME,
@@ -2691,12 +2974,14 @@ export class ApiController {
                     console.log(`ERROR: ${e.message}`);
                 }
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2754,10 +3039,14 @@ export class ApiController {
         @requestBody(RequestGetProjectByAdressBody) req:ReqGetProjectByAdressType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let nftContractAddress = req?.nftContractAddress;
             console.log({nftContractAddress: nftContractAddress});
             if (!isValidAddressPolkadotAddress(nftContractAddress)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let projectData = await this.projectsSchemaRepository.findOne({
@@ -2767,11 +3056,14 @@ export class ApiController {
             });
             // console.log({collection_data: projectData});
             if (!projectData) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: projectData});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2785,17 +3077,20 @@ export class ApiController {
     ): Promise<ResponseBody | Response> {
         try {
             if (!req || !req.userName || !req.password) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
             const userName = req?.userName;
             const password = req?.password;
             if (userName !== process.env.TRIGGER_REWARDS_USER_NAME || password !== process.env.TRIGGER_REWARDS_PASSWORD) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_AUTHENTICATION,
                 });
             }
             const ret = await setClaimedStatus();
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS,
@@ -2803,6 +3098,7 @@ export class ApiController {
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2818,11 +3114,13 @@ export class ApiController {
         console.log("RUN resetAllQueue now: " + currentTime);
         try {
             if (!req || !req.userName || !req.password) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
             const userName = req?.userName;
             const password = req?.password;
             if (userName !== process.env.ADMIN_USER_NAME || password !== process.env.ADMIN_PASSWORD) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_AUTHENTICATION,
@@ -2835,12 +3133,14 @@ export class ApiController {
             } catch (e) {
                 console.log(`ERROR: ${e.message}`);
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2856,11 +3156,13 @@ export class ApiController {
         console.log("RUN moveNftQueu now: " + currentTime);
         try {
             if (!req || !req.userName || !req.password) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
             const userName = req?.userName;
             const password = req?.password;
             if (userName !== process.env.ADMIN_USER_NAME || password !== process.env.ADMIN_PASSWORD) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_AUTHENTICATION,
@@ -2898,12 +3200,14 @@ export class ApiController {
             } catch (e) {
                 console.log(`ERROR: ${e.message}`);
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2919,11 +3223,13 @@ export class ApiController {
         console.log("RUN resetAllQueue now: " + currentTime);
         try {
             if (!req || !req.userName || !req.password) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
             const userName = req?.userName;
             const password = req?.password;
             if (userName !== process.env.ADMIN_USER_NAME || password !== process.env.ADMIN_PASSWORD) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_AUTHENTICATION,
@@ -2953,7 +3259,7 @@ export class ApiController {
                 },
             });
             apiTrigger.on("connected", () => {
-                apiTrigger.isReady.then((api) => {
+                apiTrigger.isReady.then(() => {
                     console.log("Smartnet AZERO Connected");
                 });
             });
@@ -3006,6 +3312,7 @@ export class ApiController {
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -3020,11 +3327,13 @@ export class ApiController {
     ): Promise<ResponseBody | Response> {
         try {
             if (!req || !req.typeConfig || !req.mainConfig || !req.userName || !req.password) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
             const userName = req?.userName;
             const password = req?.password;
             if (userName !== process.env.BLACK_LIST_USER_NAME || password !== process.env.BLACK_LIST_PASSWORD) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_AUTHENTICATION,
@@ -3069,12 +3378,14 @@ export class ApiController {
                     }
                 }
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -3099,6 +3410,7 @@ export class ApiController {
     ): Promise<Response> {
         const data = await this.withdrawEventSchemaRepository.find(filter);
         const eventCount = await this.withdrawEventSchemaRepository.count(filter?.where);
+        // @ts-ignore
         return this.response.send({status: STATUS.OK, ret: data, totalCount: eventCount});
     }
 
@@ -3119,6 +3431,7 @@ export class ApiController {
     ): Promise<Response> {
         const data = await this.luanchpadMintingEventSchemaRepository.find(filter);
         const eventCount = await this.luanchpadMintingEventSchemaRepository.count(filter?.where);
+        // @ts-ignore
         return this.response.send({status: STATUS.OK, ret: data, totalCount: eventCount});
     }
 
@@ -3128,18 +3441,21 @@ export class ApiController {
     ): Promise<ResponseBody | Response> {
         try {
             if (!req || !req.userName || !req.password) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
             const userName = req?.userName;
             const password = req?.password;
             const nftContractAddress = req?.nftContractAddress;
             if (userName !== process.env.ADMIN_USER_NAME || password !== process.env.ADMIN_PASSWORD) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_AUTHENTICATION,
                 });
             }
             if (!nftContractAddress) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_INPUT,
@@ -3156,6 +3472,7 @@ export class ApiController {
                     }
                 });
                 if (!foundCollection) {
+                    // @ts-ignore
                     return this.response.send({
                         status: STATUS.FAILED,
                         message: MESSAGE.INVALID_COLLECTION_ADDRESS,
@@ -3166,6 +3483,7 @@ export class ApiController {
                     launchpad_psp34_nft_standard.CONTRACT_ABI,
                     nftContractAddress
                 );
+                // @ts-ignore
                 const {result, output} = await launchpad_psp34_nft_standard_contract.query["psp34Traits::tokenUri"](
                     global_vars.caller,
                     {value: 0, gasLimit: await readOnlyGasLimit(api)},
@@ -3226,6 +3544,7 @@ export class ApiController {
             } catch (e) {
                 console.log(e.message);
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS,
@@ -3236,6 +3555,7 @@ export class ApiController {
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
