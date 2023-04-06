@@ -71,7 +71,8 @@ export class CronJobAzProjectWhitelist implements Provider<CronJob> {
                                 globalApi,
                                 projectsRepo,
                                 projectWhitelistQueuesRepo,
-                                global_vars.caller
+                                global_vars.caller,
+                                undefined
                             );
                         } catch (e) {
                             console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_WHITELIST} - ERROR: ${e.message}`);

@@ -168,7 +168,7 @@ import {
     check_collection_queue,
     check_new_AZ_NFTs,
     check_new_collections,
-    check_NFT_queue, scanAllNFTs, setClaimedStatus
+    check_NFT_queue, checkAllWhiteListQueue, scanAllNFTs, setClaimedStatus
 } from "../cronjobs/actions";
 import dotenv from "dotenv";
 import {convertToUTCTime} from "../utils/Tools";
@@ -463,6 +463,19 @@ export class ApiController {
                             updatedTime: new Date()
                         }
                     );
+                } catch (e) {
+                    console.log(`ERROR: ${e.message}`);
+                }
+                try {
+                    if ((global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) {
+                        checkAllWhiteListQueue(
+                            globalApi,
+                            this.projectsSchemaRepository,
+                            this.projectWhitelistQueuesRepository,
+                            global_vars.caller,
+                            project_address
+                        );
+                    }
                 } catch (e) {
                     console.log(`ERROR: ${e.message}`);
                 }

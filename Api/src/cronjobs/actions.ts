@@ -1275,24 +1275,54 @@ export async function checkAllWhiteListQueue(
     api: ApiPromise,
     projectsRepo: ProjectsSchemaRepository,
     projectWhitelistQueuesRepo: ProjectWhitelistQueuesRepository,
-    callerAccount: string
+    callerAccount: string,
+    nftContractAddress?: string
 ) {
     if (global_vars.is_check_project_queue_whitelist) return;
     global_vars.is_check_project_queue_whitelist = true;
 
     try {
         console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_WHITELIST} - Checking for Project Whitelist Queue ...`);
-        let queueData = await projectsRepo.find({});    // switch to projectWhitelistQueuesRepo later
-        let recordsLength = queueData.length;
+        let projectsData: projects[] = [];
+        if (!nftContractAddress) {
+            projectsData = await projectsRepo.find({});    // switch to projectWhitelistQueuesRepo later
+        } else {
+            const currentProject = await projectsRepo.findOne({
+                where: {
+                    nftContractAddress: nftContractAddress
+                }
+            });
+            if (currentProject) {
+                projectsData.push(currentProject);
+            }
+        }
+        let recordsLength = projectsData.length;
+        console.log({recordsLength: recordsLength});
         for (let j = 0; j < recordsLength; j++) {
-            let project_contract_address = queueData[j].nftContractAddress;
+            let project_contract_address = projectsData[j].nftContractAddress;
             if (!project_contract_address) continue;
-            console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_WHITELIST} - Project Contract Address`, project_contract_address);
+            console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_WHITELIST} - Start checkAllWhiteListQueue for ${project_contract_address}: ${convertToUTCTime(new Date())}`);
             const launchpad_psp34_nft_standard_contract = new ContractPromise(
                 api,
                 launchpad_psp34_nft_standard.CONTRACT_ABI,
                 project_contract_address
             );
+            // TODO: Update availableTokenAmount first!
+            try {
+                const availableTokenAmount =
+                    await launchpad_psp34_nft_standard_calls.getAvailableTokenAmount(
+                        api,
+                        launchpad_psp34_nft_standard_contract,
+                        global_vars.caller
+                    );
+                await projectsRepo.updateById(projectsData[j]._id, {
+                    availableTokenAmount: (availableTokenAmount) ? parseInt(convertNumberWithoutCommas(availableTokenAmount)) : 0,
+                    updatedTime: new Date()
+                });
+            } catch (e) {
+                console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_WHITELIST} - ERROR: ${e.message}`);
+            }
+            // TODO: Update whitelist data
             // let project_information_hash = await launchpad_psp34_nft_standard_calls.getProjectInfo(
             //     launchpad_psp34_nft_standard_contract,
             //     callerAccount
@@ -1329,23 +1359,18 @@ export async function checkAllWhiteListQueue(
                     }));
                 }
             }
-            const obj: projects = new projects(
-                {
+            try {
+                await projectsRepo.updateById(projectsData[j]._id, {
                     whiteList: whiteListData,
                     updatedTime: new Date()
-                }
-            );
-            try {
-                await projectsRepo.updateAll(
-                    obj,
-                    {nftContractAddress: project_contract_address}
-                );
+                });
             } catch (e) {
                 console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_WHITELIST} - ERROR: ${e.message}`);
             }
             await projectWhitelistQueuesRepo.deleteAll({
                 nftContractAddress: project_contract_address,
             });
+            console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_WHITELIST} - Stop checkAllWhiteListQueue for ${project_contract_address}: ${convertToUTCTime(new Date())}`);
         }
     } catch (e) {
         send_telegram_message("check_project_queue - " + e.message);
