@@ -18,7 +18,8 @@ export async function getTotalStaked(caller_account: string) {
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
-    const {result, output} = await staking_contract.query.getTotalStaked(
+    // @ts-ignore
+    const {result, output} = await staking_contract.query["artZeroStakingTrait::getTotalStaked"](
         address,
         {
             value: azero_value,
@@ -42,7 +43,8 @@ export async function isClaimed(caller_account: any, account: string) {
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
-    const {result, output} = await staking_contract.query.isClaimed(
+    // @ts-ignore
+    const {result, output} = await staking_contract.query["artZeroStakingTrait::isClaimed"](
         address,
         {
             value: azero_value,
@@ -66,7 +68,8 @@ export async function getIsLocked(caller_account: any) {
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
-    const {result, output} = await staking_contract.query.getIsLocked(
+    // @ts-ignore
+    const {result, output} = await staking_contract.query["artZeroStakingTrait::getIsLocked"](
         address,
         {
             value: azero_value,
@@ -89,7 +92,8 @@ export async function getRewardStarted(caller_account: any) {
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
-    const {result, output} = await staking_contract.query.getRewardStarted(
+    // @ts-ignore
+    const {result, output} = await staking_contract.query["artZeroStakingTrait::getRewardStarted"](
         address,
         {
             value: azero_value,
@@ -112,7 +116,8 @@ export async function getTotalCountOfStakeholders(caller_account: any): Promise<
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
-    const {result, output} = await staking_contract.query.getStakedAccountsLastIndex(
+    // @ts-ignore
+    const {result, output} = await staking_contract.query["artZeroStakingTrait::getStakedAccountsLastIndex"](
         address,
         {
             value: azero_value,
@@ -136,7 +141,8 @@ export async function getStakedAccountsAccountByIndex(caller_account: any, index
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
-    const {result, output} = await staking_contract.query.getStakedAccountsAccountByIndex(
+    // @ts-ignore
+    const {result, output} = await staking_contract.query["artZeroStakingTrait::getStakedAccountsAccountByIndex"](
         address,
         {
             value: azero_value,
@@ -188,6 +194,7 @@ export async function isAdmin(caller_account: any, account: string) {
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const { result, output } = await staking_contract.query["accessControl::hasRole"](
         address,
         {

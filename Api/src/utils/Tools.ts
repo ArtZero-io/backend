@@ -1,3 +1,6 @@
+import {BlackListRepository} from "../repositories";
+import {BLACK_LIST_TYPE} from "./constant";
+
 export const sleep = (waitTimeInMs: number) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
 export function convertToUTCTime(date: Date) {
     return date.toISOString().replace(/T/, ' ').replace(/\..+/, '');
@@ -27,4 +30,18 @@ export function checkIPClientPrivate(ipClient: string) {
         });
     }
     return ret;
+}
+
+export async function isBlackListCollection(
+    blackListRepo: BlackListRepository,
+    nftContractAddress: string
+):Promise<boolean> {
+    const data = await blackListRepo.findOne({
+        where: {
+            nftContractAddress: nftContractAddress,
+            typeName: BLACK_LIST_TYPE.COLLECTION,
+            isActive: true
+        }
+    });
+    return !!data;
 }

@@ -25,6 +25,11 @@ export class nftqueuealls extends Entity {
   tokenID?: number;
 
   @property({
+    type: 'boolean',
+  })
+  isProcessing?: boolean;
+
+  @property({
     type: 'object',
   })
   dataObject?: object;

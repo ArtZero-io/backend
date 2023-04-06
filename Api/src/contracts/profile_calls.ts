@@ -21,6 +21,7 @@ export async function getAttributes(
     const gasLimit = readOnlyGasLimit(profile_contract.api);
     const azero_value = 0;
     let attributeVals;
+    // @ts-ignore
     const {result, output} = await profile_contract.query.getAttributes(
         address,
         {

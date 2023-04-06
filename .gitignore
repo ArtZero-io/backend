@@ -104,4 +104,5 @@ dist
 .tern-port
 
 ._*
-build
+build!/Api/.env
+!/Api/.env

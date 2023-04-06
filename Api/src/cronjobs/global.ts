@@ -1,0 +1,31 @@
+export enum SOCKET_STATUS  {
+    CONNECTED= "connected",
+    READY = "ready",
+    ERROR = "error",
+}
+export let global_vars = {
+    socketStatus: SOCKET_STATUS.ERROR,
+    socketStatusLocal: SOCKET_STATUS.ERROR,
+    caller: process.env.CALLER ? process.env.CALLER : '',
+    is_check_new_collections: false,
+    is_check_collection_queue: false,
+    collection_count_contract: 0,
+    collection_count_db: 0,
+    is_check_NFT_queue: false,
+    is_scan_all_NFTs: false,
+    is_check_new_AZ_NFT: false,
+    is_check_NFT_queue_all: false,
+    az_nft_count_db: 0,
+    az_nft_count_contract: 0,
+    is_check_new_projects: false,
+    is_check_project_queue_whitelist: false,
+    is_check_project_queue: false,
+    project_count_contract: 0,
+    project_count_db: 0,
+    is_check_Image_queue: false,
+    isScanning: false,
+    is_check_Bid: false,
+    is_auto_check_Bid: false,
+    is_push_to_cloudflare_status: false,
+    theadCounter: 0
+};

@@ -1,6 +1,6 @@
 import {ContractPromise} from "@polkadot/api-contract";
 import BN from "bn.js";
-import {isValidAddressPolkadotAddress, readOnlyGasLimit} from "../utils/utils";
+import {isValidAddressPolkadotAddress, readOnlyGasLimit, send_telegram_message} from "../utils/utils";
 
 let collection_manager_contract: ContractPromise;
 
@@ -8,15 +8,16 @@ export function setContract(c: ContractPromise) {
     collection_manager_contract = c;
 }
 
-export async function getCollectionCount(caller_account: string): Promise<number | null> {
+export async function getCollectionCount(caller_account: string): Promise<number> {
     if (!collection_manager_contract || !caller_account) {
-        return null;
+        return 0;
     }
     const address = caller_account;
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(collection_manager_contract.api);
     const azero_value = 0;
-    const {result, output} = await collection_manager_contract.query.getCollectionCount(
+    // @ts-ignore
+    const {result, output} = await collection_manager_contract.query["artZeroCollectionTrait::getCollectionCount"](
         address,
         {
             value: azero_value,
@@ -24,9 +25,12 @@ export async function getCollectionCount(caller_account: string): Promise<number
         });
     if (result.isOk && output) {
         // @ts-ignore
-        return new BN(output.toHuman()?.Ok, 10, "le").toNumber();
+        // return new BN(output.toHuman()?.Ok, 10, "le").toNumber();
+        return output.toHuman()?.Ok?.replaceAll(",", "");
+        // return new BN(output.toHuman()?.Ok?.replaceAll(",", ""));
+        // return new BN(output.toHuman()?.Ok, 10, "le");
     }
-    return null;
+    return 0;
 }
 
 export async function getContractById(caller_account: string, collection_id: number) {
@@ -37,8 +41,9 @@ export async function getContractById(caller_account: string, collection_id: num
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(collection_manager_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} =
-        await collection_manager_contract.query.getContractById(
+        await collection_manager_contract.query["artZeroCollectionTrait::getContractById"](
             address,
             {value: azero_value, gasLimit},
             collection_id
@@ -61,8 +66,9 @@ export async function getCollectionByAddress(caller_account: string, collection_
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(collection_manager_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const {result, output} =
-        await collection_manager_contract.query.getCollectionByAddress(
+        await collection_manager_contract.query["artZeroCollectionTrait::getCollectionByAddress"](
             caller_account,
             {value: azero_value, gasLimit},
             collection_address
@@ -82,8 +88,9 @@ export async function getAttributes(caller_account: string, nft_contract_address
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(collection_manager_contract.api);
     const azero_value = 0;
+    // @ts-ignore
     const { result, output } =
-        await collection_manager_contract.query.getAttributes(
+        await collection_manager_contract.query["artZeroCollectionTrait::getAttributes"](
             caller_account,
             { value: azero_value, gasLimit },
             nft_contract_address,

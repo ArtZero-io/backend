@@ -298,6 +298,7 @@ export const RequestGetJSONBody = {
     required: true,
     content: {
         'application/x-www-form-urlencoded': {schema: ReqGetJSONSchema},
+        'application/json': {schema: ReqGetJSONSchema},
     },
 };
 
@@ -1210,6 +1211,34 @@ export const RequestGetClaimRewardHistoryBody = {
     },
 };
 
+// CHECK WHITELIST
+export type ReqGetPhaseInfoType = {
+    nftContractAddress: string,
+    phaseId: number,
+};
+const ReqGetPhaseInfoSchema: SchemaObject = {
+    type: 'object',
+    required: ['nftContractAddress','phaseId'],
+    properties: {
+        projectAddress: {
+            type: 'string',
+        },
+        nftContractAddress: {
+            type: 'string',
+        },
+        phaseId: {
+            type: 'number',
+        }
+    },
+};
+export const RequestGetPhaseInfoBody = {
+    description: 'The input of checkWhiteList function',
+    required: true,
+    content: {
+        'application/x-www-form-urlencoded': {schema: ReqGetPhaseInfoSchema},
+    },
+};
+
 // REPORT NFT request
 export type ReqReportNFTType = {
    collection_name: string, 
@@ -1248,5 +1277,195 @@ export const RequestReportNFTBody = {
     required: true,
     content: {
         'application/x-www-form-urlencoded': {schema: ReqReportNFTSchema},
+    },
+};
+
+// CREATE BLACKLIST
+export type ReqCreateBlackListType = {
+    nftContractAddress: string,
+    typeName: string,
+    isActive: boolean,
+    userName: string,
+    password: string
+};
+const ReqCreateBlackListSchema: SchemaObject = {
+    type: 'object',
+    required: ['nftContractAddress','typeName','userName','password'],
+    properties: {
+        nftContractAddress: {
+            type: 'string',
+        },
+        typeName: {
+            type: 'string',
+        },
+        isActive: {
+            type: 'boolean',
+        },
+        userName: {
+            type: 'string',
+        },
+        password: {
+            type: 'string',
+        }
+    },
+};
+export const RequestCreateBlackListBody = {
+    description: 'The input of createBlackList function',
+    required: true,
+    content: {
+        'application/x-www-form-urlencoded': {schema: ReqCreateBlackListSchema},
+    },
+};
+
+// GET PROJECT BY ADDRESS
+export type ReqGetProjectByAdressType = {
+    nftContractAddress: string,
+};
+const ReqGetProjectByAdressSchema: SchemaObject = {
+    type: 'object',
+    required: ['nftContractAddress'],
+    properties: {
+        nftContractAddress: {
+            type: 'string',
+        },
+    },
+};
+export const RequestGetProjectByAdressBody = {
+    description: 'The input of getProjectByAdress function',
+    required: true,
+    content: {
+        'application/x-www-form-urlencoded': {schema: ReqGetProjectByAdressSchema},
+    },
+};
+
+// UPDATE API AND JOBS CONFIG
+export type MainConfig = {
+    configJobs: ConfigJobs,
+    configRest?: ConfigRest,
+};
+export type ConfigRest = {
+    // TODO: Update for rest api
+};
+export type ConfigJobs = {
+    // TODO: Update for jobs
+    isEnable: boolean,
+    rpc: string
+};
+export type ReqUpdateConfigType = {
+    typeConfig: Array<string>,
+    mainConfig: MainConfig,
+    nodeIp: string,
+    nodeCluster: string,
+    userName: string,
+    password: string
+};
+const ReqUpdateConfigSchema: SchemaObject = {
+    type: 'object',
+    required: ['typeConfig', 'mainConfig', 'userName', 'password','nodeIp','nodeCluster'],
+    properties: {
+        typeConfig: {
+            type: 'array',
+        },
+        nodeIp: {
+            type: 'string',
+        },
+        nodeCluster: {
+            type: 'string',
+        },
+        mainConfig: {
+            type: 'object',
+        },
+        userName: {
+            type: 'string',
+        },
+        password: {
+            type: 'string',
+        },
+    },
+};
+export const RequestUpdateConfigBody = {
+    description: 'The input of updateConfig function',
+    required: true,
+    content: {
+        'application/json': {schema: ReqUpdateConfigSchema},
+    },
+};
+
+// TRIGGER REWARDS
+export type ReqTriggerRewardsType = {
+    userName: string,
+    password: string
+};
+const ReqTriggerRewardsSchema: SchemaObject = {
+    type: 'object',
+    required: ['userName', 'password'],
+    properties: {
+        userName: {
+            type: 'string',
+        },
+        password: {
+            type: 'string',
+        },
+    },
+};
+export const RequestTriggerRewardsBody = {
+    description: 'The input of triggerRewards function',
+    required: true,
+    content: {
+        'application/json': {schema: ReqTriggerRewardsSchema},
+    },
+};
+
+// RESET ALL QUEUE
+export type ReqResetAllQueueType = {
+    userName: string,
+    password: string
+};
+const ReqResetAllQueueSchema: SchemaObject = {
+    type: 'object',
+    required: ['userName', 'password'],
+    properties: {
+        userName: {
+            type: 'string',
+        },
+        password: {
+            type: 'string',
+        },
+    },
+};
+export const RequestResetAllQueueBody = {
+    description: 'The input of ResetAllQueue function',
+    required: true,
+    content: {
+        'application/json': {schema: ReqResetAllQueueSchema},
+    },
+};
+
+// CHECKING JSON AND IMAGES
+export type ReqCheckingImagesAndJsonType = {
+    userName: string,
+    password: string,
+    nftContractAddress: string
+};
+const ReqCheckingImagesAndJsonSchema: SchemaObject = {
+    type: 'object',
+    required: ['userName', 'password', 'nftContractAddress'],
+    properties: {
+        userName: {
+            type: 'string',
+        },
+        password: {
+            type: 'string',
+        },
+        nftContractAddress: {
+            type: 'string',
+        },
+    },
+};
+export const RequestCheckingImagesAndJsonBody = {
+    description: 'The input of checkingImagesAndJson function',
+    required: true,
+    content: {
+        'application/json': {schema: ReqCheckingImagesAndJsonSchema},
     },
 };

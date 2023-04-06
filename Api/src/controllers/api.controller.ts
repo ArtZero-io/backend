@@ -1,5 +1,8 @@
 import {
-    repository
+    Count,
+    CountSchema,
+    Filter, FilterExcludingWhere,
+    repository, Where
 } from '@loopback/repository';
 import {
     post,
@@ -7,7 +10,7 @@ import {
     RestBindings,
     Request,
     Response,
-    oas, requestBody, param,
+    oas, requestBody, param, response, getModelSchemaRef,
 } from '@loopback/rest';
 
 import {
@@ -15,24 +18,31 @@ import {
     BidQueueSchemaRepository,
     BidsSchemaRepository,
     BidWinEventSchemaRepository,
+    BlackListRepository,
     ClaimRewardEventSchemaRepository,
     CollectionEventSchemaRepository,
     CollectionQueueSchemaRepository,
     CollectionsSchemaRepository,
+    ConfigRepository,
     ImageQueueSchemaRepository,
     ImageRemoveQueueSchemaRepository,
     ImagesSchemaRepository,
     JsonQueueSchemaRepository,
-    JsonSchemaRepository,
+    JsonSchemaRepository, LaunchpadMintingEventSchemaRepository,
     MintingEventSchemaRepository,
     NewListEventSchemaRepository,
     NftQueueScanAllSchemaRepository,
     NftQueueSchemaRepository,
-    NftsSchemaRepository, ProjectQueueSchemaRepository,
+    NftsSchemaRepository,
+    ProjectQueueSchemaRepository,
     ProjectsSchemaRepository,
+    ProjectWhitelistQueuesRepository,
     PurchaseEventSchemaRepository,
     RewardQueueSchemaRepository,
-    ScannedBlocksSchemaRepository, StakingEventSchemaRepository, UnListEventSchemaRepository
+    ScannedBlocksSchemaRepository,
+    StakingEventSchemaRepository,
+    UnListEventSchemaRepository,
+    WithdrawEventSchemaRepository
 } from "../repositories";
 import {
     ResponseBody,
@@ -55,8 +65,6 @@ import {
     RequestCacheImagesBody,
     ReqCacheJSONType,
     RequestCacheJSONBody,
-    ReqGetJSONType,
-    RequestGetJSONBody,
     RequestGetCollectionContractBody,
     ReqGetCollectionContractType,
     RequestGetCollectionsBody,
@@ -109,10 +117,34 @@ import {
     RequestGetClaimRewardHistoryBody,
     RequestGetAllCollectionsBody,
     ReqGetAllCollectionsType,
-    RequestUpdateCollectionEmailBody, ReqUpdateCollectionEmailType, TraitFilters,
+    RequestUpdateCollectionEmailBody,
+    ReqUpdateCollectionEmailType,
+    TraitFilters,
+    ReqReportNFTType,
+    RequestReportNFTBody,
+    RequestGetPhaseInfoBody,
+    ReqGetPhaseInfoType,
+    ReqCreateBlackListType,
+    RequestCreateBlackListBody,
+    ReqGetProjectByAdressType,
+    RequestGetProjectByAdressBody,
+    RequestUpdateConfigBody,
+    ReqUpdateConfigType,
+    RequestTriggerRewardsBody,
+    ReqTriggerRewardsType,
+    RequestResetAllQueueBody,
+    ReqResetAllQueueType,
+    RequestCheckingImagesAndJsonBody, ReqCheckingImagesAndJsonType,
 } from "../utils/Message";
-import {MESSAGE, STATUS} from "../utils/constant";
-import {getFile, isValidAddressPolkadotAddress, send_telegram_message} from "../utils/utils";
+import { MESSAGE, STATUS} from "../utils/constant";
+import {
+    getFile,
+    isValidAddressPolkadotAddress,
+    isValidSignature,
+    isValidTypeName, readOnlyGasLimit,
+    send_report_telegram_message,
+    send_telegram_message
+} from "../utils/utils";
 import * as nft721_psp34_standard_calls from "../contracts/nft721_psp34_standard_calls";
 import * as collection_manager_calls from "../contracts/collection_manager_calls";
 import {collection_manager} from "../contracts/collection_manager";
@@ -122,20 +154,34 @@ import {nft721_psp34_standard} from "../contracts/nft721_psp34_standard";
 import {ApiPromise, WsProvider} from "@polkadot/api";
 import jsonrpc from "@polkadot/types/interfaces/jsonrpc";
 import {inject} from "@loopback/core";
-import {artzero_nft} from "../contracts/artzero_nft";
 import {profile} from "../contracts/profile";
 import {
-    bidwinevents,
+    bidwinevents, BlackList,
     claimrewardevents,
-    collections, newlistevents, projects,
+    collections, launchpadmintingevents, newlistevents, projects, ProjectWhitelistData,
     purchaseevents,
-    unlistevents
+    unlistevents, withdrawevents, nfts, nftqueues
 } from "../models";
+import {global_vars, SOCKET_STATUS} from "../cronjobs/global";
+import {globalApi} from "../index";
+import {
+    check_collection_queue,
+    check_new_AZ_NFTs,
+    check_new_collections,
+    check_NFT_queue, scanAllNFTs, setClaimedStatus
+} from "../cronjobs/actions";
+import dotenv from "dotenv";
+import {convertToUTCTime} from "../utils/Tools";
+import {marketplace} from "../contracts/marketplace";
+import * as marketplace_calls from "../contracts/marketplace_calls";
+import {artzero_nft} from "../contracts/artzero_nft";
+import * as artzero_nft_calls from "../contracts/artzero_nft_calls";
+import {launchpad_psp34_nft_standard} from "../contracts/launchpad_psp34_nft_standard";
+import * as launchpad_psp34_nft_standard_calls from "../contracts/launchpad_psp34_nft_standard_calls";
+import fs from "fs";
+dotenv.config();
 
-let global_vars = {
-    caller: process.env.CALLER
-};
-const provider = new WsProvider(process.env.WSSPROVIDER);
+const provider = new WsProvider(process.env.WSSPROVIDER_API);
 let api = new ApiPromise({
     provider,
     rpc: jsonrpc,
@@ -225,6 +271,8 @@ export class ApiController {
         public projectsSchemaRepository: ProjectsSchemaRepository,
         @repository(ProjectQueueSchemaRepository)
         public projectQueueSchemaRepository: ProjectQueueSchemaRepository,
+        @repository(ProjectWhitelistQueuesRepository)
+        public projectWhitelistQueuesRepository: ProjectWhitelistQueuesRepository,
         @repository(PurchaseEventSchemaRepository)
         public purchaseEventSchemaRepository: PurchaseEventSchemaRepository,
         @repository(RewardQueueSchemaRepository)
@@ -235,6 +283,14 @@ export class ApiController {
         public stakingEventSchemaRepository: StakingEventSchemaRepository,
         @repository(UnListEventSchemaRepository)
         public unListEventSchemaRepository: UnListEventSchemaRepository,
+        @repository(BlackListRepository)
+        public blackListRepository: BlackListRepository,
+        @repository(ConfigRepository)
+        public configRepository: ConfigRepository,
+        @repository(WithdrawEventSchemaRepository)
+        public withdrawEventSchemaRepository: WithdrawEventSchemaRepository,
+        @repository(LaunchpadMintingEventSchemaRepository)
+        public luanchpadMintingEventSchemaRepository: LaunchpadMintingEventSchemaRepository,
     ) {
     }
 
@@ -244,18 +300,21 @@ export class ApiController {
         @requestBody(RequestUpdateCollectionBody) req:ReqUpdateCollectionType
     ): Promise<ResponseBody | Response> {
         try {
+            // @ts-ignore
             if (!req) return this.response.send({
                 status: STATUS.FAILED,
                 message: MESSAGE.NO_INPUT
             });
             let collection_address = req?.collection_address;
             if (!collection_address) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NO_ADDRESS
                 });
             }
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_ADDRESS
@@ -267,6 +326,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NOT_EXIST_ADDRESS
@@ -278,17 +338,46 @@ export class ApiController {
                 }
             });
             if (!queue_data) {
-                await this.collectionQueueSchemaRepository.create({
-                    type: "update",
-                    nftContractAddress: collection_address,
-                    createdTime: new Date(),
-                    updatedTime: new Date()
-                });
+                try {
+                    await this.collectionQueueSchemaRepository.create({
+                        type: "update",
+                        nftContractAddress: collection_address,
+                        createdTime: new Date(),
+                        updatedTime: new Date()
+                    });
+                } catch (e) {
+                    console.log(`ERROR: ${e.message}`);
+                }
+                // TODO: Trigger to jobs
+                if ((global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) {
+                    global_vars.is_check_new_collections = false;
+                    global_vars.is_check_collection_queue = false;
+                    try {
+                        await check_new_collections(
+                            this.collectionsSchemaRepository,
+                            this.nfTsSchemaRepository
+                        );
+                    } catch (e) {
+                        console.log(`ERROR: ${e.message}`);
+                    }
+                    try {
+                        await check_collection_queue(
+                            this.collectionsSchemaRepository,
+                            this.collectionQueueSchemaRepository,
+                            this.nfTsSchemaRepository,
+                            this.imageRemoveQueueSchemaRepository
+                        );
+                    } catch (e) {
+                        console.log(`ERROR: ${e.message}`);
+                    }
+                }
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.OK,
                     message: MESSAGE.SUCCESS
                 });
             } else {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     ret: "",
@@ -297,7 +386,8 @@ export class ApiController {
                 });
             }
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -311,18 +401,23 @@ export class ApiController {
         @requestBody(RequestUpdateProjectBody) req:ReqUpdateProjectType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({
-                status: STATUS.FAILED,
-                message: MESSAGE.NO_INPUT
-            });
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.NO_INPUT
+                });
+            }
             let project_address = req?.project_address;
             if (!project_address) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NO_ADDRESS
                 });
             }
             if (!isValidAddressPolkadotAddress(project_address)) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_ADDRESS
@@ -335,6 +430,7 @@ export class ApiController {
                 }
             );
             if (!project_data) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NOT_EXIST_ADDRESS
@@ -346,26 +442,45 @@ export class ApiController {
                 }
             });
             if (!queue_data) {
-                await this.projectQueueSchemaRepository.create(
-                    {
-                        type: "update",
-                        nftContractAddress: project_address,
-                        createdTime: new Date(),
-                        updatedTime: new Date()
-                    }
-                );
+                try {
+                    await this.projectQueueSchemaRepository.create(
+                        {
+                            type: "update",
+                            nftContractAddress: project_address,
+                            createdTime: new Date(),
+                            updatedTime: new Date()
+                        }
+                    );
+                } catch (e) {
+                    console.log(`ERROR: ${e.message}`);
+                }
+                try {
+                    await this.projectWhitelistQueuesRepository.create(
+                        {
+                            type: "update",
+                            nftContractAddress: project_address,
+                            createdTime: new Date(),
+                            updatedTime: new Date()
+                        }
+                    );
+                } catch (e) {
+                    console.log(`ERROR: ${e.message}`);
+                }
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.OK,
                     message: MESSAGE.SUCCESS
                 });
             } else {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.DUPLICATED_ADDRESS,
                 });
             }
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -379,6 +494,7 @@ export class ApiController {
         @requestBody(RequestNewMintingEventBody) req:ReqNewMintingEventType
     ): Promise<ResponseBody | Response> {
         try {
+            // @ts-ignore
             if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             let nftContractAddress = req?.project;
             let minter = req?.minter;
@@ -387,30 +503,38 @@ export class ApiController {
             let price = req?.price;
             let projectMintFee = req?.project_mint_fee;
             if (!nftContractAddress || !minter) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_ADDRESS});
             }
             if (
                 !isValidAddressPolkadotAddress(nftContractAddress) ||
                 !isValidAddressPolkadotAddress(minter)
             ) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
-            await this.mintingEventSchemaRepository.create({
-                nftContractAddress: nftContractAddress,
-                minterAddress: minter,
-                phaseId: phaseId,
-                mintAmount: mintAmount,
-                price: price,
-                projectMintFee: projectMintFee,
-                createdTime: new Date(),
-                updatedTime: new Date()
-            });
+            try {
+                await this.mintingEventSchemaRepository.create({
+                    nftContractAddress: nftContractAddress,
+                    minterAddress: minter,
+                    phaseId: phaseId,
+                    mintAmount: mintAmount,
+                    price: price,
+                    projectMintFee: projectMintFee,
+                    createdTime: new Date(),
+                    updatedTime: new Date()
+                });
+            } catch (e) {
+                console.log(`ERROR: ${e.message}`);
+            }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS
             });
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -436,6 +560,7 @@ export class ApiController {
             listData.map((item: any) => {
                 total += item?.projectMintFee
             });
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 ret: total,
@@ -443,7 +568,8 @@ export class ApiController {
                 data: []
             });
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -457,16 +583,22 @@ export class ApiController {
         @requestBody(RequestUpdateNftBody) req:ReqUpdateNftType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             let tokenID = req?.token_id;
             if (!collection_address) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_ADDRESS});
             }
             if (!tokenID) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
             }
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -475,6 +607,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
             }
             let queue_data = await this.nftQueueSchemaRepository.findOne({
@@ -484,21 +617,56 @@ export class ApiController {
                 }
             });
             if (!queue_data) {
-                await this.nftQueueSchemaRepository.create({
-                    type: "update",
-                    nftContractAddress: collection_address,
-                    tokenID: tokenID,
-                    createdTime: new Date(),
-                    updatedTime: new Date()
-                });
+                let newNftQueue: nftqueues | undefined = undefined;
+                try {
+                    newNftQueue = await this.nftQueueSchemaRepository.create({
+                        type: "update",
+                        nftContractAddress: collection_address,
+                        tokenID: tokenID,
+                        createdTime: new Date(),
+                        updatedTime: new Date()
+                    });
+                } catch (e) {
+                    console.log(`ERROR: ${e.message}`);
+                }
+                // TODO: Trigger to jobs
+                if (newNftQueue) {
+                    if ((global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) {
+                        global_vars.is_check_NFT_queue = false;
+                        global_vars.is_check_new_AZ_NFT = false;
+                        try {
+                            check_NFT_queue(
+                                globalApi,
+                                this.nfTsSchemaRepository,
+                                this.nftQueueSchemaRepository,
+                                this.collectionsSchemaRepository,
+                                this.blackListRepository,
+                                newNftQueue
+                            );
+                        } catch (e) {
+                            console.log(`ERROR: ${e.message}`);
+                        }
+                        try {
+                            check_new_AZ_NFTs(
+                                this.nfTsSchemaRepository,
+                                this.nftQueueSchemaRepository
+                            );
+                        } catch (e) {
+                            console.log(`ERROR: ${e.message}`);
+                        }
+                    }
+                }
+                // @ts-ignore
                 return this.response.send({status: STATUS.OK, message: MESSAGE.SUCCESS});
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: MESSAGE.DUPLICATED_RECORD,
             });
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -512,20 +680,26 @@ export class ApiController {
         @requestBody(RequestUpdateBidsBody) req:ReqUpdateBidsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             let seller = req?.seller;
             let tokenID = req?.token_id;
             if (!collection_address || !seller) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_ADDRESS});
             }
             if (!tokenID) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
             }
             if (
                 !isValidAddressPolkadotAddress(collection_address) ||
                 !isValidAddressPolkadotAddress(seller)
             ) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -534,6 +708,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NOT_EXIST_COLLECTION_ADDRESS,
@@ -547,21 +722,44 @@ export class ApiController {
                 }
             });
             if (!queue_data) {
-                await this.bidQueueSchemaRepository.create({
-                    nftContractAddress: collection_address,
-                    tokenID: tokenID,
-                    seller: seller,
-                    createdTime: new Date(),
-                    updatedTime: new Date()
-                });
+                try {
+                    const currentData = await this.bidQueueSchemaRepository.findOne({
+                        where: {
+                            nftContractAddress: collection_address,
+                            tokenID: tokenID,
+                            seller: seller,
+                        }
+                    });
+                    if (!currentData) {
+                        await this.bidQueueSchemaRepository.create({
+                            nftContractAddress: collection_address,
+                            tokenID: tokenID,
+                            seller: seller,
+                            createdTime: new Date(),
+                            updatedTime: new Date()
+                        });
+                    } else {
+                        await this.bidQueueSchemaRepository.updateById(currentData._id, {
+                            nftContractAddress: collection_address,
+                            tokenID: tokenID,
+                            seller: seller,
+                            updatedTime: new Date()
+                        });
+                    }
+                } catch (e) {
+                    console.log(`ERROR: ${e.message}`);
+                }
+                // @ts-ignore
                 return this.response.send({status: STATUS.OK, message: MESSAGE.SUCCESS});
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: MESSAGE.DUPLICATED_RECORD,
             });
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -575,7 +773,10 @@ export class ApiController {
         @requestBody(RequestGetBidsByBidderAddressBody) req:ReqGetBidsByBidderAddressType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let bidder = req?.bidder;
             let limit = req?.limit;
             let offset = req?.offset;
@@ -583,9 +784,11 @@ export class ApiController {
             if (!offset) offset = 0;
             const order = (req?.sort && req?.sort == 1) ? "bid_date ASC" : "bid_date DESC";
             if (!bidder) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_ADDRESS});
             }
             if (!isValidAddressPolkadotAddress(bidder)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let data = await this.bidsSchemaRepository.find({
@@ -596,13 +799,15 @@ export class ApiController {
                 skip: offset,
                 order: [order]
             });
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS,
                 ret: data
             });
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -616,7 +821,10 @@ export class ApiController {
         @requestBody(RequestCacheImageBody) req:ReqCacheImageType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let input = req?.input;
             let is1024 = req?.is1024;
             let is1440 = req?.is1440;
@@ -629,12 +837,15 @@ export class ApiController {
             let is500 = true;
             let is100 = true;
             if (!input) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
             if (!imageType) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_IMAGE_TYPE});
             }
             if (!metadata) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_METADATA});
             }
             input = input.replace("ipfs://", "/ipfs/");
@@ -644,12 +855,18 @@ export class ApiController {
                 }
             });
             if (input_data) {
-                if (is1024 && input_data.location1024 != "")
+                if (is1024 && input_data.location1024 != "") {
+                    // @ts-ignore
                     return this.response.send({status: STATUS.FAILED, message: MESSAGE.INPUT_ALREADY_EXIST});
-                if (is1440 && input_data.location1440 != "")
+                }
+                if (is1440 && input_data.location1440 != "") {
+                    // @ts-ignore
                     return this.response.send({status: STATUS.FAILED, message: MESSAGE.INPUT_ALREADY_EXIST});
-                if (is1920 && input_data.location1920 != "")
+                }
+                if (is1920 && input_data.location1920 != "") {
+                    // @ts-ignore
                     return this.response.send({status: STATUS.FAILED, message: MESSAGE.INPUT_ALREADY_EXIST});
+                }
                 if ((is1024 || is1440 || is1920) && input_data.location100 != "") {
                     is500 = false;
                     is100 = false;
@@ -661,24 +878,31 @@ export class ApiController {
                 }
             });
             if (!queue_data) {
-                await this.imageQueueSchemaRepository.create({
-                    input: input,
-                    is1024: is1024,
-                    is1920: is1920,
-                    is1440: is1440,
-                    is500: is500,
-                    is100: is100,
-                    createdTime: new Date(),
-                    updatedTime: new Date()
-                });
+                try {
+                    await this.imageQueueSchemaRepository.create({
+                        input: input,
+                        is1024: is1024,
+                        is1920: is1920,
+                        is1440: is1440,
+                        is500: is500,
+                        is100: is100,
+                        createdTime: new Date(),
+                        updatedTime: new Date()
+                    });
+                } catch (e) {
+                    console.log(`ERROR: ${e.message}`);
+                }
+                // @ts-ignore
                 return this.response.send({status: STATUS.OK, message: MESSAGE.SUCCESS});
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: MESSAGE.DUPLICATED_RECORD
             });
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -692,7 +916,10 @@ export class ApiController {
         @requestBody(RequestCacheImagesBody) req:ReqCacheImagesType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let images = JSON.parse(req?.images);
             console.log('Images Request: ', req?.images);
             console.log('Images Request after parse: ', images);
@@ -749,16 +976,20 @@ export class ApiController {
                                     );
                                     if (attributes[0]) {
                                         if (attributes[0] == input) {
-                                            await this.imageQueueSchemaRepository.create({
-                                                input: input,
-                                                is1024: is1024,
-                                                is1920: is1920,
-                                                is1440: is1440,
-                                                is500: is500,
-                                                is100: is100,
-                                                createdTime: new Date(),
-                                                updatedTime: new Date()
-                                            });
+                                            try {
+                                                await this.imageQueueSchemaRepository.create({
+                                                    input: input,
+                                                    is1024: is1024,
+                                                    is1920: is1920,
+                                                    is1440: is1440,
+                                                    is500: is500,
+                                                    is100: is100,
+                                                    createdTime: new Date(),
+                                                    updatedTime: new Date()
+                                                });
+                                            } catch (e) {
+                                                console.log(`ERROR: ${e.message}`);
+                                            }
                                             console.log('Cache Images: added ' + input);
                                         } else {
                                             console.log('Cache Images: attribute ' + metadata.type + ' is ' + attributes[0])
@@ -779,16 +1010,20 @@ export class ApiController {
                                 );
                                 if (attributes[0]) {
                                     if (attributes[0] == input) {
-                                        await this.imageQueueSchemaRepository.create({
-                                            input: input,
-                                            is1024: is1024,
-                                            is1920: is1920,
-                                            is1440: is1440,
-                                            is500: is500,
-                                            is100: is100,
-                                            createdTime: new Date(),
-                                            updatedTime: new Date()
-                                        });
+                                        try {
+                                            await this.imageQueueSchemaRepository.create({
+                                                input: input,
+                                                is1024: is1024,
+                                                is1920: is1920,
+                                                is1440: is1440,
+                                                is500: is500,
+                                                is100: is100,
+                                                createdTime: new Date(),
+                                                updatedTime: new Date()
+                                            });
+                                        } catch (e) {
+                                            console.log(`ERROR: ${e.message}`);
+                                        }
                                         console.log('Cache Images: added ' + input);
                                     } else {
                                         console.log('Cache Images: attribute ' + metadata.type + ' is ' + attributes[0])
@@ -815,16 +1050,20 @@ export class ApiController {
                                     );
                                     if (attributes[0]) {
                                         if (attributes[0] == input) {
-                                            await this.imageQueueSchemaRepository.create({
-                                                input: input,
-                                                is1024: is1024,
-                                                is1920: is1920,
-                                                is1440: is1440,
-                                                is500: is500,
-                                                is100: is100,
-                                                createdTime: new Date(),
-                                                updatedTime: new Date()
-                                            });
+                                            try {
+                                                await this.imageQueueSchemaRepository.create({
+                                                    input: input,
+                                                    is1024: is1024,
+                                                    is1920: is1920,
+                                                    is1440: is1440,
+                                                    is500: is500,
+                                                    is100: is100,
+                                                    createdTime: new Date(),
+                                                    updatedTime: new Date()
+                                                });
+                                            } catch (e) {
+                                                console.log(`ERROR: ${e.message}`);
+                                            }
                                             console.log('Cache Images: added ' + input);
                                         } else {
                                             console.log('Cache Images: attribute ' + metadata.type + ' is ' + attributes[0])
@@ -841,14 +1080,17 @@ export class ApiController {
                     }
                 }
             } else {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_IMAGES});
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS
             });
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -862,9 +1104,13 @@ export class ApiController {
         @requestBody(RequestCacheJSONBody) req:ReqCacheJSONType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let input = req?.input;
             if (!input) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
             input = input.replace("ipfs://", "/ipfs/");
@@ -874,6 +1120,7 @@ export class ApiController {
                 }
             });
             if (input_data) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INPUT_ALREADY_EXIST});
             }
             let queue_data = await this.jsonQueueSchemaRepository.findOne({
@@ -882,19 +1129,26 @@ export class ApiController {
                 }
             });
             if (!queue_data) {
-                await this.jsonQueueSchemaRepository.create({
-                    input: input,
-                    createdTime: new Date(),
-                    updatedTime: new Date()
-                });
+                try {
+                    await this.jsonQueueSchemaRepository.create({
+                        input: input,
+                        createdTime: new Date(),
+                        updatedTime: new Date()
+                    });
+                } catch (e) {
+                    console.log(`ERROR: ${e.message}`);
+                }
+                // @ts-ignore
                 return this.response.send({status: STATUS.OK, message: MESSAGE.SUCCESS});
             }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: MESSAGE.DUPLICATED_RECORD,
             });
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -909,10 +1163,13 @@ export class ApiController {
         @param.query.string('input') input?: string
     ): Promise<Response | ResponseBody | void> {
         try {
-            if (!input) return this.response.send({
-                status: STATUS.FAILED,
-                message: MESSAGE.INVALID_INPUT
-            });
+            if (!input) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_INPUT
+                });
+            }
             input = input.replace("ipfs://", "/ipfs/");
             let input_data = await this.jsonSchemaRepository.findOne({
                 where: {
@@ -925,7 +1182,8 @@ export class ApiController {
                 return getFile(input_data.location, this.response);
             }
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -942,13 +1200,11 @@ export class ApiController {
         // @requestBody(RequestGetImageBody) req:ReqGetImageType
     ): Promise<Response | ResponseBody | void> {
         try {
-            console.log({getImageInput: {
-                    input: input,
-                    url: url,
-                    size: size
-                }})
             if (!url) url = "";
-            if (!input) return this.response.send(url);
+            if (!input) {
+                // @ts-ignore
+                return this.response.send(url);
+            }
             if (
                 size != 100 &&
                 size != 500 &&
@@ -971,22 +1227,29 @@ export class ApiController {
                     }
                 });
                 if (!queue_data) {
-                    await this.imageQueueSchemaRepository.create({
-                        input: input,
-                        is500: true,
-                        is100: true,
-                        createdTime: new Date(),
-                        updatedTime: new Date()
-                    });
+                    try {
+                        await this.imageQueueSchemaRepository.create({
+                            input: input,
+                            is500: true,
+                            is100: true,
+                            createdTime: new Date(),
+                            updatedTime: new Date()
+                        });
+                    } catch (e) {
+                        console.log(`ERROR: ${e.message}`);
+                    }
                 }
+                // @ts-ignore
                 return this.response.send(url);
             }
             if (size == 100) {
                 try {
                     if (input_data.isCloudFlare) {
+                        // @ts-ignore
                         return this.response.send(input_data.location100);
                     } else {
                         if (input_data.location100) {
+                            console.log({location100: input_data.location100});
                             return getFile(input_data.location100, this.response);
                         }
                     }
@@ -995,20 +1258,26 @@ export class ApiController {
                     await this.imagesSchemaRepository.deleteAll({
                         input: input
                     });
-                    await this.imageQueueSchemaRepository.create({
-                        input: input,
-                        is500: true,
-                        is100: true,
-                        createdTime: new Date(),
-                        updatedTime: new Date()
-                    });
+                    try {
+                        await this.imageQueueSchemaRepository.create({
+                            input: input,
+                            is500: true,
+                            is100: true,
+                            createdTime: new Date(),
+                            updatedTime: new Date()
+                        });
+                    } catch (e) {
+                        console.log(`ERROR: ${e.message}`);
+                    }
                 }
             } else if (size == 500) {
                 try {
                     if (input_data.isCloudFlare) {
+                        // @ts-ignore
                         return this.response.send(input_data.location500);
                     } else {
                         if (input_data.location500) {
+                            console.log({location500: input_data.location500});
                             return getFile(input_data.location500, this.response);
                         }
                     }
@@ -1017,21 +1286,27 @@ export class ApiController {
                     await this.imagesSchemaRepository.deleteAll({
                         input: input
                     });
-                    await this.imageQueueSchemaRepository.create({
-                        input: input,
-                        is500: true,
-                        is100: true,
-                        createdTime: new Date(),
-                        updatedTime: new Date()
-                    });
+                    try {
+                        await this.imageQueueSchemaRepository.create({
+                            input: input,
+                            is500: true,
+                            is100: true,
+                            createdTime: new Date(),
+                            updatedTime: new Date()
+                        });
+                    } catch (e) {
+                        console.log(`ERROR: ${e.message}`);
+                    }
                 }
             } else if (size == 1024) {
                 if (input_data.location1024 != "") {
                     try {
                         if (input_data.isCloudFlare) {
+                            // @ts-ignore
                             return this.response.send(input_data.location1024);
                         } else {
                             if (input_data.location1024) {
+                                console.log({location1024: input_data.location1024});
                                 return getFile(input_data.location1024, this.response);
                             }
                         }
@@ -1040,21 +1315,30 @@ export class ApiController {
                         await this.imagesSchemaRepository.deleteAll({
                             input: input
                         });
-                        await this.imageQueueSchemaRepository.create({
-                            input: input,
-                            is1024: true,
-                            createdTime: new Date(),
-                            updatedTime: new Date()
-                        });
+                        try {
+                            await this.imageQueueSchemaRepository.create({
+                                input: input,
+                                is1024: true,
+                                createdTime: new Date(),
+                                updatedTime: new Date()
+                            });
+                        } catch (e) {
+                            console.log(`ERROR: ${e.message}`);
+                        }
                     }
-                } else return this.response.send(url);
+                } else {
+                    // @ts-ignore
+                    return this.response.send(url);
+                }
             } else if (size == 1440) {
                 if (input_data.location1440 != "") {
                     try {
                         if (input_data.isCloudFlare) {
+                            // @ts-ignore
                             return this.response.send(input_data.location1440);
                         } else {
                             if (input_data.location1440) {
+                                console.log({location1440: input_data.location1440});
                                 return getFile(input_data.location1440, this.response);
                             }
                         }
@@ -1064,21 +1348,30 @@ export class ApiController {
                         await this.imagesSchemaRepository.deleteAll({
                             input: input
                         });
-                        await this.imageQueueSchemaRepository.create({
-                            input: input,
-                            is1440: true,
-                            createdTime: new Date(),
-                            updatedTime: new Date()
-                        });
+                        try {
+                            await this.imageQueueSchemaRepository.create({
+                                input: input,
+                                is1440: true,
+                                createdTime: new Date(),
+                                updatedTime: new Date()
+                            });
+                        } catch (e) {
+                            console.log(`ERROR: ${e.message}`);
+                        }
                     }
-                } else return this.response.send(url);
+                } else {
+                    // @ts-ignore
+                    return this.response.send(url);
+                }
             } else if (size == 1920) {
                 if (input_data.location1920 != "") {
                     try {
                         if (input_data.isCloudFlare) {
+                            // @ts-ignore
                             return this.response.send(input_data.location1920);
                         } else {
                             if (input_data.location1920) {
+                                console.log({location1920: input_data.location1920});
                                 return getFile(input_data.location1920, this.response);
                             }
                         }
@@ -1087,17 +1380,25 @@ export class ApiController {
                         await this.imagesSchemaRepository.deleteAll({
                             input: input
                         });
-                        await this.imageQueueSchemaRepository.create({
-                            input: input,
-                            is1920: true,
-                            createdTime: new Date(),
-                            updatedTime: new Date()
-                        });
+                        try {
+                            await this.imageQueueSchemaRepository.create({
+                                input: input,
+                                is1920: true,
+                                createdTime: new Date(),
+                                updatedTime: new Date()
+                            });
+                        } catch (e) {
+                            console.log(`ERROR: ${e.message}`);
+                        }
                     }
-                } else return this.response.send(url);
+                } else {
+                    // @ts-ignore
+                    return this.response.send(url);
+                }
             }
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1108,14 +1409,28 @@ export class ApiController {
     // Get Collection Contract Address
     @get('/getCollectionContract')
     async getCollectionContract(
+        @requestBody(RequestGetCollectionContractBody) req:ReqGetCollectionContractType
     ): Promise<ResponseBody | Response> {
         try {
+            // @ts-ignore
+            const host = this.request.headers.host;
+            // @ts-ignore
+            const origin = this.request.headers.origin;
+            // @ts-ignore
+            const userIP = this.request.socket.remoteAddress;
+            // @ts-ignore
+            console.log(this.request.headers);
+            console.log(`userIP: ${userIP}`);
+            console.log(`host: ${host}`);
+            console.log(`origin: ${origin}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 ret: collection_manager.CONTRACT_ADDRESS
             });
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1131,9 +1446,11 @@ export class ApiController {
                 isActive: true,
                 nft_count: {gt: 0},
             });
+            // @ts-ignore
             return this.response.send({status: "OK", ret: collection_count_db.count});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1145,14 +1462,21 @@ export class ApiController {
     @get('/getFeaturedCollections')
     async getFeaturedCollections(): Promise<ResponseBody | Response> {
         try {
+            let ret: string[] = [];
+            if (process.env.LIST_FEATURED_COLLECTIONS) {
+                const listFeaturedCollections = process.env.LIST_FEATURED_COLLECTIONS.split(',');
+                listFeaturedCollections.map((item) => {
+                    ret.push(item);
+                });
+            }
+            // @ts-ignore
             return this.response.send({
                 status: "OK",
-                ret: [
-                    `${artzero_nft.CONTRACT_ADDRESS}`
-                ],
+                ret: ret,
             });
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1166,6 +1490,7 @@ export class ApiController {
         @requestBody(RequestGetCollectionsBody) req:ReqGetCollectionsType
     ): Promise<ResponseBody | Response> {
         try {
+            // @ts-ignore
             if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             let limit = req?.limit;
             let offset = req?.offset;
@@ -1203,9 +1528,11 @@ export class ApiController {
                 console.log({error: e});
             }
             console.log({data: data.length});
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1219,7 +1546,10 @@ export class ApiController {
         @requestBody(RequestGetAllCollectionsBody) req:ReqGetAllCollectionsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let isActive:boolean | undefined = req?.isActive;
@@ -1252,9 +1582,11 @@ export class ApiController {
                 console.log({error: e});
             }
             console.log({data: data.length});
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1268,24 +1600,30 @@ export class ApiController {
         @requestBody(RequestUpdateCollectionEmailBody) req:ReqUpdateCollectionEmailType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req.collection_address;
             let email = req.email;
             const emailRegexp =
                 /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
             if (!email || !emailRegexp.test(email)) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_EMAIL_FORMAT,
                 });
             }
             if (!collection_address) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_ADDRESS,
                 });
             }
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_COLLECTION_ADDRESS,
@@ -1297,21 +1635,27 @@ export class ApiController {
                 }
             });
             if (!foundDoc) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NOT_EXIST_COLLECTION_ADDRESS,
                 });
             }
-            const updatedDoc = await this.collectionsSchemaRepository.updateById(foundDoc._id, {
-                email: email
-            });
-            console.log({updatedDoc: updatedDoc});
+            try {
+                await this.collectionsSchemaRepository.updateById(foundDoc._id, {
+                    email: email
+                });
+            } catch (e) {
+                console.log(`ERROR: ${e.message}`);
+            }
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS,
             });
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1325,7 +1669,10 @@ export class ApiController {
         @requestBody(RequestGetProjectsBody) req:ReqGetProjectsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let isActive = req?.isActive;
@@ -1342,9 +1689,11 @@ export class ApiController {
                 limit: limit,
                 order: [order]
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1358,7 +1707,10 @@ export class ApiController {
         @requestBody(RequestGetCollectionsByVolumeBody) req:ReqGetCollectionsByVolumeType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let isActive = req?.isActive;
@@ -1380,9 +1732,11 @@ export class ApiController {
                 limit: limit,
                 order: [order]
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1396,7 +1750,10 @@ export class ApiController {
         @requestBody(RequestGetCollectionByIDBody) req:ReqGetCollectionByIDType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let id = req?.id;
             if (!id) id = 1;
             let data = await this.collectionsSchemaRepository.find({
@@ -1404,9 +1761,11 @@ export class ApiController {
                     index: id
                 }
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1420,13 +1779,17 @@ export class ApiController {
         @requestBody(RequestGetCollectionsByOwnerBody) req:ReqGetCollectionsByOwnerType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let owner = req?.owner;
             let limit = req?.limit;
             let offset = req?.offset;
             if (!limit) limit = 15;
             if (!offset) offset = 0;
             if (!owner) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             const order = (req?.sort && req?.sort == 1) ? "index ASC" : "index DESC";
@@ -1438,9 +1801,11 @@ export class ApiController {
                 limit: limit,
                 order: [order]
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1454,11 +1819,15 @@ export class ApiController {
         @requestBody(RequestCountCollectionsByOwnerBody) req:ReqCountCollectionsByOwnerType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let owner = req?.owner;
             let includeNoneNFT = req?.noNFT;
             if (!includeNoneNFT) includeNoneNFT = false;
             if (!owner) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             if (includeNoneNFT) {
@@ -1466,16 +1835,19 @@ export class ApiController {
                     collectionOwner: owner
                 });
                 console.log({data: data});
+                // @ts-ignore
                 return this.response.send({status: STATUS.OK, ret: data.count});
             } else {
                 let data = await this.collectionsSchemaRepository.count({
                     collectionOwner: owner,
                     nft_count: {gt: 0},
                 });
+                // @ts-ignore
                 return this.response.send({status: STATUS.OK, ret: data.count});
             }
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1489,10 +1861,14 @@ export class ApiController {
         @requestBody(RequestGetCollectionByAddressBody) req:ReqGetCollectionByAddressType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             console.log({collection_address: collection_address});
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -1500,8 +1876,9 @@ export class ApiController {
                     nftContractAddress: collection_address,
                 }
             });
-            console.log({collection_data: collection_data});
+            // console.log({collection_data: collection_data});
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
             }
             let data = await this.collectionsSchemaRepository.find({
@@ -1509,9 +1886,11 @@ export class ApiController {
                     nftContractAddress: collection_address,
                 }
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1525,9 +1904,13 @@ export class ApiController {
         @requestBody(RequestGetFloorPriceBody) req:ReqGetFloorPriceType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -1537,6 +1920,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NOT_EXIST_ADDRESS_INACTIVE,
@@ -1547,12 +1931,14 @@ export class ApiController {
                     nftContractAddress: collection_address,
                     is_for_sale: true,
                 },
-                order: ["price DESC"],  // price ASC
+                order: ["price ASC"],  // price ASC
                 limit: 1
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1566,13 +1952,17 @@ export class ApiController {
         @requestBody(RequestGetNFTsBody) req:ReqGetNFTsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             let limit = req?.limit;
             let offset = req?.offset;
             if (!limit) limit = 15;
             if (!offset) offset = 0;
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -1581,6 +1971,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
             }
             const order = (req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC";
@@ -1592,9 +1983,11 @@ export class ApiController {
                 skip: offset,
                 limit: limit
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1607,13 +2000,17 @@ export class ApiController {
         @requestBody(RequestGetListedNFTsBody) req:ReqGetListedNFTsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             let limit = req?.limit;
             let offset = req?.offset;
             if (!limit) limit = 15;
             if (!offset) offset = 0;
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -1622,6 +2019,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
             }
             const order = (req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC";
@@ -1634,9 +2032,11 @@ export class ApiController {
                 skip: offset,
                 limit: limit
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1649,13 +2049,17 @@ export class ApiController {
         @requestBody(RequestGetUnlistedNFTsBody) req:ReqGetUnlistedNFTsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             let limit = req?.limit;
             let offset = req?.offset;
             if (!limit) limit = 15;
             if (!offset) offset = 0;
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -1664,6 +2068,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
             }
             const order = (req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC";
@@ -1676,9 +2081,11 @@ export class ApiController {
                 skip: offset,
                 limit: limit
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1692,13 +2099,18 @@ export class ApiController {
         @requestBody(RequestGetNFTByIDBody) req:ReqGetNFTByIDType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let tokenID = req?.token_id;
             let collection_address = req?.collection_address;
             if (!tokenID) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
             }
             if (!isValidAddressPolkadotAddress(collection_address)) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             let collection_data = await this.collectionsSchemaRepository.findOne({
@@ -1707,6 +2119,7 @@ export class ApiController {
                 }
             });
             if (!collection_data) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
             }
             let data = await this.nfTsSchemaRepository.find({
@@ -1715,9 +2128,11 @@ export class ApiController {
                     tokenID: tokenID,
                 }
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1731,7 +2146,10 @@ export class ApiController {
         @requestBody(RequestGetNFTsByOwnerBody) req:ReqGetNFTsByOwnerType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let owner = req?.owner;
             let limit = req?.limit;
             let offset = req?.offset;
@@ -1740,6 +2158,7 @@ export class ApiController {
             if (!offset) offset = 0;
             if (!sort) sort = -1;
             if (!owner) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             const order = (req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC";
@@ -1775,9 +2194,11 @@ export class ApiController {
                     })
                     .slice(0, limit);
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: result});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1791,7 +2212,10 @@ export class ApiController {
         @requestBody(RequestGetNFTsByOwnerAndCollectionBody) req:ReqGetNFTsByOwnerAndCollectionType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let owner = req?.owner;
             let collection_address = req?.collection_address;
             let limit = req?.limit;
@@ -1801,6 +2225,7 @@ export class ApiController {
             if (!offset) offset = 0;
             if (!sort) sort = -1;
             if (!owner || !collection_address) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             const order = (req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC";
@@ -1838,9 +2263,11 @@ export class ApiController {
                     })
                     .slice(0, limit);
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: result});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1854,13 +2281,17 @@ export class ApiController {
         @requestBody(RequestGetNFTsByCollectionAddressBody) req:ReqGetNFTsByCollectionAddressType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             let limit = req?.limit;
             let offset = req?.offset;
             if (!limit) limit = 15;
             if (!offset) offset = 0;
             if (!collection_address) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             const order = (req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC";
@@ -1872,9 +2303,11 @@ export class ApiController {
                 skip: offset,
                 limit: limit
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1888,7 +2321,10 @@ export class ApiController {
         @requestBody(RequestGetNewListEventsBody) req:ReqGetNewListEventsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let collection_address = req?.collection_address;
@@ -1913,9 +2349,11 @@ export class ApiController {
                     limit: limit
                 });
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1929,7 +2367,10 @@ export class ApiController {
         @requestBody(RequestGetUnlistEventsBody) req:ReqGetUnlistEventsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let collection_address = req?.collection_address;
@@ -1954,9 +2395,11 @@ export class ApiController {
                     limit: limit
                 });
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -1970,7 +2413,10 @@ export class ApiController {
         @requestBody(RequestGetPurchaseEventsBody) req:ReqGetPurchaseEventsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let collection_address = req?.collection_address;
@@ -1995,9 +2441,11 @@ export class ApiController {
                     limit: limit
                 });
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2011,14 +2459,17 @@ export class ApiController {
         @requestBody(RequestGetBidWinEventsBody) req:ReqGetBidWinEventsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let collection_address = req?.collection_address;
             if (!limit) limit = 15;
             if (!offset) offset = 0;
             let data: bidwinevents[];
-            const order = (req?.sort && req?.sort == 1) ? "blockNumber ASC" : "blockNumber DESC";
+            const order = (req?.sort && req?.sort == 1) ? "blockNumber DESC" : "blockNumber ASC";
             if (collection_address) {
                 data = await this.bidWinEventSchemaRepository.find({
                     where: {
@@ -2036,9 +2487,11 @@ export class ApiController {
                     limit: limit
                 });
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2052,7 +2505,10 @@ export class ApiController {
         @requestBody(RequestSearchCollectionsBody) req:ReqSearchCollectionsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let keywords = req?.keywords;
             let limit = req?.limit;
             let isActive = req?.isActive;
@@ -2079,9 +2535,11 @@ export class ApiController {
                     limit: limit
                 });
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2094,11 +2552,15 @@ export class ApiController {
         @requestBody(RequestGetOwnershipHistoryBody) req:ReqGetOwnershipHistoryType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let collection_address = req?.collection_address;
             let tokenID = req?.token_id;
             let owner = req?.owner;
             if (!collection_address || !tokenID || !owner) {
+                // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_INPUT});
             }
             let bid_win = await this.bidWinEventSchemaRepository.find({
@@ -2129,9 +2591,11 @@ export class ApiController {
             result = result.sort(function (a: any, b: any) {
                 return parseInt(b.blockNumber) - parseInt(a.blockNumber);
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: result});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2145,12 +2609,16 @@ export class ApiController {
         @requestBody(RequestSearchNFTOfCollectionByTraitsBody) req:ReqSearchNFTOfCollectionByTraitsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let params:TraitFilters | undefined = (req?.traitFilters) ? JSON.parse(req?.traitFilters) : undefined;
             let limit = req?.limit || 24;
             let offset = req?.offset || 0;
             let collectionAddress = req?.collectionAddress;
             if (!isValidAddressPolkadotAddress(collectionAddress)) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.INVALID_COLLECTION_ADDRESS,
@@ -2163,6 +2631,7 @@ export class ApiController {
                 }
             });
             if (!collectionInfo) {
+                // @ts-ignore
                 return this.response.send({
                     status: STATUS.FAILED,
                     message: MESSAGE.NOT_EXIST_COLLECTION_ADDRESS,
@@ -2182,14 +2651,20 @@ export class ApiController {
                 skip: offset,
                 limit: limit
             })
+            const countNft = await this.nfTsSchemaRepository.count({
+                nftContractAddress: collectionAddress,
+                ...params,
+            })
 
             ret.result = {
                 NFTList: data,
-                totalResults: data.length,
+                totalResults: countNft.count,
             };
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2203,7 +2678,10 @@ export class ApiController {
         @requestBody(RequestGetAddRewardHistoryBody) req:ReqGetAddRewardHistoryType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             if (!limit) limit = 15;
@@ -2215,9 +2693,11 @@ export class ApiController {
                 skip: offset,
                 limit: limit
             });
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
@@ -2231,7 +2711,10 @@ export class ApiController {
         @requestBody(RequestGetClaimRewardHistoryBody) req:ReqGetClaimRewardHistoryType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
             let limit = req?.limit;
             let offset = req?.offset;
             let staker_address = req?.staker_address;
@@ -2256,9 +2739,823 @@ export class ApiController {
                     limit: limit
                 });
             }
+            // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: data});
         } catch (e) {
-            console.log(e);
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    @post('/reportNFT')
+    async reportNFT(
+        @requestBody(RequestReportNFTBody) req:ReqReportNFTType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            const isValid = isValidSignature(
+                MESSAGE.SIGN,
+                req?.signature,
+                req?.address
+            );
+            if(isValid) {
+                send_report_telegram_message(`${req?.address}\nReported NFT : ${req?.nft_name} \n with message: ${req?.message} \n of collection ${req?.collection_name}\nLink: ${req?.nft_link}`);
+                // @ts-ignore
+                return this.response.send({status: STATUS.OK});
+            } else {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED});
+            }
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    @post('/getPhaseInfo')
+    async getPhaseInfo(
+        @requestBody(RequestGetPhaseInfoBody) req:ReqGetPhaseInfoType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req || !req.phaseId || !req.nftContractAddress) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            let nftContractAddress = req?.nftContractAddress;
+            if (!isValidAddressPolkadotAddress(nftContractAddress)) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_NFT_ADDRESS,
+                });
+            }
+            if (api && global_vars.caller) {
+                const data = await this.projectsSchemaRepository.findOne({
+                    where: {
+                        nftContractAddress: nftContractAddress
+                    },
+                    fields: {
+                        whiteList: true
+                    }
+                });
+                let retData:ProjectWhitelistData = new ProjectWhitelistData();
+                if (data && data?.whiteList) {
+                    data?.whiteList.map((item:any) => {
+                        if (item?.phaseId == req.phaseId) {
+                            retData = item
+                        }
+                    });
+                }
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.OK,
+                    ret: retData,
+                    message: MESSAGE.SUCCESS
+                });
+            }
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: MESSAGE.INVALID_INPUT
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    @get('/api/nfts-schemas')
+    @response(200, {
+        description: 'Array of NfTsSchema model instances',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'array',
+                    items: getModelSchemaRef(nfts, {includeRelations: true}),
+                },
+            },
+        },
+    })
+    async findNfts(
+        @param.filter(nfts) filter?: Filter<nfts>,
+    ): Promise<nfts[]> {
+        return this.nfTsSchemaRepository.find(filter);
+    }
+
+    @get('/api/collections-schemas')
+    @response(200, {
+        description: 'Array of CollectionsSchema model instances',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'array',
+                    items: getModelSchemaRef(collections, {includeRelations: true}),
+                },
+            },
+        },
+    })
+    async findCollections(
+        @param.filter(collections) filter?: Filter<collections>,
+    ): Promise<collections[]> {
+        return this.collectionsSchemaRepository.find(filter);
+    }
+
+    @get('/api/projects-schemas')
+    @response(200, {
+        description: 'Array of ProjectsSchema model instances',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'array',
+                    items: getModelSchemaRef(projects, {includeRelations: true}),
+                },
+            },
+        },
+    })
+    async find(
+        @param.filter(projects) filter?: Filter<projects>,
+    ): Promise<projects[]> {
+        return this.projectsSchemaRepository.find(filter);
+    }
+
+    @get('/api/projects-schemas/count')
+    @response(200, {
+        description: 'ProjectsSchema model count',
+        content: {'application/json': {schema: CountSchema}},
+    })
+    async count(
+        @param.where(projects) where?: Where<projects>,
+    ): Promise<Count | Response> {
+        const projectCountDb = await this.collectionsSchemaRepository.count(where);
+        // @ts-ignore
+        return this.response.send({status: "OK", ret: projectCountDb.count});
+    }
+
+    @post('/api/black-lists/createBlackList')
+    async createBlackList(
+        @requestBody(RequestCreateBlackListBody) req:ReqCreateBlackListType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req || !req.typeName || !req.nftContractAddress || !req.userName || !req.password) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            const nftContractAddress = req?.nftContractAddress;
+            const typeName = req?.typeName;
+            const isActive:boolean = (req?.isActive !== undefined) ? req.isActive : true;
+            const userName = req?.userName;
+            const password = req?.password;
+            if (userName !== process.env.BLACK_LIST_USER_NAME || password !== process.env.BLACK_LIST_PASSWORD) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_AUTHENTICATION,
+                });
+            }
+            if (!isValidAddressPolkadotAddress(nftContractAddress)) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_NFT_ADDRESS,
+                });
+            }
+            if (!isValidTypeName(typeName)) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_BLACKLIST_TYPE_NAME,
+                });
+            }
+            let data = await this.blackListRepository.findOne({
+                where: {
+                    nftContractAddress: nftContractAddress,
+                    typeName: typeName
+                }
+            });
+
+            if (data) {
+                try {
+                    data.isActive = req?.isActive;
+                    data.typeName = typeName;
+                    data.nftContractAddress = nftContractAddress;
+                    await this.blackListRepository.updateById(data._id, {
+                        ...data,
+                        isActive: isActive,
+                        updatedTime: new Date()
+                    });
+                } catch (e) {
+                    console.log(`ERROR: ${e.message}`);
+                }
+            } else {
+                try {
+                    await this.blackListRepository.create({
+                        nftContractAddress: nftContractAddress,
+                        typeName: typeName,
+                        isActive: isActive,
+                        createdTime: new Date(),
+                        updatedTime: new Date()
+                    })
+                } catch (e) {
+                    console.log(`ERROR: ${e.message}`);
+                }
+            }
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.OK,
+                message: MESSAGE.SUCCESS
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    @get('/api/black-lists/count')
+    @response(200, {
+        description: 'BlackList model count',
+        content: {'application/json': {schema: CountSchema}},
+    })
+    async countBlackList(
+        @param.where(BlackList) where?: Where<BlackList>,
+    ): Promise<Count> {
+        return this.blackListRepository.count(where);
+    }
+
+    @get('/api/black-lists')
+    @response(200, {
+        description: 'Array of BlackList model instances',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'array',
+                    items: getModelSchemaRef(BlackList, {includeRelations: true}),
+                },
+            },
+        },
+    })
+    async findBlackList(
+        @param.filter(BlackList) filter?: Filter<BlackList>,
+    ): Promise<BlackList[]> {
+        return this.blackListRepository.find(filter);
+    }
+
+    @get('/api/black-lists/{id}')
+    @response(200, {
+        description: 'BlackList model instance',
+        content: {
+            'application/json': {
+                schema: getModelSchemaRef(BlackList, {includeRelations: true}),
+            },
+        },
+    })
+    async findBlackListById(
+        @param.path.string('id') id: string,
+        @param.filter(BlackList, {exclude: 'where'}) filter?: FilterExcludingWhere<BlackList>
+    ): Promise<BlackList> {
+        return this.blackListRepository.findById(id, filter);
+    }
+
+    @post('/getProjectByAdress')
+    async getProjectByAdress(
+        @requestBody(RequestGetProjectByAdressBody) req:ReqGetProjectByAdressType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            let nftContractAddress = req?.nftContractAddress;
+            console.log({nftContractAddress: nftContractAddress});
+            if (!isValidAddressPolkadotAddress(nftContractAddress)) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
+            }
+            let projectData = await this.projectsSchemaRepository.findOne({
+                where: {
+                    nftContractAddress: nftContractAddress,
+                }
+            });
+            // console.log({collection_data: projectData});
+            if (!projectData) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
+            }
+            // @ts-ignore
+            return this.response.send({status: STATUS.OK, ret: projectData});
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    @post('/api/config/triggerRewards')
+    async triggerRewards(
+        @requestBody(RequestTriggerRewardsBody) req:ReqTriggerRewardsType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req || !req.userName || !req.password) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            const userName = req?.userName;
+            const password = req?.password;
+            if (userName !== process.env.TRIGGER_REWARDS_USER_NAME || password !== process.env.TRIGGER_REWARDS_PASSWORD) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_AUTHENTICATION,
+                });
+            }
+            const ret = await setClaimedStatus();
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.OK,
+                message: MESSAGE.SUCCESS,
+                ret: ret
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    @post('/api/config/reset-all-queue')
+    async resetAllQueue(
+        @requestBody(RequestResetAllQueueBody) req:ReqResetAllQueueType
+    ): Promise<ResponseBody | Response> {
+        const currentTime = convertToUTCTime(new Date());
+        console.log("RUN resetAllQueue now: " + currentTime);
+        try {
+            if (!req || !req.userName || !req.password) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            const userName = req?.userName;
+            const password = req?.password;
+            if (userName !== process.env.ADMIN_USER_NAME || password !== process.env.ADMIN_PASSWORD) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_AUTHENTICATION,
+                });
+            }
+            try {
+                await this.nftQueueScanAllSchemaRepository.updateAll({
+                    isProcessing: false
+                }, {});
+            } catch (e) {
+                console.log(`ERROR: ${e.message}`);
+            }
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.OK,
+                message: MESSAGE.SUCCESS
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    @post('/api/config/move-queue')
+    async moveNftQueue(
+        @requestBody(RequestResetAllQueueBody) req:ReqResetAllQueueType
+    ): Promise<ResponseBody | Response> {
+        const currentTime = convertToUTCTime(new Date());
+        console.log("RUN moveNftQueu now: " + currentTime);
+        try {
+            if (!req || !req.userName || !req.password) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            const userName = req?.userName;
+            const password = req?.password;
+            if (userName !== process.env.ADMIN_USER_NAME || password !== process.env.ADMIN_PASSWORD) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_AUTHENTICATION,
+                });
+            }
+            try {
+                const currentNftQueue = await this.nftQueueSchemaRepository.find({});
+                if (currentNftQueue && currentNftQueue.length > 0) {
+                    for (const nftQueue of currentNftQueue) {
+                        if (nftQueue.type === "update") {
+                            const currentNftQueueAll = await this.nftQueueScanAllSchemaRepository.findOne({
+                                where: {
+                                    nftContractAddress: nftQueue.nftContractAddress,
+                                    tokenID: nftQueue.tokenID,
+                                    type: "update"
+                                }
+                            });
+                            if (currentNftQueueAll) {
+                                console.log(`deleteById: ${nftQueue.nftContractAddress} - tokenID: ${nftQueue.tokenID}`);
+                                await this.nftQueueSchemaRepository.deleteById(nftQueue._id);
+                            } else {
+                                console.log(`create: ${nftQueue.nftContractAddress} - tokenID: ${nftQueue.tokenID}`);
+                                await this.nftQueueScanAllSchemaRepository.create({
+                                    nftContractAddress: nftQueue.nftContractAddress,
+                                    tokenID: nftQueue.tokenID,
+                                    type: "update",
+                                    isProcessing: false,
+                                    createdTime: new Date(),
+                                    updatedTime: new Date()
+                                });
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log(`ERROR: ${e.message}`);
+            }
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.OK,
+                message: MESSAGE.SUCCESS
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    @post('/api/config/update-all-queue')
+    async updateAllQueue(
+        @requestBody(RequestResetAllQueueBody) req:ReqResetAllQueueType
+    ): Promise<object> {
+        const currentTime = convertToUTCTime(new Date());
+        console.log("RUN resetAllQueue now: " + currentTime);
+        try {
+            if (!req || !req.userName || !req.password) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            const userName = req?.userName;
+            const password = req?.password;
+            if (userName !== process.env.ADMIN_USER_NAME || password !== process.env.ADMIN_PASSWORD) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_AUTHENTICATION,
+                });
+            }
+            const nftRepo = this.nfTsSchemaRepository;
+            const nftQueueRepo = this.nftQueueSchemaRepository;
+            const nftQueueScanAllRepo = this.nftQueueScanAllSchemaRepository;
+            const collectionsRepo = this.collectionsSchemaRepository;
+            const collectionQueueRepo = this.collectionQueueSchemaRepository;
+
+            const provider = new WsProvider(process.env.WSSPROVIDER);
+            const apiTrigger = new ApiPromise({
+                provider,
+                rpc: jsonrpc,
+                types: {
+                    ContractsPsp34Id: {
+                        _enum: {
+                            U8: "u8",
+                            U16: "u16",
+                            U32: "u32",
+                            U64: "u64",
+                            U128: "u128",
+                            Bytes: "Vec<u8>",
+                        },
+                    },
+                },
+            });
+            apiTrigger.on("connected", () => {
+                apiTrigger.isReady.then(() => {
+                    console.log("Smartnet AZERO Connected");
+                });
+            });
+            apiTrigger.on("ready", async () => {
+                console.log("Smartnet AZERO Ready");
+                const marketplace_contract = new ContractPromise(
+                    apiTrigger,
+                    marketplace.CONTRACT_ABI,
+                    marketplace.CONTRACT_ADDRESS
+                );
+                console.log("Marketplace Contract is ready");
+                marketplace_calls.setContract(marketplace_contract);
+
+                const az_nft_contract = new ContractPromise(
+                    apiTrigger,
+                    artzero_nft.CONTRACT_ABI,
+                    artzero_nft.CONTRACT_ADDRESS
+                );
+                console.log("ArtZero NFT Contract is ready 4");
+                artzero_nft_calls.setContract(az_nft_contract);
+
+                const collection_contract = new ContractPromise(
+                    apiTrigger,
+                    collection_manager.CONTRACT_ABI,
+                    collection_manager.CONTRACT_ADDRESS
+                );
+                console.log("Collection Contract is ready");
+                collection_manager_calls.setContract(collection_contract);
+                global_vars.is_check_NFT_queue = false;
+                global_vars.is_scan_all_NFTs = false;
+                global_vars.is_check_new_AZ_NFT = false;
+                global_vars.is_check_NFT_queue_all = false;
+                try {
+                    // TODO: Testing
+                    await scanAllNFTs(
+                        globalApi,
+                        nftRepo,
+                        nftQueueRepo,
+                        nftQueueScanAllRepo,
+                        collectionsRepo,
+                        collectionQueueRepo
+                    );
+                } catch (e) {
+                    console.log(e);
+                }
+                await apiTrigger.disconnect();
+            });
+            apiTrigger.on("error", (err) => {
+                console.log("error", err);
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+        return {}
+    }
+
+    @post('/api/config/updateConfig')
+    async updateConfig(
+        @requestBody(RequestUpdateConfigBody) req:ReqUpdateConfigType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req || !req.typeConfig || !req.mainConfig || !req.userName || !req.password) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            const userName = req?.userName;
+            const password = req?.password;
+            if (userName !== process.env.BLACK_LIST_USER_NAME || password !== process.env.BLACK_LIST_PASSWORD) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_AUTHENTICATION,
+                });
+            }
+            for(const typeConfig of req?.typeConfig) {
+                // const typeConfig = req?.typeConfig;
+                const nodeIp = req?.nodeIp;
+                const nodeCluster = req?.nodeCluster;
+                const mainConfig = req?.mainConfig;
+                let data = await this.configRepository.findOne({
+                    where: {
+                        typeConfig: typeConfig,
+                        nodeIp: nodeIp,
+                        nodeCluster: nodeCluster,
+                    }
+                });
+
+                if (data) {
+                    try {
+                        data.typeConfig = typeConfig;
+                        data.mainConfig = mainConfig;
+                        await this.configRepository.updateById(data._id, {
+                            ...data,
+                            updatedTime: new Date()
+                        });
+                    } catch (e) {
+                        console.log(`ERROR: ${e.message}`);
+                    }
+                } else {
+                    try {
+                        await this.configRepository.create({
+                            typeConfig: typeConfig,
+                            nodeIp: nodeIp,
+                            nodeCluster: nodeCluster,
+                            mainConfig: mainConfig,
+                            createdTime: new Date(),
+                            updatedTime: new Date()
+                        })
+                    } catch (e) {
+                        console.log(`ERROR: ${e.message}`);
+                    }
+                }
+            }
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.OK,
+                message: MESSAGE.SUCCESS
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    @get('/api/withdraw-event-schemas')
+    @response(200, {
+        description: 'Array of WithdrawEventSchema model instances',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'array',
+                    items: getModelSchemaRef(withdrawevents, {includeRelations: true}),
+                },
+            },
+        },
+    })
+    async getWithdrawEvent(
+        @param.filter(withdrawevents) filter?: Filter<withdrawevents>,
+    ): Promise<Response> {
+        const data = await this.withdrawEventSchemaRepository.find(filter);
+        const eventCount = await this.withdrawEventSchemaRepository.count(filter?.where);
+        // @ts-ignore
+        return this.response.send({status: STATUS.OK, ret: data, totalCount: eventCount});
+    }
+
+    @get('/api/launchpad-minting-event-schemas')
+    @response(200, {
+        description: 'Array of LaunchpadMintingEventSchema model instances',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'array',
+                    items: getModelSchemaRef(launchpadmintingevents, {includeRelations: true}),
+                },
+            },
+        },
+    })
+    async getLaunchpadMintingEvent(
+        @param.filter(launchpadmintingevents) filter?: Filter<launchpadmintingevents>,
+    ): Promise<Response> {
+        const data = await this.luanchpadMintingEventSchemaRepository.find(filter);
+        const eventCount = await this.luanchpadMintingEventSchemaRepository.count(filter?.where);
+        // @ts-ignore
+        return this.response.send({status: STATUS.OK, ret: data, totalCount: eventCount});
+    }
+
+    @post('/api/checking/images-and-json')
+    async checkingImagesAndJson(
+        @requestBody(RequestCheckingImagesAndJsonBody) req:ReqCheckingImagesAndJsonType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req || !req.userName || !req.password) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            const userName = req?.userName;
+            const password = req?.password;
+            const nftContractAddress = req?.nftContractAddress;
+            if (userName !== process.env.ADMIN_USER_NAME || password !== process.env.ADMIN_PASSWORD) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_AUTHENTICATION,
+                });
+            }
+            if (!nftContractAddress) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_INPUT,
+                });
+            }
+            let listError:string[] = [];
+            let listSuccess:string[] = [];
+            let totalSuccess: number = 0;
+            let totalError: number = 0;
+            try {
+                let foundCollection = await this.collectionsSchemaRepository.findOne({
+                    where: {
+                        nftContractAddress: nftContractAddress,
+                    }
+                });
+                if (!foundCollection) {
+                    // @ts-ignore
+                    return this.response.send({
+                        status: STATUS.FAILED,
+                        message: MESSAGE.INVALID_COLLECTION_ADDRESS,
+                    });
+                }
+                const launchpad_psp34_nft_standard_contract = new ContractPromise(
+                    api,
+                    launchpad_psp34_nft_standard.CONTRACT_ABI,
+                    nftContractAddress
+                );
+                // @ts-ignore
+                const {result, output} = await launchpad_psp34_nft_standard_contract.query["psp34Traits::tokenUri"](
+                    global_vars.caller,
+                    {value: 0, gasLimit: await readOnlyGasLimit(api)},
+                    1
+                );
+                let tokenUri = "";
+                if (result.isOk && output) {
+                    // @ts-ignore
+                    tokenUri = output.toHuman()?.Ok?.replace("1.json", "");
+                }
+                let currentSupply = await launchpad_psp34_nft_standard_calls.getTotalSupply(
+                    launchpad_psp34_nft_standard_contract,
+                    global_vars.caller
+                );
+                console.log({data: {
+                        nftContractAddress: nftContractAddress,
+                        currentSupply: currentSupply,
+                        tokenUri: tokenUri
+                    }});
+                if (currentSupply) {
+                    for (let tokenID = 1; tokenID <= currentSupply; tokenID++) {
+                        console.log(`Checking tokenID: ${tokenID} of tokenUri ${tokenUri} from currentSupply ${currentSupply} NFTs`);
+                        const input = `${tokenUri.replace("ipfs://", "/ipfs/")}${tokenID}.json`;
+                        let input_data = await this.jsonSchemaRepository.findOne({
+                            where: {
+                                input: input
+                            }
+                        });
+                        if (!input_data) {
+                            console.log(`ERROR: ${input} not found!`);
+                        } else if (input_data?.location) {
+                            const locationTmp = input_data.location;
+                            const bufferString = await fs.promises.readFile(locationTmp);
+                            const offChainData = JSON.parse(bufferString.toString());
+                            // TODO: Check data here!
+                            let imageIpfsLinkI = offChainData?.image.replace("ipfs://","/ipfs/");
+                            if (imageIpfsLinkI) {
+                                const data = await this.imagesSchemaRepository.findOne({
+                                    where: {
+                                        isCloudFlare: true,
+                                        input: imageIpfsLinkI
+                                    }
+                                });
+                                if (!data) {
+                                    listError.push(offChainData?.image);
+                                    totalError += 1;
+                                } else {
+                                    listSuccess.push(offChainData?.image);
+                                    totalSuccess += 1;
+                                }
+                            } else {
+                                listError.push(offChainData?.image);
+                                totalError += 1;
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log(e.message);
+            }
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.OK,
+                message: MESSAGE.SUCCESS,
+                totalSuccess: totalSuccess,
+                totalError: totalError,
+                listError: listError,
+                listSuccess: listSuccess,
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
             return this.response.send({
                 status: STATUS.FAILED,
                 message: e.message
