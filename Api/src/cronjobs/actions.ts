@@ -2666,7 +2666,11 @@ export async function check_bid_queue(
             console.log(`${CONFIG_TYPE_NAME.AZ_BIDS_MONITOR} - Result getAllBids: `, ret);
             if (!ret) {
                 //Not Exist, remove queue
-                await bidQueueRepo.deleteById(queue_data[j]._id);
+                try {
+                    await bidQueueRepo.deleteById(queue_data[j]._id);
+                } catch (e) {
+                    console.log(`${CONFIG_TYPE_NAME.AZ_BIDS_MONITOR} - WARNING: `, e.message);
+                }
             } else {
                 // TODO: Check hash before call RPC, shouldn't deleteAll here! => Check if same hash, deleteById only
                 await bidsRepo.deleteAll({nftContractAddress: nftContractAddress, tokenID: tokenID, seller: seller});
@@ -2716,7 +2720,11 @@ export async function check_bid_queue(
                     }
                 }
                 // console.log({queue_data: queue_data[j]});
-                await bidQueueRepo.deleteById(queue_data[j]._id);
+                try {
+                    await bidQueueRepo.deleteById(queue_data[j]._id);
+                } catch (e) {
+                    console.log(`${CONFIG_TYPE_NAME.AZ_BIDS_MONITOR} - WARNING: ${e.message}`);
+                }
             }
         }
     } catch (e) {
