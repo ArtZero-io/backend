@@ -1,8 +1,8 @@
 const staking = {
-  CONTRACT_ADDRESS: "5DHfvGcjXoUb7e1am1cSxcZ4w9ErC3omNp6exk2AibMn75kt",
+  CONTRACT_ADDRESS: "Undefined",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x0af3d8ee0d28afdc39f23128b634cbe61673e8a19c8ebb7c22817aade1c5d41d",
+      "hash": "Undefined",
       "language": "ink! 4.0.0-beta",
       "compiler": "rustc 1.69.0-nightly",
       "build_info": {
@@ -19,7 +19,7 @@ const staking = {
       "name": "artzero_staking_nft",
       "version": "1.0.0",
       "authors": [
-        "ArtZero <admin@artzero.io>"
+        "Undefined"
       ]
     },
     "spec": {

@@ -1,8 +1,8 @@
 const profile = {
-  CONTRACT_ADDRESS: "5FUXaNYkcdvwYurXXxzU4cdLsVFViE2xEbNnUZLBoi41axUx",
+  CONTRACT_ADDRESS: "Undefined",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xd9e66c2e777c1705ba62e2e6e60027cab28b383e9a5d9b7bf6ebcca0d4337c35",
+      "hash": "Undefined",
       "language": "ink! 4.0.0-beta",
       "compiler": "rustc 1.69.0-nightly",
       "build_info": {
@@ -19,7 +19,7 @@ const profile = {
       "name": "profile_manager",
       "version": "1.0.0",
       "authors": [
-        "ArtZero <admin@artzero.io>"
+        "Undefined"
       ]
     },
     "spec": {

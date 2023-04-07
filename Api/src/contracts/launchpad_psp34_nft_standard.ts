@@ -1,7 +1,7 @@
 export const launchpad_psp34_nft_standard = {
   CONTRACT_ABI: {
 	"source": {
-	  "hash": "0xdfd3c64116b72cb3d3fa3120e37b59d49a9dc72eaf4b7913b7de389ddc5e12a7",
+	  "hash": "Undefined",
 	  "language": "ink! 4.0.1",
 	  "compiler": "rustc 1.70.0-nightly",
 	  "build_info": {
@@ -18,7 +18,7 @@ export const launchpad_psp34_nft_standard = {
 	  "name": "launchpad_psp34_nft_standard",
 	  "version": "1.0.0",
 	  "authors": [
-		"ArtZero <admin@artzero.io>"
+		"Undefined"
 	  ]
 	},
 	"spec": {

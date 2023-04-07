@@ -1,7 +1,7 @@
 const nft721_psp34_standard = {
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x24d21481b424ff012033c304de701f4016c5328788fbb62706d3477dea9b88a2",
+      "hash": "Undefined",
       "language": "ink! 4.0.0-beta",
       "compiler": "rustc 1.69.0-nightly",
       "build_info": {
@@ -18,7 +18,7 @@ const nft721_psp34_standard = {
       "name": "psp34_nft",
       "version": "1.0.0",
       "authors": [
-        "ArtZero <admin@artzero.io>"
+        "Undefined"
       ]
     },
     "spec": {

@@ -1,8 +1,8 @@
 const artzero_nft = {
-  CONTRACT_ADDRESS: "5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC",
+  CONTRACT_ADDRESS: "Undefined",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x34a8a19142dfc443a3be1291b5730d59bae45ad7d70134a5e0b371b6977c40db",
+      "hash": "Undefined",
       "language": "ink! 4.0.0-beta",
       "compiler": "rustc 1.69.0-nightly",
       "build_info": {
@@ -19,7 +19,7 @@ const artzero_nft = {
       "name": "launchpad_psp34_nft_standard",
       "version": "1.0.0",
       "authors": [
-        "ArtZero <admin@artzero.io>"
+        "Undefined"
       ]
     },
     "spec": {

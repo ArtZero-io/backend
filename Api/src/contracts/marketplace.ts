@@ -1,8 +1,8 @@
 export const marketplace = {
-  CONTRACT_ADDRESS: "5HdgTttMhPx2btCoSHFQeB4uSj5EVb1EcHqjRxx18h3sU5ZJ",
+  CONTRACT_ADDRESS: "Undefined",
   CONTRACT_ABI: {
 		"source": {
-		  "hash": "0x8567ce97be510a050d766d4bef3e4ca9ac466bc70121d389eb08c61acfdbccea",
+		  "hash": "Undefined",
 		  "language": "ink! 4.0.1",
 		  "compiler": "rustc 1.70.0-nightly",
 		  "build_info": {
@@ -19,7 +19,7 @@ export const marketplace = {
 		  "name": "artzero_marketplace_psp34",
 		  "version": "1.0.0",
 		  "authors": [
-			"ArtZero <admin@artzero.io>"
+			"Undefined"
 		  ]
 		},
 		"spec": {

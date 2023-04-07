@@ -1,8 +1,8 @@
 export const collection_manager = {
-	CONTRACT_ADDRESS: "5GJvpM8oivvTrK1vceX4zYNBa9eccrBaj2HoMAdSe7yppFE5",
+	CONTRACT_ADDRESS: "Undefined",
 	CONTRACT_ABI: {
 		"source": {
-		  "hash": "0x9022d8876293107fa8900dac9338c4ddbc0b7c7ef33c7786362042c2ede34c0d",
+		  "hash": "Undefined",
 		  "language": "ink! 4.0.1",
 		  "compiler": "rustc 1.70.0-nightly",
 		  "build_info": {
@@ -19,7 +19,7 @@ export const collection_manager = {
 		  "name": "artzero_collection_manager",
 		  "version": "1.0.0",
 		  "authors": [
-			"ArtZero <admin@artzero.io>"
+			"Undefined"
 		  ]
 		},
 		"spec": {
