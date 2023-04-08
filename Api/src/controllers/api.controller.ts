@@ -606,7 +606,7 @@ export class ApiController {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_ADDRESS});
             }
-            if (!tokenID) {
+            if (!tokenID || tokenID < 0) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
             }
@@ -704,7 +704,7 @@ export class ApiController {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_ADDRESS});
             }
-            if (!tokenID) {
+            if (!tokenID || tokenID < 0) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
             }
@@ -2118,7 +2118,7 @@ export class ApiController {
             }
             let tokenID = req?.token_id;
             let collection_address = req?.collection_address;
-            if (!tokenID) {
+            if (!tokenID || tokenID < 0) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
             }
@@ -2572,7 +2572,7 @@ export class ApiController {
             let collection_address = req?.collection_address;
             let tokenID = req?.token_id;
             let owner = req?.owner;
-            if (!collection_address || !tokenID || !owner) {
+            if (!collection_address || !tokenID || tokenID < 0 || !owner) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_INPUT});
             }
