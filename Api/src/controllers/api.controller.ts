@@ -929,12 +929,12 @@ export class ApiController {
         @requestBody(RequestCacheImagesBody) req:ReqCacheImagesType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) {
+            if (!req || !req.images) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
-            let images = JSON.parse(req?.images);
-            console.log('Images Request: ', req?.images);
+            let images = JSON.parse(req.images);
+            console.log('Images Request: ', req.images);
             console.log('Images Request after parse: ', images);
             if (images.length) {
                 console.log('Images length:', images.length);
@@ -1171,7 +1171,7 @@ export class ApiController {
 
     // Get JSON Cache
     @get('/getJSON')
-    @oas.response.file()
+    @oas.response.file?.()
     async getJSON(
         @param.query.string('input') input?: string
     ): Promise<Response | ResponseBody | void> {
@@ -1874,11 +1874,11 @@ export class ApiController {
         @requestBody(RequestGetCollectionByAddressBody) req:ReqGetCollectionByAddressType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) {
+            if (!req || !req.collection_address) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
-            let collection_address = req?.collection_address;
+            let collection_address = req.collection_address;
             console.log({collection_address: collection_address});
             if (!isValidAddressPolkadotAddress(collection_address)) {
                 // @ts-ignore
@@ -1917,11 +1917,11 @@ export class ApiController {
         @requestBody(RequestGetFloorPriceBody) req:ReqGetFloorPriceType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) {
+            if (!req || !req.collection_address) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
-            let collection_address = req?.collection_address;
+            let collection_address = req.collection_address;
             if (!isValidAddressPolkadotAddress(collection_address)) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
@@ -1965,11 +1965,11 @@ export class ApiController {
         @requestBody(RequestGetNFTsBody) req:ReqGetNFTsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) {
+            if (!req || !req.collection_address) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
-            let collection_address = req?.collection_address;
+            let collection_address = req.collection_address;
             let limit = req?.limit;
             let offset = req?.offset;
             if (!limit) limit = 15;
@@ -2013,11 +2013,11 @@ export class ApiController {
         @requestBody(RequestGetListedNFTsBody) req:ReqGetListedNFTsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) {
+            if (!req || !req.collection_address) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
-            let collection_address = req?.collection_address;
+            let collection_address = req.collection_address;
             let limit = req?.limit;
             let offset = req?.offset;
             if (!limit) limit = 15;
@@ -2062,11 +2062,11 @@ export class ApiController {
         @requestBody(RequestGetUnlistedNFTsBody) req:ReqGetUnlistedNFTsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) {
+            if (!req || !req.collection_address) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
-            let collection_address = req?.collection_address;
+            let collection_address = req.collection_address;
             let limit = req?.limit;
             let offset = req?.offset;
             if (!limit) limit = 15;
@@ -2112,12 +2112,12 @@ export class ApiController {
         @requestBody(RequestGetNFTByIDBody) req:ReqGetNFTByIDType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) {
+            if (!req || !req.collection_address) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
             let tokenID = req?.token_id;
-            let collection_address = req?.collection_address;
+            let collection_address = req.collection_address;
             if (!tokenID || tokenID < 0) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
@@ -2622,14 +2622,14 @@ export class ApiController {
         @requestBody(RequestSearchNFTOfCollectionByTraitsBody) req:ReqSearchNFTOfCollectionByTraitsType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) {
+            if (!req || !req.collectionAddress) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
-            let params:TraitFilters | undefined = (req?.traitFilters) ? JSON.parse(req?.traitFilters) : undefined;
+            let params:TraitFilters | undefined = (req.traitFilters) ? JSON.parse(req.traitFilters) : undefined;
             let limit = req?.limit || 24;
             let offset = req?.offset || 0;
-            let collectionAddress = req?.collectionAddress;
+            let collectionAddress = req.collectionAddress;
             if (!isValidAddressPolkadotAddress(collectionAddress)) {
                 // @ts-ignore
                 return this.response.send({
@@ -2769,14 +2769,14 @@ export class ApiController {
         @requestBody(RequestReportNFTBody) req:ReqReportNFTType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) {
+            if (!req || !req.signature || !req.address) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
             const isValid = isValidSignature(
                 MESSAGE.SIGN,
-                req?.signature,
-                req?.address
+                req.signature,
+                req.address
             );
             if(isValid) {
                 send_report_telegram_message(`${req?.address}\nReported NFT : ${req?.nft_name} \n with message: ${req?.message} \n of collection ${req?.collection_name}\nLink: ${req?.nft_link}`);
@@ -2805,7 +2805,7 @@ export class ApiController {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
-            let nftContractAddress = req?.nftContractAddress;
+            let nftContractAddress = req.nftContractAddress;
             if (!isValidAddressPolkadotAddress(nftContractAddress)) {
                 // @ts-ignore
                 return this.response.send({
@@ -2928,8 +2928,8 @@ export class ApiController {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
-            const nftContractAddress = req?.nftContractAddress;
-            const typeName = req?.typeName;
+            const nftContractAddress = req.nftContractAddress;
+            const typeName = req.typeName;
             const isActive:boolean = (req?.isActive !== undefined) ? req.isActive : true;
             const userName = req?.userName;
             const password = req?.password;
@@ -3052,11 +3052,11 @@ export class ApiController {
         @requestBody(RequestGetProjectByAdressBody) req:ReqGetProjectByAdressType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req) {
+            if (!req || !req.nftContractAddress) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
-            let nftContractAddress = req?.nftContractAddress;
+            let nftContractAddress = req.nftContractAddress;
             console.log({nftContractAddress: nftContractAddress});
             if (!isValidAddressPolkadotAddress(nftContractAddress)) {
                 // @ts-ignore

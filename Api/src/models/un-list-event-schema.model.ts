@@ -7,7 +7,7 @@ export class unlistevents extends Entity {
     id: true,
     generated: true,
   })
-  _id?: string;
+  _id: string;
 
   @property({
     type: 'number',

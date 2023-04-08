@@ -41,7 +41,7 @@ export class CronJobAzNftMonitorScanAll implements Provider<CronJob> {
             name: CONFIG_TYPE_NAME.AZ_NFT_MONITOR_SCAN_ALL,
             onTick: async () => {
                 try {
-                    let getConfig = CRONJOB_ENABLE.AZ_NFT_MONITOR_SCAN_ALL;
+                    let getConfig:boolean = CRONJOB_ENABLE.AZ_NFT_MONITOR_SCAN_ALL;
                     if (GET_CONFIG_FORM_DB) {
                         const configRepo = this.configRepository;
                         const filter = {
@@ -57,7 +57,7 @@ export class CronJobAzNftMonitorScanAll implements Provider<CronJob> {
                             return;
                         }
                         if (apiConfig.mainConfig?.configJobs.isEnable) {
-                            getConfig = apiConfig.mainConfig?.configJobs.isEnable;
+                            getConfig = apiConfig.mainConfig.configJobs.isEnable;
                         }
                         if (!getConfig) {
                             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR_SCAN_ALL} - Job is not enabled!`);

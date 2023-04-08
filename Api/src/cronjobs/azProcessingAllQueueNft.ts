@@ -48,7 +48,7 @@ export class CronJobAzProcessingAllQueueNft implements Provider<CronJob> {
             name: CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT,
             onTick: async () => {
                 try {
-                    let getConfig = CRONJOB_ENABLE.AZ_PROCESSING_ALL_QUEUE_NFT;
+                    let getConfig:boolean = CRONJOB_ENABLE.AZ_PROCESSING_ALL_QUEUE_NFT;
                     if (GET_CONFIG_FORM_DB) {
                         const configRepo = this.configRepository;
                         const filter = {
@@ -64,7 +64,7 @@ export class CronJobAzProcessingAllQueueNft implements Provider<CronJob> {
                             return;
                         }
                         if (apiConfig.mainConfig?.configJobs.isEnable) {
-                            getConfig = apiConfig.mainConfig?.configJobs.isEnable;
+                            getConfig = apiConfig.mainConfig.configJobs.isEnable;
                         }
                         if (!getConfig) {
                             console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - Job is not enabled!`);

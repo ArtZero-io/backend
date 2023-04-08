@@ -27,7 +27,7 @@ export class CronJobAzCloudflareSyncMonitor implements Provider<CronJob> {
             name: CONFIG_TYPE_NAME.AZ_CLOUDFLARE_SYNC_MONITOR,
             onTick: async () => {
                 try {
-                    let getConfig = CRONJOB_ENABLE.AZ_CLOUDFLARE_SYNC_MONITOR;
+                    let getConfig:boolean = CRONJOB_ENABLE.AZ_CLOUDFLARE_SYNC_MONITOR;
                     if (GET_CONFIG_FORM_DB) {
                         const configRepo = this.configRepository;
                         const filter = {
@@ -43,7 +43,7 @@ export class CronJobAzCloudflareSyncMonitor implements Provider<CronJob> {
                             return;
                         }
                         if (apiConfig.mainConfig?.configJobs.isEnable) {
-                            getConfig = apiConfig.mainConfig?.configJobs.isEnable;
+                            getConfig = apiConfig.mainConfig.configJobs.isEnable;
                         }
                         if (!getConfig) {
                             console.log(`${CONFIG_TYPE_NAME.AZ_CLOUDFLARE_SYNC_MONITOR} - Job is not enabled!`);

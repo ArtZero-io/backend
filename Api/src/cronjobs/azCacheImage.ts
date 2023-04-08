@@ -29,7 +29,7 @@ export class CronJobAzCacheImage implements Provider<CronJob> {
             name: CONFIG_TYPE_NAME.AZ_CACHE_IMAGE,
             onTick: async () => {
                 try {
-                    let getConfig = CRONJOB_ENABLE.AZ_CACHE_IMAGE;
+                    let getConfig:boolean = CRONJOB_ENABLE.AZ_CACHE_IMAGE;
                     if (GET_CONFIG_FORM_DB) {
                         const configRepo = this.configRepository;
                         const filter = {
@@ -45,7 +45,7 @@ export class CronJobAzCacheImage implements Provider<CronJob> {
                             return;
                         }
                         if (apiConfig.mainConfig?.configJobs.isEnable) {
-                            getConfig = apiConfig.mainConfig?.configJobs.isEnable;
+                            getConfig = apiConfig.mainConfig.configJobs.isEnable;
                         }
                         if (!getConfig) {
                             console.log(`${CONFIG_TYPE_NAME.AZ_CACHE_IMAGE} - Job is not enabled!`);
