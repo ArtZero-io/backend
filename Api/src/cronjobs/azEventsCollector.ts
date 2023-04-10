@@ -68,7 +68,7 @@ export class CronJobAzEventsCollector implements Provider<CronJob> {
             name: CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR,
             onTick: async () => {
                 try {
-                    let getConfig = CRONJOB_ENABLE.AZ_EVENTS_COLLECTOR;
+                    let getConfig:boolean = CRONJOB_ENABLE.AZ_EVENTS_COLLECTOR;
                     if (GET_CONFIG_FORM_DB) {
                         const configRepo = this.configRepository;
                         const filter = {
@@ -84,7 +84,7 @@ export class CronJobAzEventsCollector implements Provider<CronJob> {
                             return;
                         }
                         if (apiConfig.mainConfig?.configJobs.isEnable) {
-                            getConfig = apiConfig.mainConfig?.configJobs.isEnable;
+                            getConfig = apiConfig.mainConfig.configJobs.isEnable;
                         }
                         if (!getConfig) {
                             console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Job is not enabled!`);

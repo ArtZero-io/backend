@@ -33,7 +33,7 @@ export class CronJobAzProjectMonitor implements Provider<CronJob> {
             name: CONFIG_TYPE_NAME.AZ_PROJECT_MONITOR,
             onTick: async () => {
                 try {
-                    let getConfig = CRONJOB_ENABLE.AZ_PROJECT_MONITOR;
+                    let getConfig:boolean = CRONJOB_ENABLE.AZ_PROJECT_MONITOR;
                     if (GET_CONFIG_FORM_DB) {
                         const configRepo = this.configRepository;
                         const filter = {
@@ -49,7 +49,7 @@ export class CronJobAzProjectMonitor implements Provider<CronJob> {
                             return;
                         }
                         if (apiConfig.mainConfig?.configJobs.isEnable) {
-                            getConfig = apiConfig.mainConfig?.configJobs.isEnable;
+                            getConfig = apiConfig.mainConfig.configJobs.isEnable;
                         }
                         if (!getConfig) {
                             console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_MONITOR} - Job is not enabled!`);

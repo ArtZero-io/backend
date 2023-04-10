@@ -58,7 +58,7 @@ export class CronJobAzTelegramBot implements Provider<CronJob> {
             name: CONFIG_TYPE_NAME.AZ_TELEGRAM_BOT,
             onTick: async () => {
                 try {
-                    let getConfig = CRONJOB_ENABLE.AZ_TELEGRAM_BOT;
+                    let getConfig:boolean = CRONJOB_ENABLE.AZ_TELEGRAM_BOT;
                     if (GET_CONFIG_FORM_DB) {
                         const configRepo = this.configRepository;
                         const filter = {
@@ -74,7 +74,7 @@ export class CronJobAzTelegramBot implements Provider<CronJob> {
                             return;
                         }
                         if (apiConfig.mainConfig?.configJobs.isEnable) {
-                            getConfig = apiConfig.mainConfig?.configJobs.isEnable;
+                            getConfig = apiConfig.mainConfig.configJobs.isEnable;
                         }
                         if (!getConfig) {
                             console.log(`${CONFIG_TYPE_NAME.AZ_TELEGRAM_BOT} - Job is not enabled!`);

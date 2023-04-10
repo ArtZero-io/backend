@@ -1,11 +1,11 @@
 export enum SOCKET_STATUS  {
-    CONNECTED= "connected",
+    CONNECTED = "connected",
     READY = "ready",
     ERROR = "error",
 }
 export let global_vars = {
-    socketStatus: SOCKET_STATUS.ERROR,
-    socketStatusLocal: SOCKET_STATUS.ERROR,
+    socketStatus: "error",
+    socketStatusLocal: "error",
     caller: process.env.CALLER ? process.env.CALLER : '',
     is_check_new_collections: false,
     is_check_collection_queue: false,

@@ -25,10 +25,7 @@ export async function getCollectionCount(caller_account: string): Promise<number
         });
     if (result.isOk && output) {
         // @ts-ignore
-        // return new BN(output.toHuman()?.Ok, 10, "le").toNumber();
         return output.toHuman()?.Ok?.replaceAll(",", "");
-        // return new BN(output.toHuman()?.Ok?.replaceAll(",", ""));
-        // return new BN(output.toHuman()?.Ok, 10, "le");
     }
     return 0;
 }

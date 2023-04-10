@@ -28,7 +28,7 @@ export class CronJobAzBidsMonitorAutoCheckQueue implements Provider<CronJob> {
             name: CONFIG_TYPE_NAME.AZ_BIDS_MONITOR_CHECK_QUEUE,
             onTick: async () => {
                 try {
-                    let getConfig = CRONJOB_ENABLE.AZ_BIDS_MONITOR_CHECK_QUEUE;
+                    let getConfig:boolean = CRONJOB_ENABLE.AZ_BIDS_MONITOR_CHECK_QUEUE;
                     if (GET_CONFIG_FORM_DB) {
                         const configRepo = this.configRepository;
                         const filter = {
@@ -44,7 +44,7 @@ export class CronJobAzBidsMonitorAutoCheckQueue implements Provider<CronJob> {
                             return;
                         }
                         if (apiConfig.mainConfig?.configJobs.isEnable) {
-                            getConfig =  apiConfig.mainConfig?.configJobs.isEnable;
+                            getConfig =  apiConfig.mainConfig.configJobs.isEnable;
                         }
                         if (!getConfig) {
                             console.log(`${CONFIG_TYPE_NAME.AZ_BIDS_MONITOR_CHECK_QUEUE} - Job is not enabled!`);
