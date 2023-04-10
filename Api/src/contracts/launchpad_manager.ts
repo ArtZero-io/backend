@@ -1,8 +1,8 @@
 export const launchpad_manager = {
-	CONTRACT_ADDRESS: "Undefined",
+	CONTRACT_ADDRESS: "X1ytB7NjFdspgRHSaGD9jhU3rE2Sm1CRyzsGdTxxTYKihrR",
 	CONTRACT_ABI: {
 		"source": {
-		  "hash": "Undefined",
+		  "hash": "0xe9e8ab9c3f32989ebf17474186207c796616e7971fe2c11481aab50c19acbdc9",
 		  "language": "ink! 4.0.1",
 		  "compiler": "rustc 1.70.0-nightly",
 		  "build_info": {
@@ -19,7 +19,7 @@ export const launchpad_manager = {
 		  "name": "artzero_launchpad_psp34",
 		  "version": "1.0.0",
 		  "authors": [
-			"Undefined"
+			"ArtZero <admin@artzero.io>"
 		  ]
 		},
 		"spec": {
