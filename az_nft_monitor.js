@@ -677,12 +677,12 @@ connectDb().then(async () => {
   });
   api.on("connected", () => {
     api.isReady.then((api) => {
-      console.log("Smartnet AZERO Connected");
+      console.log("Smartnet Astar Connected");
     });
   });
 
   api.on("ready", () => {
-    console.log("Smartnet AZERO Ready");
+    console.log("Smartnet Astar Ready");
 
     const marketplace_contract = new ContractPromise(
       api,

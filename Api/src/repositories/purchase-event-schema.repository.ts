@@ -2,9 +2,6 @@ import {inject} from '@loopback/core';
 import {DefaultCrudRepository} from '@loopback/repository';
 import {purchaseevents, PurchaseEventSchemaRelations} from '../models';
 import {AstarDbDatasource} from "../datasources";
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 export class PurchaseEventSchemaRepository extends DefaultCrudRepository<
     purchaseevents,
@@ -12,7 +9,7 @@ export class PurchaseEventSchemaRepository extends DefaultCrudRepository<
     PurchaseEventSchemaRelations
 > {
     constructor(
-        @inject(`datasources.${process.env.DB_NAME}`) dataSource: AstarDbDatasource,
+        @inject(`datasources.AstarDB`) dataSource: AstarDbDatasource,
     ) {
         super(purchaseevents, dataSource);
     }

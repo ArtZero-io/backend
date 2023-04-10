@@ -136,7 +136,7 @@ export class CronJobAzEventsCollector implements Provider<CronJob> {
                                     console.log(`Global RPC Connected: ${rpc}`);
 
                                     // TODO: Start scanBlocks
-                                    console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Smartnet AZERO Ready`);
+                                    console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Smartnet Astar Ready`);
                                     global_vars.isScanning = false;
 
                                     const abi_marketplace_contract = new Abi(marketplace.CONTRACT_ABI);
@@ -191,66 +191,6 @@ export class CronJobAzEventsCollector implements Provider<CronJob> {
                         } catch (e) {
                             console.log(`API GLOBAL - ERROR: ${e.message}`);
                         }
-
-                        // const scannedBlocksRepo = this.scannedBlocksSchemaRepository;
-                        // const newListEventRepo = this.newListEventSchemaRepository;
-                        // const unListEventRepo = this.unListEventSchemaRepository;
-                        // const purchaseEventRepo = this.purchaseEventSchemaRepository;
-                        // const bidWinEventRepo = this.bidWinEventSchemaRepository;
-                        // const stakingEventRepo = this.stakingEventSchemaRepository;
-                        // const claimRewardEventRepo = this.claimRewardEventSchemaRepository;
-                        // const launchpadMintingEventRepo = this.launchpadMintingEventSchemaRepository;
-                        // const withdrawEventRepo = this.withdrawEventSchemaRepository;
-                        // const addRewardEventRepo = this.addRewardEventSchemaRepository;
-                        // const collectionEventRepo = this.collectionEventSchemaRepository;
-                        // const projectsRepo = this.projectsSchemaRepository;
-                        //
-                        // if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) return;
-                        // try {
-                        //     console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Smartnet AZERO Ready`);
-                        //     global_vars.isScanning = false;
-                        //
-                        //     const abi_marketplace_contract = new Abi(marketplace.CONTRACT_ABI);
-                        //     console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Marketplace Contract ABI is ready`);
-                        //
-                        //     const abi_staking_contract = new Abi(staking.CONTRACT_ABI);
-                        //     console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Staking Contract ABI is ready`);
-                        //
-                        //     const abi_collection_contract = new Abi(collection_manager.CONTRACT_ABI);
-                        //     console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Collection Contract ABI is ready`);
-                        //
-                        //     const api_launchpad_psp34_nft_standard = new Abi(launchpad_psp34_nft_standard.CONTRACT_ABI);
-                        //     console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Launchpad Contract ABI is ready`);
-                        //
-                        //     await globalApi.rpc.chain.subscribeNewHeads((header) => {
-                        //         try {
-                        //             scanBlocks(
-                        //                 parseInt(header.number.toString()),
-                        //                 globalApi,
-                        //                 api_launchpad_psp34_nft_standard,
-                        //                 abi_marketplace_contract,
-                        //                 abi_staking_contract,
-                        //                 abi_collection_contract,
-                        //                 scannedBlocksRepo,
-                        //                 newListEventRepo,
-                        //                 unListEventRepo,
-                        //                 purchaseEventRepo,
-                        //                 bidWinEventRepo,
-                        //                 stakingEventRepo,
-                        //                 claimRewardEventRepo,
-                        //                 launchpadMintingEventRepo,
-                        //                 withdrawEventRepo,
-                        //                 addRewardEventRepo,
-                        //                 collectionEventRepo,
-                        //                 projectsRepo
-                        //             );
-                        //         } catch (e) {
-                        //             console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - ERROR: ${e.message}`);
-                        //         }
-                        //     });
-                        // } catch (e) {
-                        //     console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - ERROR: ${e.message}`);
-                        // }
                     }
                 } catch (e) {
                     console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - ERROR: ${e.message}`);

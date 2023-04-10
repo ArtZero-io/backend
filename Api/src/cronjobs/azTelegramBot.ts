@@ -97,9 +97,9 @@ export class CronJobAzTelegramBot implements Provider<CronJob> {
                         const collectionsRepo = this.collectionsSchemaRepository;
 
                         if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) return;
-                        console.log(`${CONFIG_TYPE_NAME.AZ_TELEGRAM_BOT} - ARTZERO Telegram Bot is active!`);
+                        console.log(`${CONFIG_TYPE_NAME.AZ_TELEGRAM_BOT} - Astar Telegram Bot is active!`);
                         try {
-                            console.log(`${CONFIG_TYPE_NAME.AZ_TELEGRAM_BOT} - Smartnet AZERO Ready`);
+                            console.log(`${CONFIG_TYPE_NAME.AZ_TELEGRAM_BOT} - Smartnet Astar Ready`);
                             const collection_contract = new ContractPromise(
                                 globalApi,
                                 collection_manager.CONTRACT_ABI,

@@ -2,9 +2,6 @@ import {inject} from '@loopback/core';
 import {DefaultCrudRepository} from '@loopback/repository';
 import {withdrawevents, WithdrawEventSchemaRelations} from '../models';
 import {AstarDbDatasource} from "../datasources";
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 export class WithdrawEventSchemaRepository extends DefaultCrudRepository<
     withdrawevents,
@@ -12,7 +9,7 @@ export class WithdrawEventSchemaRepository extends DefaultCrudRepository<
     WithdrawEventSchemaRelations
 > {
     constructor(
-        @inject(`datasources.${process.env.DB_NAME}`) dataSource: AstarDbDatasource,
+        @inject(`datasources.AstarDB`) dataSource: AstarDbDatasource,
     ) {
         super(withdrawevents, dataSource);
     }

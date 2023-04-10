@@ -64,9 +64,9 @@ export class CronJobAzProjectMonitor implements Provider<CronJob> {
                         const projectQueueRepo = this.projectQueueSchemaRepository;
 
                         if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) return;
-                        console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_MONITOR} - ARTZERO Project Monitoring is active!`);
+                        console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_MONITOR} - Astar Project Monitoring is active!`);
                         try {
-                            console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_MONITOR} - Smartnet AZERO Ready`);
+                            console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_MONITOR} - Smartnet Astar Ready`);
                             global_vars.is_check_new_projects = false;
                             global_vars.is_check_project_queue = false;
                             try {

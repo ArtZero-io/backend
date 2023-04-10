@@ -75,7 +75,7 @@ export class CronJobAzNftMonitorScanAll implements Provider<CronJob> {
                         const collectionQueueRepo = this.collectionQueueSchemaRepository;
                         if (!(global_vars.socketStatusLocal == SOCKET_STATUS.CONNECTED && localApi)) return;
                         try {
-                            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR_SCAN_ALL} - Smartnet AZERO Ready`);
+                            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR_SCAN_ALL} - Smartnet Astar Ready`);
                             global_vars.is_scan_all_NFTs = false;
                             global_vars.is_check_NFT_queue_all = false;
                             try {

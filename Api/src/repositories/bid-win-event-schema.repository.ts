@@ -2,9 +2,6 @@ import {inject} from '@loopback/core';
 import {DefaultCrudRepository} from '@loopback/repository';
 import {bidwinevents, BidWinEventSchemaRelations} from '../models';
 import {AstarDbDatasource} from "../datasources";
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 export class BidWinEventSchemaRepository extends DefaultCrudRepository<
     bidwinevents,
@@ -12,7 +9,7 @@ export class BidWinEventSchemaRepository extends DefaultCrudRepository<
     BidWinEventSchemaRelations
 > {
     constructor(
-        @inject(`datasources.${process.env.DB_NAME}`) dataSource: AstarDbDatasource,
+        @inject(`datasources.AstarDB`) dataSource: AstarDbDatasource,
     ) {
         super(bidwinevents, dataSource);
     }

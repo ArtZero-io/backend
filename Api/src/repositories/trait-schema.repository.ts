@@ -2,9 +2,6 @@ import {inject} from '@loopback/core';
 import {DefaultCrudRepository} from '@loopback/repository';
 import {traits, TraitSchemaRelations} from '../models';
 import {AstarDbDatasource} from "../datasources";
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 export class TraitSchemaRepository extends DefaultCrudRepository<
     traits,
@@ -12,7 +9,7 @@ export class TraitSchemaRepository extends DefaultCrudRepository<
     TraitSchemaRelations
 > {
     constructor(
-        @inject(`datasources.${process.env.DB_NAME}`) dataSource: AstarDbDatasource,
+        @inject(`datasources.AstarDB`) dataSource: AstarDbDatasource,
     ) {
         super(traits, dataSource);
     }

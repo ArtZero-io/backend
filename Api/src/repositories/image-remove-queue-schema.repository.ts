@@ -2,9 +2,6 @@ import {inject} from '@loopback/core';
 import {DefaultCrudRepository} from '@loopback/repository';
 import {imageremovequeues, ImageRemoveQueueSchemaRelations} from '../models';
 import {AstarDbDatasource} from "../datasources";
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 export class ImageRemoveQueueSchemaRepository extends DefaultCrudRepository<
     imageremovequeues,
@@ -12,7 +9,7 @@ export class ImageRemoveQueueSchemaRepository extends DefaultCrudRepository<
     ImageRemoveQueueSchemaRelations
 > {
     constructor(
-        @inject(`datasources.${process.env.DB_NAME}`) dataSource: AstarDbDatasource,
+        @inject(`datasources.AstarDB`) dataSource: AstarDbDatasource,
     ) {
         super(imageremovequeues, dataSource);
     }

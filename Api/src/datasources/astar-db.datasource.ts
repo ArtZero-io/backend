@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 const config = {
-  name: process.env.DB_NAME,
+  name: 'AstarDB',
   connector: process.env.DB_CONNECTOR,
   url: process.env.DB_URL,
   host: process.env.DB_HOST,
@@ -22,11 +22,11 @@ const config = {
 @lifeCycleObserver('datasource')
 export class AstarDbDatasource extends juggler.DataSource
   implements LifeCycleObserver {
-  static dataSourceName = `${process.env.DB_NAME}`;
+  static dataSourceName = 'AstarDB';
   static readonly defaultConfig = config;
 
   constructor(
-    @inject(`datasources.config.${process.env.DB_NAME}`, {optional: true})
+      @inject('datasources.config.AstarDB', {optional: true})
     dsConfig: object = config,
   ) {
     super(dsConfig);

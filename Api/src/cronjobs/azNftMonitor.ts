@@ -84,7 +84,7 @@ export class CronJobAzNftMonitor implements Provider<CronJob> {
                         const blackListRepo = this.blackListRepository;
                         if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) return;
                         try {
-                            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Smartnet AZERO Ready`);
+                            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Smartnet Astar Ready`);
                             const marketplace_contract = new ContractPromise(
                                 globalApi,
                                 marketplace.CONTRACT_ABI,

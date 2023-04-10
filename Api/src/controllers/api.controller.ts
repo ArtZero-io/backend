@@ -200,12 +200,12 @@ let api = new ApiPromise({
 });
 api.on("connected", () => {
     api.isReady.then(() => {
-        console.log("Smartnet AZERO Connected");
+        console.log("Smartnet Astar Connected");
     });
 });
 
 api.on("ready", () => {
-    console.log("Smartnet AZERO Ready");
+    console.log("Smartnet Astar Ready");
     const collection_contract = new ContractPromise(
         api,
         collection_manager.CONTRACT_ABI,
@@ -3273,11 +3273,11 @@ export class ApiController {
             });
             apiTrigger.on("connected", () => {
                 apiTrigger.isReady.then(() => {
-                    console.log("Smartnet AZERO Connected");
+                    console.log("Smartnet Astar Connected");
                 });
             });
             apiTrigger.on("ready", async () => {
-                console.log("Smartnet AZERO Ready");
+                console.log("Smartnet Astar Ready");
                 const marketplace_contract = new ContractPromise(
                     apiTrigger,
                     marketplace.CONTRACT_ABI,

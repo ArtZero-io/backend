@@ -84,7 +84,7 @@ export class CronJobAzProcessingAllQueueNft implements Provider<CronJob> {
                                 if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) {
                                     return;
                                 } else{
-                                    console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - Smartnet AZERO Ready`);
+                                    console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - Smartnet Astar Ready`);
                                     // global_vars.is_scan_all_NFTs = false;
                                     global_vars.is_check_NFT_queue_all = false;
                                     try {
@@ -100,7 +100,7 @@ export class CronJobAzProcessingAllQueueNft implements Provider<CronJob> {
                                     }
                                 }
                             } else {
-                                console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - Smartnet AZERO Ready`);
+                                console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - Smartnet Astar Ready`);
                                 // global_vars.is_scan_all_NFTs = false;
                                 global_vars.is_check_NFT_queue_all = false;
                                 try {

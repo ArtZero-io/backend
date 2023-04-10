@@ -74,7 +74,7 @@ export class CronJobAzCollectionMonitor implements Provider<CronJob> {
                         const imageRemoveQueueRepo = this.imageRemoveQueueSchemaRepository;
                         if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) return;
                         try {
-                            console.log(`${CONFIG_TYPE_NAME.AZ_CLOUDFLARE_SYNC_MONITOR} - Smartnet AZERO Ready`);
+                            console.log(`${CONFIG_TYPE_NAME.AZ_CLOUDFLARE_SYNC_MONITOR} - Smartnet Astar Ready`);
                             global_vars.is_check_new_collections = false;
                             global_vars.is_check_collection_queue = false;
                             try {

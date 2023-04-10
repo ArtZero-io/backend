@@ -288,12 +288,12 @@ connectDb().then(async () => {
     });
     api.on("connected", () => {
       api.isReady.then((api) => {
-        console.log("Smartnet AZERO Connected");
+        console.log("Smartnet Astar Connected");
       });
     });
 
     api.on("ready", async () => {
-      console.log("Smartnet AZERO Ready");
+      console.log("Smartnet Astar Ready");
       global_vars.isScanning = false;
 
       abi_marketplace_contract = new Abi(marketplace.CONTRACT_ABI);
