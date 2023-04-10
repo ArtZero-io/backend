@@ -1,16 +1,19 @@
 import {inject} from '@loopback/core';
 import {DefaultCrudRepository} from '@loopback/repository';
 import {newlistevents, NewListEventSchemaRelations} from '../models';
-import {ArtZeroDbDataSource} from "../datasources";
+import {AstarDbDatasource} from "../datasources";
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 export class NewListEventSchemaRepository extends DefaultCrudRepository<
-  newlistevents,
-  typeof newlistevents.prototype._id,
-  NewListEventSchemaRelations
+    newlistevents,
+    typeof newlistevents.prototype._id,
+    NewListEventSchemaRelations
 > {
-  constructor(
-    @inject('datasources.ArtZeroDB') dataSource: ArtZeroDbDataSource,
-  ) {
-    super(newlistevents, dataSource);
-  }
+    constructor(
+        @inject(`datasources.${process.env.DB_NAME}`) dataSource: AstarDbDatasource,
+    ) {
+        super(newlistevents, dataSource);
+    }
 }

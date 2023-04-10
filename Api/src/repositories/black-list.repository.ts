@@ -1,16 +1,19 @@
 import {inject} from '@loopback/core';
 import {DefaultCrudRepository} from '@loopback/repository';
 import {BlackList, BlackListRelations} from '../models';
-import {ArtZeroDbDataSource} from "../datasources";
+import {AstarDbDatasource} from "../datasources";
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 export class BlackListRepository extends DefaultCrudRepository<
-  BlackList,
-  typeof BlackList.prototype._id,
-  BlackListRelations
+    BlackList,
+    typeof BlackList.prototype._id,
+    BlackListRelations
 > {
-  constructor(
-    @inject('datasources.ArtZeroDB') dataSource: ArtZeroDbDataSource,
-  ) {
-    super(BlackList, dataSource);
-  }
+    constructor(
+        @inject(`datasources.${process.env.DB_NAME}`) dataSource: AstarDbDatasource,
+    ) {
+        super(BlackList, dataSource);
+    }
 }

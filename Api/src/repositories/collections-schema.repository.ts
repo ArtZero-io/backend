@@ -1,16 +1,19 @@
 import {inject} from '@loopback/core';
 import {DefaultCrudRepository} from '@loopback/repository';
 import {collections, CollectionsSchemaRelations} from '../models';
-import {ArtZeroDbDataSource} from "../datasources";
+import {AstarDbDatasource} from "../datasources";
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 export class CollectionsSchemaRepository extends DefaultCrudRepository<
-  collections,
-  typeof collections.prototype._id,
-  CollectionsSchemaRelations
+    collections,
+    typeof collections.prototype._id,
+    CollectionsSchemaRelations
 > {
-  constructor(
-    @inject('datasources.ArtZeroDB') dataSource: ArtZeroDbDataSource,
-  ) {
-    super(collections, dataSource);
-  }
+    constructor(
+        @inject(`datasources.${process.env.DB_NAME}`) dataSource: AstarDbDatasource,
+    ) {
+        super(collections, dataSource);
+    }
 }

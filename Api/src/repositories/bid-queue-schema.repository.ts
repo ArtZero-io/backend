@@ -1,16 +1,19 @@
 import {inject} from '@loopback/core';
 import {DefaultCrudRepository} from '@loopback/repository';
 import {bidqueues, BidQueueSchemaRelations} from '../models';
-import {ArtZeroDbDataSource} from "../datasources";
+import {AstarDbDatasource} from "../datasources";
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 export class BidQueueSchemaRepository extends DefaultCrudRepository<
-  bidqueues,
-  typeof bidqueues.prototype._id,
-  BidQueueSchemaRelations
+    bidqueues,
+    typeof bidqueues.prototype._id,
+    BidQueueSchemaRelations
 > {
-  constructor(
-    @inject('datasources.ArtZeroDB') dataSource: ArtZeroDbDataSource,
-  ) {
-    super(bidqueues, dataSource);
-  }
+    constructor(
+        @inject(`datasources.${process.env.DB_NAME}`) dataSource: AstarDbDatasource,
+    ) {
+        super(bidqueues, dataSource);
+    }
 }
