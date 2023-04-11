@@ -1469,3 +1469,32 @@ export const RequestCheckingImagesAndJsonBody = {
         'application/json': {schema: ReqCheckingImagesAndJsonSchema},
     },
 };
+
+// GET ALL BIDS QUEUE
+export type ReqGetAllBidsQueueType = {
+    userName: string,
+    password: string,
+    nftContractAddress: string
+};
+const ReqGetAllBidsQueueSchema: SchemaObject = {
+    type: 'object',
+    required: ['userName', 'password', 'nftContractAddress'],
+    properties: {
+        userName: {
+            type: 'string',
+        },
+        password: {
+            type: 'string',
+        },
+        nftContractAddress: {
+            type: 'string',
+        },
+    },
+};
+export const RequestGetAllBidsQueueBody = {
+    description: 'The input of getAllBidsQueue function',
+    required: true,
+    content: {
+        'application/json': {schema: ReqGetAllBidsQueueSchema},
+    },
+};

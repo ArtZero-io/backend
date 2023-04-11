@@ -120,7 +120,7 @@ IPFS_BASE_URL=https://artzeronft.infura-ipfs.io/ipfs
 
 
 # Example
-# DB_NAME=ArtZeroDB # Get from art-zero-db.datasource.ts
+# DB_NAME=ArtZeroDB # Get from astar-db.datasource.ts
 # DB_HOST=localhost
 # DB_PORT=27017
 # DB_USER=AccTest

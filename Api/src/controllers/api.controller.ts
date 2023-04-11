@@ -134,7 +134,7 @@ import {
     ReqTriggerRewardsType,
     RequestResetAllQueueBody,
     ReqResetAllQueueType,
-    RequestCheckingImagesAndJsonBody, ReqCheckingImagesAndJsonType,
+    RequestCheckingImagesAndJsonBody, ReqCheckingImagesAndJsonType, ReqGetAllBidsQueueType, RequestGetAllBidsQueueBody,
 } from "../utils/Message";
 import { MESSAGE, STATUS} from "../utils/constant";
 import {
@@ -3565,6 +3565,91 @@ export class ApiController {
                 totalError: totalError,
                 listError: listError,
                 listSuccess: listSuccess,
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    @post('/api/checking/get-all-bidsqueue')
+    async getAllBidsQueue(
+        @requestBody(RequestGetAllBidsQueueBody) req:ReqGetAllBidsQueueType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req || !req.userName || !req.password) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            const userName = req?.userName;
+            const password = req?.password;
+            const nftContractAddress = req?.nftContractAddress;
+            if (userName !== process.env.ADMIN_USER_NAME || password !== process.env.ADMIN_PASSWORD) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_AUTHENTICATION,
+                });
+            }
+            if (!nftContractAddress) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_INPUT,
+                });
+            }
+            try {
+                const allCollection = await this.collectionsSchemaRepository.find({
+                    where: {
+                        nftContractAddress: nftContractAddress
+                    }
+                });
+                if (allCollection) {
+                    for (const collection of allCollection) {
+                        if (collection.isActive) {
+                            const nftsForSale = await this.nfTsSchemaRepository.find({
+                                where: {
+                                    nftContractAddress: collection.nftContractAddress,
+                                    is_for_sale: true
+                                }
+                            });
+                            console.log(`${collection.nftContractAddress}: ${nftsForSale.length} NFTs`);
+                            for (const nft of nftsForSale) {
+                                // TODO - Step 1: Get current owner NFT
+                                const seller = nft.nft_owner;
+                                // TODO - Step 2: Insert to bidsQueue
+                                if (seller) {
+                                    try {
+                                        const newData = await this.bidQueueSchemaRepository.create({
+                                            nftContractAddress: collection.nftContractAddress,
+                                            tokenID: nft.tokenID,
+                                            seller: seller,
+                                            createdTime: new Date(),
+                                            updatedTime: new Date()
+                                        });
+                                        console.log(newData);
+                                    } catch (e) {
+                                        console.log(e.message);
+                                    }
+                                } else {
+                                    console.log(`ERROR: Not found seller!`);
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log(e.message);
+            }
+
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.OK,
+                message: MESSAGE.SUCCESS,
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
