@@ -3,7 +3,7 @@ import BN from "bn.js";
 import {convertNumberWithoutCommas, readOnlyGasLimit, readOnlyGasLimitAstar} from "../utils/utils";
 import {KeyringPair} from "@polkadot/keyring/types";
 import axios from "axios";
-import {logger} from "../scripts/GenerateNftAttributes";
+import {convertToUTCTime, logger} from "../utils/Tools";
 let contract: ContractPromise;
 export const setContract = (c: ContractPromise) => {
     contract = c;
@@ -211,11 +211,11 @@ export async function mintNewNft(
         // await nft721_psp34_standard_contract.tx.mint({})
         .signAndSend(keypair, async result => {
             if (result.status.isInBlock) {
-                console.log(`InBlock for NFT ${tokenId} of collection ${collectionAddress}`);
+                console.log(`InBlock for NFT ${tokenId} of collection ${collectionAddress} at ${convertToUTCTime(new Date())}`);
                 // @ts-ignore
                 logger.info(`InBlock: ${result.toHuman()?.status?.InBlock}`);
             } else if (result.status.isFinalized) {
-                console.log(`In finalized for NFT ${tokenId} of collection ${collectionAddress}`);
+                console.log(`In finalized for NFT ${tokenId} of collection ${collectionAddress} at ${convertToUTCTime(new Date())}`);
                 // @ts-ignore
                 logger.info(`Finalized: ${result.toHuman()?.status?.Finalized}`);
                 try {
@@ -233,6 +233,7 @@ export async function mintNewNft(
                             headers: headers
                         });
                     logger.info(res);
+                    console.log(`Complete NFT ${tokenId} of collection ${collectionAddress} at ${convertToUTCTime(new Date())}`);
                 } catch (e) {
                     logger.error(e.message);
                 }

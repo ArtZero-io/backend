@@ -1,6 +1,20 @@
 import {BlackListRepository} from "../repositories";
 import {BLACK_LIST_TYPE} from "./constant";
+import winston from "winston";
 
+export const logger = winston.createLogger({
+    level: "silly",
+    format: winston.format.combine(
+        winston.format.timestamp(), // adds a timestamp property
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({filename: "logs/scripts_error.log", level: "error"}),
+        new winston.transports.File({filename: "logs/scripts_info.log", level: "info"}),
+        new winston.transports.File({filename: "logs/scripts.log"}),
+    ],
+});
 export const sleep = (waitTimeInMs: number) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
 export function convertToUTCTime(date: Date) {
     return date.toISOString().replace(/T/, ' ').replace(/\..+/, '');
