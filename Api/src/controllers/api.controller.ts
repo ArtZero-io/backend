@@ -2661,7 +2661,7 @@ export class ApiController {
             if (params?.price) {
                 paramTmp = {...paramTmp, price: params.price};
             }
-            if (params?.is_for_sale) {
+            if (params && params?.is_for_sale != undefined) {
                 paramTmp = {...paramTmp, is_for_sale: params.is_for_sale};
             }
             if (params?.and) {
@@ -2676,7 +2676,7 @@ export class ApiController {
                 nftContractAddress: collectionAddress,
                 ...paramTmp
             };
-            // console.log(filterData);
+            console.log(filterData);
             const data = await this.nfTsSchemaRepository.find({
                 where: filterData,
                 order: [order],

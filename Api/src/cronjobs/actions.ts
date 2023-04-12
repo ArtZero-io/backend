@@ -449,7 +449,7 @@ export async function check_NFT_queue_all(
                 nftContractAddress
             );
             console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - NFT Contract is ready 2: `, nftContractAddress, tokenID);
-            //nft721_psp34_standard_calls.setContract(nft_contract);
+            nft721_psp34_standard_calls.setContract(nft_contract);
             //Check is Locked
             let is_locked = false;
             if (found_collection.showOnChainMetadata) {
@@ -753,7 +753,7 @@ export async function scanAllNFTs(
                 nftContractAddress
             );
             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR_SCAN_ALL} - NFT Contract is ready 3`);
-            //nft721_psp34_standard_calls.setContract(nft_contract);
+            nft721_psp34_standard_calls.setContract(nft_contract);
             let totalSupply = await nft721_psp34_standard_calls.getTotalSupply(
                 nft_contract,
                 global_vars.caller
@@ -867,14 +867,14 @@ export async function check_NFT_queue(
                 });
                 continue;
             }
+            console.log({nftContractAddress: nftContractAddress});
             const nft_contract = new ContractPromise(
                 api,
                 nft721_psp34_standard.CONTRACT_ABI,
                 nftContractAddress
             );
             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - NFT Contract is ready 1 `, nftContractAddress, tokenID);
-            //nft721_psp34_standard_calls.setContract(nft_contract);
-            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Before check is_clocked`);
+            nft721_psp34_standard_calls.setContract(nft_contract);
             //Check is Locked
             let is_locked = false;
             if (found_collection.showOnChainMetadata) {
@@ -884,12 +884,10 @@ export async function check_NFT_queue(
                     {u64: tokenID}
                 );
             }
-            // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - After check is_clocked`);
-            // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Before check totalSupply`);
             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - nftContractAddress: `, nftContractAddress);
             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - global_vars.caller: `, global_vars.caller);
-            // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Before totalSupply`);
             //Check total Supply
+            console.log(nft721_psp34_standard_calls);
             let totalSupply = await nft721_psp34_standard_calls.getLastTokenId(
                 nft_contract,
                 global_vars.caller
