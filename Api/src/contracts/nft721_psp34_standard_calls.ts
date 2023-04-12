@@ -1,7 +1,10 @@
 import {ContractPromise} from "@polkadot/api-contract";
 import BN from "bn.js";
 import {convertNumberWithoutCommas, readOnlyGasLimit} from "../utils/utils";
-
+let contract: ContractPromise;
+export const setContract = (c: ContractPromise) => {
+    contract = c;
+};
 export async function getTotalSupply(nft721_psp34_standard_contract: ContractPromise, caller_account: string) {
     if (!nft721_psp34_standard_contract || !caller_account) {
         return 0;
@@ -16,7 +19,8 @@ export async function getTotalSupply(nft721_psp34_standard_contract: ContractPro
         ](address, {value: azero_value, gasLimit});
     if (result.isOk && output) {
         // @ts-ignore
-        return new BN(convertNumberWithoutCommas(output.toHuman()?.Ok), 10, "le").toNumber();
+        return parseInt(convertNumberWithoutCommas(output.toHuman()?.Ok));
+        // return new BN(convertNumberWithoutCommas(output.toHuman()?.Ok), 10, "le").toNumber();
     }
     return 0;
 }
@@ -178,8 +182,11 @@ export async function getLastTokenId(nft721_psp34_standard_contract: ContractPro
         {value: azero_value, gasLimit}
     );
     if (result.isOk && output) {
+        console.log(output.toHuman());
         // @ts-ignore
-        return new BN(convertNumberWithoutCommas(output.toHuman()?.Ok), 10, "le").toNumber();
+        return parseInt(convertNumberWithoutCommas(output.toHuman()?.Ok));
+        // return (new BN(convertNumberWithoutCommas(output.toHuman()?.Ok), 10, "le")).toNumber();
+        // return new BN(convertNumberWithoutCommas(output.toHuman()?.Ok), 10, "le").toNumber();
     }
     return null;
 }

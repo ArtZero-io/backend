@@ -1110,6 +1110,17 @@ export const RequestGetOwnershipHistoryBody = {
 };
 
 // SEARCH NFT OF COLLECTION BY TRAITS
+/**
+ * params = {
+ *   $and: [
+ *     { $or: [{ "traits.Skin": "Red Dalmatians" }] },
+ *     { $or: [{ "traits.Background": "Dark Green" }] },
+ *   ],
+ *   is_for_sale: true,
+ *   price: { lt: 22000000000000, gt: 1000000000000 },
+ *   keyword: "25",
+ * };
+ */
 export type TraitFilters = {
     and?: object,
     is_for_sale?: boolean,
@@ -1470,5 +1481,34 @@ export const RequestCheckingImagesAndJsonBody = {
     required: true,
     content: {
         'application/json': {schema: ReqCheckingImagesAndJsonSchema},
+    },
+};
+
+// GET ALL BIDS QUEUE
+export type ReqGetAllBidsQueueType = {
+    userName: string,
+    password: string,
+    nftContractAddress: string
+};
+const ReqGetAllBidsQueueSchema: SchemaObject = {
+    type: 'object',
+    required: ['userName', 'password', 'nftContractAddress'],
+    properties: {
+        userName: {
+            type: 'string',
+        },
+        password: {
+            type: 'string',
+        },
+        nftContractAddress: {
+            type: 'string',
+        },
+    },
+};
+export const RequestGetAllBidsQueueBody = {
+    description: 'The input of getAllBidsQueue function',
+    required: true,
+    content: {
+        'application/json': {schema: ReqGetAllBidsQueueSchema},
     },
 };
