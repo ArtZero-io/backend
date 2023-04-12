@@ -1110,8 +1110,22 @@ export const RequestGetOwnershipHistoryBody = {
 };
 
 // SEARCH NFT OF COLLECTION BY TRAITS
+/**
+ * params = {
+ *   $and: [
+ *     { $or: [{ "traits.Skin": "Red Dalmatians" }] },
+ *     { $or: [{ "traits.Background": "Dark Green" }] },
+ *   ],
+ *   is_for_sale: true,
+ *   price: { lt: 22000000000000, gt: 1000000000000 },
+ *   keyword: "25",
+ * };
+ */
 export type TraitFilters = {
-    is_for_sale?: boolean
+    and?: object,
+    is_for_sale?: boolean,
+    price?: object,
+    keyword?: string
 };
 export type ReqSearchNFTOfCollectionByTraitsType = {
     collectionAddress: string,
