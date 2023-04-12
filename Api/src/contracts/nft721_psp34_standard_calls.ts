@@ -1,6 +1,9 @@
 import {ContractPromise} from "@polkadot/api-contract";
 import BN from "bn.js";
-import {convertNumberWithoutCommas, readOnlyGasLimit} from "../utils/utils";
+import {convertNumberWithoutCommas, readOnlyGasLimit, readOnlyGasLimitAstar} from "../utils/utils";
+import {KeyringPair} from "@polkadot/keyring/types";
+import axios from "axios";
+import {logger} from "../scripts/GenerateNftAttributes";
 let contract: ContractPromise;
 export const setContract = (c: ContractPromise) => {
     contract = c;
@@ -189,4 +192,52 @@ export async function getLastTokenId(nft721_psp34_standard_contract: ContractPro
         // return new BN(convertNumberWithoutCommas(output.toHuman()?.Ok), 10, "le").toNumber();
     }
     return null;
+}
+
+export async function mintNewNft(
+    keypair: KeyringPair,
+    nft721_psp34_standard_contract: ContractPromise,
+    tokenId: number,
+    urlUpdateNft: string,
+    collectionAddress: string
+): Promise<string | undefined> {
+    // @ts-ignore
+    const gasLimit = readOnlyGasLimitAstar(nft721_psp34_standard_contract.api);
+    const value = 0;
+    // const gasLimit = 6 * 100000000;
+    // const value = 0;
+
+    await nft721_psp34_standard_contract.tx.mint({ gasLimit, value })
+        // await nft721_psp34_standard_contract.tx.mint({})
+        .signAndSend(keypair, async result => {
+            if (result.status.isInBlock) {
+                console.log(`InBlock for NFT ${tokenId} of collection ${collectionAddress}`);
+                // @ts-ignore
+                logger.info(`InBlock: ${result.toHuman()?.status?.InBlock}`);
+            } else if (result.status.isFinalized) {
+                console.log(`In finalized for NFT ${tokenId} of collection ${collectionAddress}`);
+                // @ts-ignore
+                logger.info(`Finalized: ${result.toHuman()?.status?.Finalized}`);
+                try {
+                    const headers = {
+                        Accept: "*/*",
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    };
+                    const res = await axios.post(
+                        urlUpdateNft,
+                        {
+                            collection_address: collectionAddress,
+                            token_id: tokenId
+                        },
+                        {
+                            headers: headers
+                        });
+                    logger.info(res);
+                } catch (e) {
+                    logger.error(e.message);
+                }
+            }
+        })
+        .catch((e) => console.log("e", e));
+    return undefined;
 }
