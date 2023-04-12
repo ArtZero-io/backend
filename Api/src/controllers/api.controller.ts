@@ -2622,6 +2622,7 @@ export class ApiController {
         @requestBody(RequestSearchNFTOfCollectionByTraitsBody) req:ReqSearchNFTOfCollectionByTraitsType
     ): Promise<ResponseBody | Response> {
         try {
+            // console.log(req);
             if (!req || !req.collectionAddress) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
@@ -2655,19 +2656,34 @@ export class ApiController {
             const order = (params && params.is_for_sale)
                 ? ((req?.sort && req?.sort == 1) ? "price ASC" : "price DESC")
                 : ((req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC");
+
+            let paramTmp = {};
+            if (params?.price) {
+                paramTmp = {...paramTmp, price: params.price};
+            }
+            if (params?.is_for_sale) {
+                paramTmp = {...paramTmp, is_for_sale: params.is_for_sale};
+            }
+            if (params?.and) {
+                paramTmp = {...paramTmp, and: params.and};
+            }
+            if (params?.keyword) {
+                paramTmp = {...paramTmp, nftName: {like: `${params.keyword}`}};
+                // paramTmp = {...paramTmp, nftName: {like: `${new RegExp('.*' + params.keyword + '.*', "i")}`}}
+            }
+
+            const filterData = {
+                nftContractAddress: collectionAddress,
+                ...paramTmp
+            };
+            console.log(filterData);
             const data = await this.nfTsSchemaRepository.find({
-                where: {
-                    nftContractAddress: collectionAddress,
-                    ...params,
-                },
+                where: filterData,
                 order: [order],
                 skip: offset,
                 limit: limit
-            })
-            const countNft = await this.nfTsSchemaRepository.count({
-                nftContractAddress: collectionAddress,
-                ...params,
-            })
+            });
+            const countNft = await this.nfTsSchemaRepository.count(filterData);
 
             ret.result = {
                 NFTList: data,

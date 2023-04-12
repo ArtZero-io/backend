@@ -1111,7 +1111,10 @@ export const RequestGetOwnershipHistoryBody = {
 
 // SEARCH NFT OF COLLECTION BY TRAITS
 export type TraitFilters = {
-    is_for_sale?: boolean
+    and?: object,
+    is_for_sale?: boolean,
+    price?: object,
+    keyword?: string
 };
 export type ReqSearchNFTOfCollectionByTraitsType = {
     collectionAddress: string,
