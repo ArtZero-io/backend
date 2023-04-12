@@ -66,6 +66,8 @@
     "@types/sharp": "^0.31.1",
     "axios": "^1.3.3",
     "dotenv": "^16.0.3",
+    "download": "^8.0.0",
+    "file-type": "^16.5.3",
     "ipfs": "^0.62.2",
     "ipfs-http-client": "^56.0.2",
     "is-ipfs": "^6.0.2",
@@ -73,11 +75,10 @@
     "loopback-connector-mongodb": "^5.2.3",
     "mobile-detect": "^1.4.5",
     "save-file-by-url": "^0.4.2",
+    "sharp": "^0.30.4",
     "tslib": "^2.0.0",
     "uuid": "^9.0.0",
-    "sharp": "^0.30.4",
-    "download": "^8.0.0",
-    "file-type": "^16.5.3"
+    "winston": "^3.8.2"
   },
   "devDependencies": {
     "@loopback/build": "^9.0.8",

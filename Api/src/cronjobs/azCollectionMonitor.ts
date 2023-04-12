@@ -72,9 +72,11 @@ export class CronJobAzCollectionMonitor implements Provider<CronJob> {
                         const collectionQueueRepo = this.collectionQueueSchemaRepository;
                         const nftRepo = this.nfTsSchemaRepository;
                         const imageRemoveQueueRepo = this.imageRemoveQueueSchemaRepository;
+                        console.log(`${CONFIG_TYPE_NAME.AZ_COLLECTION_MONITOR} - WARNING - socketStatus: ${global_vars.socketStatus}`);
+                        console.log(`${CONFIG_TYPE_NAME.AZ_COLLECTION_MONITOR} - WARNING - globalApi: ${globalApi}`);
                         if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) return;
                         try {
-                            console.log(`${CONFIG_TYPE_NAME.AZ_CLOUDFLARE_SYNC_MONITOR} - Smartnet Astar Ready`);
+                            console.log(`${CONFIG_TYPE_NAME.AZ_COLLECTION_MONITOR} - Smartnet Astar Ready`);
                             global_vars.is_check_new_collections = false;
                             global_vars.is_check_collection_queue = false;
                             try {

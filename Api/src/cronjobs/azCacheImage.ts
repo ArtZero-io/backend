@@ -57,7 +57,7 @@ export class CronJobAzCacheImage implements Provider<CronJob> {
                         console.log(`${CONFIG_TYPE_NAME.AZ_CACHE_IMAGE} - RUN JOB AZ_CACHE_IMAGE NOW: ${currentTime}`);
                         const imageQueueSchemaRepo = this.imageQueueSchemaRepository;
                         const imageRepo = this.imagesSchemaRepository;
-                        console.log(`${CONFIG_TYPE_NAME.AZ_CACHE_IMAGE} - ARTZERO Image Caching Service is active!`);
+                        console.log(`${CONFIG_TYPE_NAME.AZ_CACHE_IMAGE} - Astar Image Caching Service is active!`);
                         global_vars.is_check_Image_queue = false;
                         try {
                             await check_Image_queue(
