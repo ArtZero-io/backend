@@ -7,14 +7,7 @@ import {
 import { Provider} from '@loopback/core';
 import {CronJob, cronJob} from '@loopback/cron';
 import {convertToUTCTime} from "../utils/Tools";
-import {ContractPromise} from "@polkadot/api-contract";
 import {global_vars, SOCKET_STATUS} from "./global";
-import {marketplace} from "../contracts/marketplace";
-import {artzero_nft} from "../contracts/artzero_nft";
-import {collection_manager} from "../contracts/collection_manager";
-import * as marketplace_calls from "../contracts/marketplace_calls";
-import * as artzero_nft_calls from "../contracts/artzero_nft_calls";
-import * as collection_manager_calls from "../contracts/collection_manager_calls";
 import {check_NFT_queue_all} from "./actions";
 import {repository} from "@loopback/repository";
 import {
@@ -80,6 +73,14 @@ export class CronJobAzProcessingAllQueueNft implements Provider<CronJob> {
                         const nftQueueScanAllRepo = this.nftQueueScanAllSchemaRepository;
                         const collectionsRepo = this.collectionsSchemaRepository;
                         try {
+                            console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - WARNING - socketStatus: ${global_vars.socketStatus}`);
+                            console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - WARNING - socketStatusLocal: ${global_vars.socketStatusLocal}`);
+                            if (globalApi){
+                                console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - WARNING - globalApi: isConnected ${JSON.stringify(globalApi.isConnected)}`);
+                            }
+                            if (localApi){
+                                console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - WARNING - localApi: isConnected ${JSON.stringify(localApi.isConnected)}`);
+                            }
                             if (!(global_vars.socketStatusLocal == SOCKET_STATUS.CONNECTED && localApi)) {
                                 if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) {
                                     return;

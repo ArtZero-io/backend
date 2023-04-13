@@ -57,7 +57,10 @@ export class CronJobAzBidsMonitor implements Provider<CronJob> {
                         const bidsRepo = this.bidsSchemaRepository;
                         const bidQueueRepo = this.bidQueueSchemaRepository;
                         const nfTsRepo = this.nfTsSchemaRepository;
-                        console.log(`${CONFIG_TYPE_NAME.AZ_BIDS_MONITOR} - ARTZERO Bid Monitor is active!`);
+                        console.log(`${CONFIG_TYPE_NAME.AZ_BIDS_MONITOR} - WARNING - socketStatus: ${global_vars.socketStatus}`);
+                        if (globalApi){
+                            console.log(`${CONFIG_TYPE_NAME.AZ_BIDS_MONITOR} - WARNING - globalApi: isConnected ${JSON.stringify(globalApi.isConnected)}`);
+                        }
                         if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) return;
                         global_vars.is_check_Bid = false;
                         try {

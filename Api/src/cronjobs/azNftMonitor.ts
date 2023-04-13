@@ -82,6 +82,10 @@ export class CronJobAzNftMonitor implements Provider<CronJob> {
                         const nftQueueRepo = this.nftQueueSchemaRepository;
                         const collectionsRepo = this.collectionsSchemaRepository;
                         const blackListRepo = this.blackListRepository;
+                        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - WARNING - socketStatus: ${global_vars.socketStatus}`);
+                        if (globalApi){
+                            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - WARNING - globalApi: isConnected ${JSON.stringify(globalApi.isConnected)}`);
+                        }
                         if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) return;
                         try {
                             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Smartnet Astar Ready`);

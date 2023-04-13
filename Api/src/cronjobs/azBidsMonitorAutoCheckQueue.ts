@@ -56,7 +56,10 @@ export class CronJobAzBidsMonitorAutoCheckQueue implements Provider<CronJob> {
                         console.log(`${CONFIG_TYPE_NAME.AZ_BIDS_MONITOR_CHECK_QUEUE} - RUN JOB AZ_BIDS_MONITOR NOW: ${currentTime}`);
                         const bidsRepo = this.bidsSchemaRepository;
                         const bidQueueRepo = this.bidQueueSchemaRepository;
-                        console.log(`${CONFIG_TYPE_NAME.AZ_BIDS_MONITOR_CHECK_QUEUE} - ARTZERO Bid Monitor is active!`);
+                        console.log(`${CONFIG_TYPE_NAME.AZ_BIDS_MONITOR_CHECK_QUEUE} - WARNING - socketStatus: ${global_vars.socketStatus}`);
+                        if (globalApi){
+                            console.log(`${CONFIG_TYPE_NAME.AZ_BIDS_MONITOR_CHECK_QUEUE} - WARNING - globalApi: isConnected ${JSON.stringify(globalApi.isConnected)}`);
+                        }
                         if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) return;
                         global_vars.is_auto_check_Bid = false;
                         try {

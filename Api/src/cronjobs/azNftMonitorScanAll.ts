@@ -16,7 +16,7 @@ import {
     NftQueueSchemaRepository,
     NftsSchemaRepository
 } from "../repositories";
-import {localApi} from "../index";
+import {globalApi, localApi} from "../index";
 @cronJob()
 export class CronJobAzNftMonitorScanAll implements Provider<CronJob> {
     constructor(
@@ -73,6 +73,10 @@ export class CronJobAzNftMonitorScanAll implements Provider<CronJob> {
                         const nftQueueScanAllRepo = this.nftQueueScanAllSchemaRepository;
                         const collectionsRepo = this.collectionsSchemaRepository;
                         const collectionQueueRepo = this.collectionQueueSchemaRepository;
+                        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR_SCAN_ALL} - WARNING - socketStatusLocal: ${global_vars.socketStatusLocal}`);
+                        if (localApi){
+                            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR_SCAN_ALL} - WARNING - localApi: isConnected ${JSON.stringify(localApi.isConnected)}`);
+                        }
                         if (!(global_vars.socketStatusLocal == SOCKET_STATUS.CONNECTED && localApi)) return;
                         try {
                             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR_SCAN_ALL} - Smartnet Astar Ready`);

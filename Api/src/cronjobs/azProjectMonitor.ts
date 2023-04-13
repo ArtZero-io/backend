@@ -63,6 +63,10 @@ export class CronJobAzProjectMonitor implements Provider<CronJob> {
                         const projectsRepo = this.projectsSchemaRepository;
                         const projectQueueRepo = this.projectQueueSchemaRepository;
 
+                        console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_MONITOR} - WARNING - socketStatus: ${global_vars.socketStatus}`);
+                        if (globalApi){
+                            console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_MONITOR} - WARNING - globalApi: isConnected ${JSON.stringify(globalApi.isConnected)}`);
+                        }
                         if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) return;
                         console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_MONITOR} - Astar Project Monitoring is active!`);
                         try {

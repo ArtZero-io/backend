@@ -64,6 +64,10 @@ export class CronJobAzProjectWhitelist implements Provider<CronJob> {
                         console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_WHITELIST} - RUN JOB AZ_PROJECT_WHITELIST NOW: ${currentTime}`);
                         const projectsRepo = this.projectsSchemaRepository;
                         const projectWhitelistQueuesRepo = this.projectWhitelistQueuesRepository;
+                        console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_WHITELIST} - WARNING - socketStatus: ${global_vars.socketStatus}`);
+                        if (globalApi){
+                            console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_WHITELIST} - WARNING - globalApi: isConnected ${JSON.stringify(globalApi.isConnected)}`);
+                        }
                         if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) return;
                         console.log(`${CONFIG_TYPE_NAME.AZ_PROJECT_WHITELIST} - AZ_PROJECT_WHITELIST is active!`);
                         try {

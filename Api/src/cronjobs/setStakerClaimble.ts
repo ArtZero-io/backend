@@ -6,10 +6,6 @@ import {
 import { Provider} from '@loopback/core';
 import {CronJob, cronJob} from '@loopback/cron';
 import {convertToUTCTime} from "../utils/Tools";
-import {ContractPromise} from "@polkadot/api-contract";
-import * as staking_calls from "../contracts/staking_calls";
-import {staking} from "../contracts/staking";
-import {delay} from "../utils/utils";
 import {setClaimedStatus} from "./actions";
 import {global_vars, SOCKET_STATUS} from "./global";
 import {globalApi} from "../index";
