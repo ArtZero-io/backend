@@ -2829,6 +2829,7 @@ export async function push_to_cloudflare(
             }
             console.log(`${CONFIG_TYPE_NAME.AZ_CLOUDFLARE_SYNC_MONITOR} - Starting push file: ${originImage} to Cloudflare`);
             let cloud_flare_image_custom_id = originImage?.replace(/\.[^/.]+$/, "").split('/').pop();
+            cloud_flare_image_custom_id = `astar/${cloud_flare_image_custom_id}`;
             let location1440 = images_not_on_cloudflare[j].location1440;
             let location1920 = images_not_on_cloudflare[j].location1920;
             let location1024 = images_not_on_cloudflare[j].location1024;
