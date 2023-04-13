@@ -136,7 +136,7 @@ import {
     ReqResetAllQueueType,
     RequestCheckingImagesAndJsonBody, ReqCheckingImagesAndJsonType, ReqGetAllBidsQueueType, RequestGetAllBidsQueueBody,
 } from "../utils/Message";
-import { MESSAGE, STATUS} from "../utils/constant";
+import {CONFIG_TYPE_NAME, MESSAGE, STATUS} from "../utils/constant";
 import {
     getFile,
     isValidAddressPolkadotAddress,
@@ -349,6 +349,10 @@ export class ApiController {
                     console.log(`ERROR: ${e.message}`);
                 }
                 // TODO: Trigger to jobs
+                console.log(`updateCollection - WARNING - socketStatus: ${global_vars.socketStatus}`);
+                if (globalApi){
+                    console.log(`updateCollection - WARNING - globalApi: isConnected ${JSON.stringify(globalApi.isConnected)}`);
+                }
                 if ((global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) {
                     global_vars.is_check_new_collections = false;
                     global_vars.is_check_collection_queue = false;
@@ -467,6 +471,10 @@ export class ApiController {
                     console.log(`ERROR: ${e.message}`);
                 }
                 try {
+                    console.log(`updateProject - WARNING - socketStatus: ${global_vars.socketStatus}`);
+                    if (globalApi){
+                        console.log(`updateProject - WARNING - globalApi: isConnected ${JSON.stringify(globalApi.isConnected)}`);
+                    }
                     if ((global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) {
                         checkAllWhiteListQueue(
                             globalApi,
@@ -644,6 +652,10 @@ export class ApiController {
                 }
                 // TODO: Trigger to jobs
                 if (newNftQueue) {
+                    console.log(`updateNFT - WARNING - socketStatus: ${global_vars.socketStatus}`);
+                    if (globalApi){
+                        console.log(`updateNFT - WARNING - globalApi: isConnected ${JSON.stringify(globalApi.isConnected)}`);
+                    }
                     if ((global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) {
                         global_vars.is_check_NFT_queue = false;
                         global_vars.is_check_new_AZ_NFT = false;
