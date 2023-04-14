@@ -887,7 +887,6 @@ export async function check_NFT_queue(
             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - nftContractAddress: `, nftContractAddress);
             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - global_vars.caller: `, global_vars.caller);
             //Check total Supply
-            console.log(nft721_psp34_standard_calls);
             let totalSupply = await nft721_psp34_standard_calls.getLastTokenId(
                 nft_contract,
                 global_vars.caller

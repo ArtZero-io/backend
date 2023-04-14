@@ -2668,7 +2668,7 @@ export class ApiController {
                 paramTmp = {...paramTmp, and: params.and};
             }
             if (params?.keyword) {
-                paramTmp = {...paramTmp, nftName: {like: `${params.keyword}`}};
+                paramTmp = {...paramTmp, nftName: {like: `${params.keyword}`, options: "i" }};
                 // paramTmp = {...paramTmp, nftName: {like: `${new RegExp('.*' + params.keyword + '.*', "i")}`}}
             }
 
