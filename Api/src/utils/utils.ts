@@ -1,5 +1,5 @@
 import {BN, BN_ONE, hexToU8a, isHex, u8aToHex} from "@polkadot/util";
-import {decodeAddress, encodeAddress} from "@polkadot/keyring";
+import Keyring, {decodeAddress, encodeAddress} from "@polkadot/keyring";
 import {ApiPromise} from "@polkadot/api";
 import {WeightV2} from "@polkadot/types/interfaces";
 import axios from "axios";
@@ -308,3 +308,15 @@ export async function checkProjectSchema(nftContractAddress: string, projectsRep
     });
     return !!project;
 }
+
+export function reformatAddress(address: string, networkPrefix: number) {
+    const publicKey = decodeAddress(address);
+  
+    if (networkPrefix < 0) {
+      const keyring = new Keyring({type: 'sr25519'});
+      const newAddress = keyring.addFromAddress(address);
+      return newAddress.address;
+    }
+    return encodeAddress(publicKey, networkPrefix);
+  }
+  

@@ -163,3 +163,5 @@ export const MAX_NFT_QUEUE_IN_PROCESSING:number = (process.env.MAX_NFT_QUEUE_IN_
 export const TIME_RESET_NFT_QUEUE_ALL:number = (process.env.TIME_RESET_NFT_QUEUE_ALL)
     ? parseInt(process.env.TIME_RESET_NFT_QUEUE_ALL)
     : 0;
+
+export const NETWORK_SS58 = 5
