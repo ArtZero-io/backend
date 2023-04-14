@@ -2126,7 +2126,7 @@ export async function scanBlocks(
                 collectionEventRepo,
                 projectsRepo
             );
-            console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Stop processEventRecords now: ${convertToUTCTime(new Date())}`);
+            console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Stop processEventRecords ${to_scan} now: ${convertToUTCTime(new Date())}`);
             try {
                 await scannedBlocksRepo.updateAll({
                     lastScanned: true,
