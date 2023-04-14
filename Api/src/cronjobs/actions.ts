@@ -2106,7 +2106,7 @@ export async function scanBlocks(
             const blockHash = await api.rpc.chain.getBlockHash(to_scan);
             // @ts-ignore
             const eventRecords = await api.query.system.events.at(blockHash);
-            console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Start processEventRecords now: ${convertToUTCTime(new Date())}`);
+            console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Start processEventRecords ${to_scan} now: ${convertToUTCTime(new Date())}`);
             await processEventRecords(
                 eventRecords,
                 to_scan,
