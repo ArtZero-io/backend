@@ -1512,3 +1512,33 @@ export const RequestGetAllBidsQueueBody = {
         'application/json': {schema: ReqGetAllBidsQueueSchema},
     },
 };
+
+// AD UPDATE COLLECTION
+export type ReqAdUpdateCollectionType = {
+    userName: string,
+    password: string,
+    nftContractAddress: string,
+    maxTotalSupply: number,
+};
+const ReqAdUpdateCollectionSchema: SchemaObject = {
+    type: 'object',
+    required: ['userName', 'password', 'nftContractAddress', 'maxTotalSupply'],
+    properties: {
+        userName: {
+            type: 'string',
+        },
+        password: {
+            type: 'string',
+        },
+        nftContractAddress: {
+            type: 'string',
+        },
+    },
+};
+export const RequestAdUpdateCollectionBody = {
+    description: 'The input of adUpdateCollection function',
+    required: true,
+    content: {
+        'application/json': {schema: ReqAdUpdateCollectionSchema},
+    },
+};
