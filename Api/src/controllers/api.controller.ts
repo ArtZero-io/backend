@@ -2677,27 +2677,27 @@ export class ApiController {
                 nftContractAddress: collectionAddress,
                 ...paramTmp
             };
-            let order:string = "tokenID ASC";
+            let order:string[] = ["tokenID ASC"];
             if (req?.sort) {
                 if (params && params.is_for_sale) {
                     if (req.sort == 1) {
-                        order = "price DESC";
+                        order = ["price DESC", "_id DESC"];
                     } else if (req.sort == 2) {
-                        order = "price ASC";
+                        order = ["price ASC", "_id DESC"];
                     } else if (req.sort == 3) {
-                        order = "listed_date DESC";
+                        order = ["listed_date DESC", "_id DESC"];
                     }
                 } else {
                     if ((req.sort == 1)) {
-                        order = "tokenID DESC";
+                        order = ["tokenID DESC"];
                     } else if ((req.sort == 2)) {
-                        order = "tokenID ASC";
+                        order = ["tokenID ASC"];
                     }
                 }
             }
             let filterObject = {
                 where: filterData,
-                order: [order],
+                order: order,
                 skip: offset,
                 limit: limit
             };
@@ -3864,7 +3864,7 @@ export class ApiController {
             //     }
             //     let filterObject = {
             //         where: filterData,
-            //         order: [order],
+            //         order: [order,"_id DESC"],
             //         skip: offset,
             //         limit: limit
             //     };
