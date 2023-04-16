@@ -29,3 +29,4 @@ export * from './launchpad-minting-event-schema.repository';
 export * from './withdraw-event-schema.repository';
 export * from './black-list.repository';
 export * from './config.repository';
+export * from './tmp-data.repository';

@@ -33,3 +33,4 @@ export * from './withdraw-event-schema.model';
 export * from './black-list.model';
 export * from './config.model';
 export * from './job-data.model';
+export * from './tmp-data.model';

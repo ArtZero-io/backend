@@ -40,7 +40,7 @@ import {
     PurchaseEventSchemaRepository,
     RewardQueueSchemaRepository,
     ScannedBlocksSchemaRepository,
-    StakingEventSchemaRepository,
+    StakingEventSchemaRepository, TmpDataRepository,
     UnListEventSchemaRepository,
     WithdrawEventSchemaRepository
 } from "../repositories";
@@ -295,6 +295,8 @@ export class ApiController {
         public withdrawEventSchemaRepository: WithdrawEventSchemaRepository,
         @repository(LaunchpadMintingEventSchemaRepository)
         public luanchpadMintingEventSchemaRepository: LaunchpadMintingEventSchemaRepository,
+        @repository(TmpDataRepository)
+        public tmpDataRepository: TmpDataRepository,
     ) {
     }
 
@@ -2675,10 +2677,13 @@ export class ApiController {
                 nftContractAddress: collectionAddress,
                 ...paramTmp
             };
-            let filterObject = {where: filterData, order: []};
-            if (limit && offset) {
-                filterObject = Object.assign(filterObject, {skip: offset, limit: limit});
-            }
+            // let filterObject = {where: filterData, order: []};
+            let filterObject = {
+                where: filterData,
+                order: [],
+                skip: offset,
+                limit: limit
+            };
             console.log(filterObject);
             const data = await this.nfTsSchemaRepository.find(filterObject);
             const countNft = await this.nfTsSchemaRepository.count(filterData);
@@ -3793,6 +3798,171 @@ export class ApiController {
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    @post('/ad/adSearchNFTOfCollectionByTraits')
+    async adSearchNFTOfCollectionByTraits(
+        @requestBody(RequestSearchNFTOfCollectionByTraitsBody) req:ReqSearchNFTOfCollectionByTraitsType
+    ): Promise<ResponseBody | Response> {
+        try {
+            // // console.log(req);
+            // if (!req || !req.collectionAddress) {
+            //     // @ts-ignore
+            //     return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            // }
+            // let params:TraitFilters | undefined = (req.traitFilters) ? JSON.parse(req.traitFilters) : undefined;
+            // let collectionAddress = req.collectionAddress;
+            // if (!isValidAddressPolkadotAddress(collectionAddress)) {
+            //     // @ts-ignore
+            //     return this.response.send({
+            //         status: STATUS.FAILED,
+            //         message: MESSAGE.INVALID_COLLECTION_ADDRESS,
+            //     });
+            // }
+            // let ret = {result: {}};
+            // let collectionInfo = await this.collectionsSchemaRepository.findOne({
+            //     where: {
+            //         nftContractAddress: collectionAddress,
+            //     }
+            // });
+            // if (!collectionInfo) {
+            //     // @ts-ignore
+            //     return this.response.send({
+            //         status: STATUS.FAILED,
+            //         message: MESSAGE.NOT_EXIST_COLLECTION_ADDRESS,
+            //     });
+            // }
+            // ret = {...ret, ...collectionInfo?.toJSON()};
+            //
+            // let paramTmp = {};
+            // if (params?.price) {
+            //     paramTmp = {...paramTmp, price: params.price};
+            // }
+            // if (params && params?.is_for_sale != undefined) {
+            //     paramTmp = {...paramTmp, is_for_sale: params.is_for_sale};
+            // }
+            // if (params?.and) {
+            //     paramTmp = {...paramTmp, and: params.and};
+            // }
+            // if (params?.keyword) {
+            //     paramTmp = {...paramTmp, nftName: {like: `${params.keyword}`, options: "i" }};
+            // }
+            //
+            // let data:any[] = [];
+            // let countNft:any = {};
+            // try {
+            //     await this.tmpDataRepository.deleteAll({
+            //         nftContractAddress: collectionAddress,
+            //     });
+            // } catch (e) {
+            //     console.log(`WARNING: ${e.message}`);
+            // }
+            // for (let page=1; page < 100; page ++) {
+            //     let limit:number = 12;
+            //     let offset:number = (page - 1) * limit;
+            //     const filterData = {
+            //         nftContractAddress: collectionAddress,
+            //         ...paramTmp
+            //     };
+            //     let filterObject = {
+            //         where: filterData,
+            //         order: [],
+            //         skip: offset,
+            //         limit: limit
+            //     };
+            //     console.log(filterObject);
+            //     data = await this.nfTsSchemaRepository.find(filterObject);
+            //     countNft = await this.nfTsSchemaRepository.count(filterData);
+            //
+            //     for (const nftData of data) {
+            //         console.log(`Create data of #${nftData.nftName} from ${data.length} NFTs`);
+            //         try {
+            //             await this.tmpDataRepository.create({
+            //                 nftContractAddress: nftData.nftContractAddress,
+            //                 tokenID: nftData.tokenID,
+            //                 nftName: nftData.nftName,
+            //                 price: nftData.price,
+            //                 listed_date: nftData.listed_date,
+            //                 createdTime: new Date(),
+            //                 updatedTime: new Date(),
+            //             });
+            //         } catch (e) {
+            //             console.log(`WARNING: ${e.message}`);
+            //         }
+            //     }
+            // }
+            //
+            // // TODO: Have to order after filter data
+            // // let order:string = "tokenID ASC";
+            // if (req?.sort) {
+            //     if (params && params.is_for_sale) {
+            //         if (req.sort == 1) {
+            //             // order = "price DESC";
+            //             data.sort((a, b) =>
+            //                 (a?.price && b.price)
+            //                     ? (a.price > b.price) ? -1 : ((b.price > a.price) ? 1 : 0)
+            //                     : 0
+            //             );
+            //         } else if (req.sort == 2) {
+            //             // order = "price ASC";
+            //             data.sort((a, b) =>
+            //                 (a?.price && b.price)
+            //                     ? (a.price > b.price) ? 1 : ((b.price > a.price) ? -1 : 0)
+            //                     : 0
+            //             );
+            //         } else if (req.sort == 3) {
+            //             // order = "listed_date DESC";
+            //             data.sort((a, b) =>
+            //                 (a?.listed_date && b.listed_date)
+            //                     ? (a.listed_date > b.listed_date) ? -1 : ((b.listed_date > a.listed_date) ? 1 : 0)
+            //                     : 0
+            //             );
+            //         }
+            //     } else {
+            //         // order = (req.sort == 1) ? "tokenID ASC" : "tokenID DESC";
+            //         if ((req.sort == 1)) {
+            //             data.sort((a, b) =>
+            //                 (a?.tokenID && b.tokenID)
+            //                     ? (a.tokenID > b.tokenID) ? 1 : ((b.tokenID > a.tokenID) ? -1 : 0)
+            //                     : 0
+            //             );
+            //         } else {
+            //             data.sort((a, b) =>
+            //                 (a?.tokenID && b.tokenID)
+            //                     ? (a.tokenID > b.tokenID) ? -1 : ((b.tokenID > a.tokenID) ? 1 : 0)
+            //                     : 0
+            //             );
+            //         }
+            //     }
+            // }
+            //
+            //
+            // const precheck = data.map((item) => ({
+            //     nftName: item.nftName,
+            //     price: item.price,
+            //     listed_date: item.listed_date,
+            //     tokenID: item.tokenID
+            // }));
+            //
+            // ret.result = {
+            //     NFTList: data,
+            //     totalResults: (countNft && countNft?.count) ? countNft.count : 0,
+            //     precheck: precheck
+            // };
+            // @ts-ignore
+            // return this.response.send({status: STATUS.OK, ret});
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: 'For checking only!'
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
