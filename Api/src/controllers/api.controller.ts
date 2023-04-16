@@ -2684,30 +2684,29 @@ export class ApiController {
                 skip: offset,
                 limit: limit
             };
-            console.log(filterObject);
+            // console.log(filterObject);
             const data = await this.nfTsSchemaRepository.find(filterObject);
             const countNft = await this.nfTsSchemaRepository.count(filterData);
 
             // TODO: Have to order after filter data
-            // let order:string = "tokenID ASC";
             if (req?.sort) {
                 if (params && params.is_for_sale) {
                     if (req.sort == 1) {
-                        // order = "price DESC";
+                        // price DESC
                         data.sort((a, b) =>
                             (a?.price && b.price)
                                 ? (a.price > b.price) ? -1 : ((b.price > a.price) ? 1 : 0)
                                 : 0
                         );
                     } else if (req.sort == 2) {
-                        // order = "price ASC";
+                        // price ASC
                         data.sort((a, b) =>
                             (a?.price && b.price)
                                 ? (a.price > b.price) ? 1 : ((b.price > a.price) ? -1 : 0)
                                 : 0
                         );
                     } else if (req.sort == 3) {
-                        // order = "listed_date DESC";
+                        // listed_date DESC;
                         data.sort((a, b) =>
                             (a?.listed_date && b.listed_date)
                                 ? (a.listed_date > b.listed_date) ? -1 : ((b.listed_date > a.listed_date) ? 1 : 0)
@@ -2715,17 +2714,18 @@ export class ApiController {
                         );
                     }
                 } else {
-                    // order = (req.sort == 1) ? "tokenID ASC" : "tokenID DESC";
                     if ((req.sort == 1)) {
-                        data.sort((a, b) =>
-                            (a?.tokenID && b.tokenID)
-                                ? (a.tokenID > b.tokenID) ? 1 : ((b.tokenID > a.tokenID) ? -1 : 0)
-                                : 0
-                        );
-                    } else {
+                        // tokenID DESC
                         data.sort((a, b) =>
                             (a?.tokenID && b.tokenID)
                                 ? (a.tokenID > b.tokenID) ? -1 : ((b.tokenID > a.tokenID) ? 1 : 0)
+                                : 0
+                        );
+                    } else if ((req.sort == 2)) {
+                        // tokenID ASC
+                        data.sort((a, b) =>
+                            (a?.tokenID && b.tokenID)
+                                ? (a.tokenID > b.tokenID) ? 1 : ((b.tokenID > a.tokenID) ? -1 : 0)
                                 : 0
                         );
                     }
