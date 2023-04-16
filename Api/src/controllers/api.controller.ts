@@ -2677,62 +2677,33 @@ export class ApiController {
                 nftContractAddress: collectionAddress,
                 ...paramTmp
             };
-            // let filterObject = {where: filterData, order: []};
+            let order:string = "tokenID ASC";
+            if (req?.sort) {
+                if (params && params.is_for_sale) {
+                    if (req.sort == 1) {
+                        order = "price DESC";
+                    } else if (req.sort == 2) {
+                        order = "price ASC";
+                    } else if (req.sort == 3) {
+                        order = "listed_date DESC";
+                    }
+                } else {
+                    if ((req.sort == 1)) {
+                        order = "tokenID DESC";
+                    } else if ((req.sort == 2)) {
+                        order = "tokenID ASC";
+                    }
+                }
+            }
             let filterObject = {
                 where: filterData,
-                order: [],
+                order: [order],
                 skip: offset,
                 limit: limit
             };
             // console.log(filterObject);
             const data = await this.nfTsSchemaRepository.find(filterObject);
             const countNft = await this.nfTsSchemaRepository.count(filterData);
-
-            // TODO: Have to order after filter data
-            if (req?.sort) {
-                if (params && params.is_for_sale) {
-                    if (req.sort == 1) {
-                        // price DESC
-                        data.sort((a, b) =>
-                            (a?.price && b.price)
-                                ? (a.price > b.price) ? -1 : ((b.price > a.price) ? 1 : 0)
-                                : 0
-                        );
-                    } else if (req.sort == 2) {
-                        // price ASC
-                        data.sort((a, b) =>
-                            (a?.price && b.price)
-                                ? (a.price > b.price) ? 1 : ((b.price > a.price) ? -1 : 0)
-                                : 0
-                        );
-                    } else if (req.sort == 3) {
-                        // listed_date DESC;
-                        data.sort((a, b) =>
-                            (a?.listed_date && b.listed_date)
-                                ? (a.listed_date > b.listed_date) ? -1 : ((b.listed_date > a.listed_date) ? 1 : 0)
-                                : 0
-                        );
-                    }
-                } else {
-                    if ((req.sort == 1)) {
-                        // tokenID DESC
-                        data.sort((a, b) =>
-                            (a?.tokenID && b.tokenID)
-                                ? (a.tokenID > b.tokenID) ? -1 : ((b.tokenID > a.tokenID) ? 1 : 0)
-                                : 0
-                        );
-                    } else if ((req.sort == 2)) {
-                        // tokenID ASC
-                        data.sort((a, b) =>
-                            (a?.tokenID && b.tokenID)
-                                ? (a.tokenID > b.tokenID) ? 1 : ((b.tokenID > a.tokenID) ? -1 : 0)
-                                : 0
-                        );
-                    }
-                }
-            }
-
-
             const precheck = data.map((item) => ({
                 nftName: item.nftName,
                 price: item.price,
@@ -3873,16 +3844,33 @@ export class ApiController {
             //         nftContractAddress: collectionAddress,
             //         ...paramTmp
             //     };
+            //     let order:string = "tokenID ASC";
+            //     if (req?.sort) {
+            //         if (params && params.is_for_sale) {
+            //             if (req.sort == 1) {
+            //                 order = "price DESC";
+            //             } else if (req.sort == 2) {
+            //                 order = "price ASC";
+            //             } else if (req.sort == 3) {
+            //                 order = "listed_date DESC";
+            //             }
+            //         } else {
+            //             if ((req.sort == 1)) {
+            //                 order = "tokenID DESC";
+            //             } else if ((req.sort == 2)) {
+            //                 order = "tokenID ASC";
+            //             }
+            //         }
+            //     }
             //     let filterObject = {
             //         where: filterData,
-            //         order: [],
+            //         order: [order],
             //         skip: offset,
             //         limit: limit
             //     };
             //     console.log(filterObject);
             //     data = await this.nfTsSchemaRepository.find(filterObject);
             //     countNft = await this.nfTsSchemaRepository.count(filterData);
-            //
             //     for (const nftData of data) {
             //         console.log(`Create data of #${nftData.nftName} from ${data.length} NFTs`);
             //         try {
@@ -3900,52 +3888,6 @@ export class ApiController {
             //         }
             //     }
             // }
-            //
-            // // TODO: Have to order after filter data
-            // // let order:string = "tokenID ASC";
-            // if (req?.sort) {
-            //     if (params && params.is_for_sale) {
-            //         if (req.sort == 1) {
-            //             // order = "price DESC";
-            //             data.sort((a, b) =>
-            //                 (a?.price && b.price)
-            //                     ? (a.price > b.price) ? -1 : ((b.price > a.price) ? 1 : 0)
-            //                     : 0
-            //             );
-            //         } else if (req.sort == 2) {
-            //             // order = "price ASC";
-            //             data.sort((a, b) =>
-            //                 (a?.price && b.price)
-            //                     ? (a.price > b.price) ? 1 : ((b.price > a.price) ? -1 : 0)
-            //                     : 0
-            //             );
-            //         } else if (req.sort == 3) {
-            //             // order = "listed_date DESC";
-            //             data.sort((a, b) =>
-            //                 (a?.listed_date && b.listed_date)
-            //                     ? (a.listed_date > b.listed_date) ? -1 : ((b.listed_date > a.listed_date) ? 1 : 0)
-            //                     : 0
-            //             );
-            //         }
-            //     } else {
-            //         // order = (req.sort == 1) ? "tokenID ASC" : "tokenID DESC";
-            //         if ((req.sort == 1)) {
-            //             data.sort((a, b) =>
-            //                 (a?.tokenID && b.tokenID)
-            //                     ? (a.tokenID > b.tokenID) ? 1 : ((b.tokenID > a.tokenID) ? -1 : 0)
-            //                     : 0
-            //             );
-            //         } else {
-            //             data.sort((a, b) =>
-            //                 (a?.tokenID && b.tokenID)
-            //                     ? (a.tokenID > b.tokenID) ? -1 : ((b.tokenID > a.tokenID) ? 1 : 0)
-            //                     : 0
-            //             );
-            //         }
-            //     }
-            // }
-            //
-            //
             // const precheck = data.map((item) => ({
             //     nftName: item.nftName,
             //     price: item.price,
@@ -3958,7 +3900,7 @@ export class ApiController {
             //     totalResults: (countNft && countNft?.count) ? countNft.count : 0,
             //     precheck: precheck
             // };
-            // @ts-ignore
+            // // @ts-ignore
             // return this.response.send({status: STATUS.OK, ret});
             return this.response.send({
                 status: STATUS.FAILED,
