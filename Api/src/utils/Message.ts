@@ -1255,12 +1255,12 @@ export const RequestGetPhaseInfoBody = {
 
 // REPORT NFT request
 export type ReqReportNFTType = {
-   collection_name: string, 
-   nft_name: string, 
-   message: string,
-   address: string, 
-   signature: string,
-   nft_link: string
+    collection_name: string,
+    nft_name: string,
+    message: string,
+    address: string,
+    signature: string,
+    nft_link: string
 };
 const ReqReportNFTSchema: SchemaObject = {
     type: 'object',
@@ -1510,5 +1510,35 @@ export const RequestGetAllBidsQueueBody = {
     required: true,
     content: {
         'application/json': {schema: ReqGetAllBidsQueueSchema},
+    },
+};
+
+// AD UPDATE COLLECTION
+export type ReqAdUpdateCollectionType = {
+    userName: string,
+    password: string,
+    nftContractAddress: string,
+    maxTotalSupply: number,
+};
+const ReqAdUpdateCollectionSchema: SchemaObject = {
+    type: 'object',
+    required: ['userName', 'password', 'nftContractAddress', 'maxTotalSupply'],
+    properties: {
+        userName: {
+            type: 'string',
+        },
+        password: {
+            type: 'string',
+        },
+        nftContractAddress: {
+            type: 'string',
+        },
+    },
+};
+export const RequestAdUpdateCollectionBody = {
+    description: 'The input of adUpdateCollection function',
+    required: true,
+    content: {
+        'application/json': {schema: ReqAdUpdateCollectionSchema},
     },
 };

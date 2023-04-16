@@ -115,6 +115,11 @@ export class collections extends Entity {
   nft_count?: number;
 
   @property({
+    type: 'number',
+  })
+  maxTotalSupply?: number;
+
+  @property({
     type: 'boolean',
   })
   isDoxxed?: boolean;

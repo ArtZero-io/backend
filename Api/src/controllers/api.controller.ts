@@ -134,9 +134,13 @@ import {
     ReqTriggerRewardsType,
     RequestResetAllQueueBody,
     ReqResetAllQueueType,
-    RequestCheckingImagesAndJsonBody, ReqCheckingImagesAndJsonType, ReqGetAllBidsQueueType, RequestGetAllBidsQueueBody,
+    RequestCheckingImagesAndJsonBody,
+    ReqCheckingImagesAndJsonType,
+    ReqGetAllBidsQueueType,
+    RequestGetAllBidsQueueBody,
+    ReqAdUpdateCollectionType, RequestAdUpdateCollectionBody,
 } from "../utils/Message";
-import {CONFIG_TYPE_NAME, MESSAGE, STATUS} from "../utils/constant";
+import { MESSAGE, STATUS} from "../utils/constant";
 import {
     getFile,
     isValidAddressPolkadotAddress,
@@ -200,12 +204,12 @@ let api = new ApiPromise({
 });
 api.on("connected", () => {
     api.isReady.then(() => {
-        console.log("Smartnet Astar Connected");
+        console.log("Smartnet AZERO Connected");
     });
 });
 
 api.on("ready", () => {
-    console.log("Smartnet Astar Ready");
+    console.log("Smartnet AZERO Ready");
     const collection_contract = new ContractPromise(
         api,
         collection_manager.CONTRACT_ABI,
@@ -349,10 +353,6 @@ export class ApiController {
                     console.log(`ERROR: ${e.message}`);
                 }
                 // TODO: Trigger to jobs
-                console.log(`updateCollection - WARNING - socketStatus: ${global_vars.socketStatus}`);
-                if (globalApi){
-                    console.log(`updateCollection - WARNING - globalApi: isConnected ${JSON.stringify(globalApi.isConnected)}`);
-                }
                 if ((global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) {
                     global_vars.is_check_new_collections = false;
                     global_vars.is_check_collection_queue = false;
@@ -471,10 +471,6 @@ export class ApiController {
                     console.log(`ERROR: ${e.message}`);
                 }
                 try {
-                    console.log(`updateProject - WARNING - socketStatus: ${global_vars.socketStatus}`);
-                    if (globalApi){
-                        console.log(`updateProject - WARNING - globalApi: isConnected ${JSON.stringify(globalApi.isConnected)}`);
-                    }
                     if ((global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) {
                         checkAllWhiteListQueue(
                             globalApi,
@@ -652,10 +648,6 @@ export class ApiController {
                 }
                 // TODO: Trigger to jobs
                 if (newNftQueue) {
-                    console.log(`updateNFT - WARNING - socketStatus: ${global_vars.socketStatus}`);
-                    if (globalApi){
-                        console.log(`updateNFT - WARNING - globalApi: isConnected ${JSON.stringify(globalApi.isConnected)}`);
-                    }
                     if ((global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) {
                         global_vars.is_check_NFT_queue = false;
                         global_vars.is_check_new_AZ_NFT = false;
@@ -2665,10 +2657,6 @@ export class ApiController {
             }
             ret = {...ret, ...collectionInfo?.toJSON()};
 
-            const order = (params && params.is_for_sale)
-                ? ((req?.sort && req?.sort == 1) ? "price ASC" : "price DESC")
-                : ((req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC");
-
             let paramTmp = {};
             if (params?.price) {
                 paramTmp = {...paramTmp, price: params.price};
@@ -2681,25 +2669,49 @@ export class ApiController {
             }
             if (params?.keyword) {
                 paramTmp = {...paramTmp, nftName: {like: `${params.keyword}`, options: "i" }};
-                // paramTmp = {...paramTmp, nftName: {like: `${new RegExp('.*' + params.keyword + '.*', "i")}`}}
             }
 
             const filterData = {
                 nftContractAddress: collectionAddress,
                 ...paramTmp
             };
-            console.log(filterData);
-            const data = await this.nfTsSchemaRepository.find({
+            let order:string = "tokenID ASC";
+            if (req?.sort) {
+                if (params && params.is_for_sale) {
+                    if (req.sort == 1) {
+                        order = "price DESC";
+                    } else if (req.sort == 2) {
+                        order = "price ASC";
+                    } else if (req.sort == 3) {
+                        order = "listed_date DESC";
+                    }
+                } else {
+                    if ((req.sort == 1)) {
+                        order = "tokenID DESC";
+                    } else if ((req.sort == 2)) {
+                        order = "tokenID ASC";
+                    }
+                }
+            }
+            let filterObject = {
                 where: filterData,
                 order: [order],
                 skip: offset,
                 limit: limit
-            });
+            };
+            // console.log(filterObject);
+            const data = await this.nfTsSchemaRepository.find(filterObject);
             const countNft = await this.nfTsSchemaRepository.count(filterData);
-
+            const precheck = data.map((item) => ({
+                nftName: item.nftName,
+                price: item.price,
+                listed_date: item.listed_date,
+                tokenID: item.tokenID
+            }));
             ret.result = {
                 NFTList: data,
                 totalResults: countNft.count,
+                precheck: precheck
             };
             // @ts-ignore
             return this.response.send({status: STATUS.OK, ret});
@@ -3678,6 +3690,82 @@ export class ApiController {
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS,
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    @post('/ad/updateCollection')
+    async adUpdateCollection(
+        @requestBody(RequestAdUpdateCollectionBody) req:ReqAdUpdateCollectionType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req || !req.userName || !req.password) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            const userName = req?.userName;
+            const password = req?.password;
+            const maxTotalSupply = req?.maxTotalSupply;
+            const nftContractAddress = req?.nftContractAddress;
+            if (userName !== process.env.ADMIN_USER_NAME || password !== process.env.ADMIN_PASSWORD) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_AUTHENTICATION,
+                });
+            }
+            if (!nftContractAddress) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_INPUT,
+                });
+            }
+            if (!maxTotalSupply || maxTotalSupply <= 0) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_INPUT,
+                });
+            }
+            try {
+                let foundCollection = await this.collectionsSchemaRepository.findOne({
+                    where: {
+                        nftContractAddress: nftContractAddress,
+                    }
+                });
+                if (!foundCollection) {
+                    // @ts-ignore
+                    return this.response.send({
+                        status: STATUS.FAILED,
+                        message: MESSAGE.INVALID_COLLECTION_ADDRESS,
+                    });
+                } else {
+                    try {
+                        await this.collectionsSchemaRepository.updateById(foundCollection._id, {
+                            maxTotalSupply: maxTotalSupply
+                        });
+                    } catch (e) {
+                        return this.response.send({
+                            status: STATUS.FAILED,
+                            message: e.message
+                        });
+                    }
+                }
+            } catch (e) {
+                console.log(e.message);
+            }
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.OK,
+                message: MESSAGE.SUCCESS
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
