@@ -1433,7 +1433,7 @@ export const RequestTriggerRewardsBody = {
 // RESET ALL QUEUE
 export type ReqResetAllQueueType = {
     userName: string,
-    password: string
+    password: string,
 };
 const ReqResetAllQueueSchema: SchemaObject = {
     type: 'object',
@@ -1540,5 +1540,39 @@ export const RequestAdUpdateCollectionBody = {
     required: true,
     content: {
         'application/json': {schema: ReqAdUpdateCollectionSchema},
+    },
+};
+
+
+// AD GET LIST MINTER
+export type ReqAdGetListMinterType = {
+    userName: string,
+    password: string,
+    nftContractAddress: string,
+    mode: string,
+};
+const ReqAdGetListMinterSchema: SchemaObject = {
+    type: 'object',
+    required: ['userName', 'password', 'nftContractAddress', 'mode'],
+    properties: {
+        userName: {
+            type: 'string',
+        },
+        password: {
+            type: 'string',
+        },
+        nftContractAddress: {
+            type: 'string',
+        },
+        mode: {
+            type: 'string',
+        },
+    },
+};
+export const RequestAdGetListMinterBody = {
+    description: 'The input of adGetListMinter function',
+    required: true,
+    content: {
+        'application/json': {schema: ReqAdGetListMinterSchema},
     },
 };

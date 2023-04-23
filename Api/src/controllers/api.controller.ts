@@ -138,7 +138,10 @@ import {
     ReqCheckingImagesAndJsonType,
     ReqGetAllBidsQueueType,
     RequestGetAllBidsQueueBody,
-    ReqAdUpdateCollectionType, RequestAdUpdateCollectionBody,
+    ReqAdUpdateCollectionType,
+    RequestAdUpdateCollectionBody,
+    ReqAdGetListMinterType,
+    RequestAdGetListMinterBody,
 } from "../utils/Message";
 import { MESSAGE, STATUS} from "../utils/constant";
 import {
@@ -160,11 +163,21 @@ import jsonrpc from "@polkadot/types/interfaces/jsonrpc";
 import {inject} from "@loopback/core";
 import {profile} from "../contracts/profile";
 import {
-    bidwinevents, BlackList,
+    bidwinevents,
+    BlackList,
     claimrewardevents,
-    collections, launchpadmintingevents, newlistevents, projects, ProjectWhitelistData,
+    collections,
+    launchpadmintingevents,
+    newlistevents,
+    projects,
+    ProjectWhitelistData,
     purchaseevents,
-    unlistevents, withdrawevents, nfts, nftqueues
+    unlistevents,
+    withdrawevents,
+    nfts,
+    nftqueues,
+    WhiteListPhaseData,
+    WhiteListUserData
 } from "../models";
 import {global_vars, SOCKET_STATUS} from "../cronjobs/global";
 import {globalApi} from "../index";
@@ -182,7 +195,9 @@ import {artzero_nft} from "../contracts/artzero_nft";
 import * as artzero_nft_calls from "../contracts/artzero_nft_calls";
 import {launchpad_psp34_nft_standard} from "../contracts/launchpad_psp34_nft_standard";
 import * as launchpad_psp34_nft_standard_calls from "../contracts/launchpad_psp34_nft_standard_calls";
+import Excel from 'exceljs';
 import fs from "fs";
+import path from "path";
 dotenv.config();
 
 const provider = new WsProvider(process.env.WSSPROVIDER_API);
@@ -3780,6 +3795,149 @@ export class ApiController {
         }
     }
 
+    @post('/ad/getListMinter')
+    async adGetListMinter(
+        @requestBody(RequestAdGetListMinterBody) req:ReqAdGetListMinterType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req || !req.userName || !req.password) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            const userName = req?.userName;
+            const password = req?.password;
+            const nftContractAddress = req?.nftContractAddress;
+            const mode = req?.mode;
+            if (userName !== process.env.ADMIN_USER_NAME || password !== process.env.ADMIN_PASSWORD) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_AUTHENTICATION,
+                });
+            }
+            if (!nftContractAddress || !mode) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_INPUT,
+                });
+            }
+            try {
+                const filter = (nftContractAddress === "all") ? {} : {
+                    nftContractAddress: nftContractAddress
+                };
+                let collections = await this.collectionsSchemaRepository.find({
+                    where: filter,
+                    fields: {
+                        _id: true,
+                        nftContractAddress: true
+                    }
+                });
+                let data: object[] = [];
+                const mintingFeeData = new Map<string, number>();
+                const mintingAmountData = new Map<string, number>();
+                let totalMinted = 0;
+                for (const collection of collections) {
+                    console.log(`collection: ${collection.nftContractAddress}`);
+                    if (collection) {
+                        try {
+                            const filterMode = (mode === "all") ? {
+                                nftContractAddress: collection.nftContractAddress,
+                            } : {
+                                nftContractAddress: collection.nftContractAddress,
+                                mode: mode
+                            };
+                            const mintedData = await this.luanchpadMintingEventSchemaRepository.find({
+                                where: filterMode
+                            });
+                            for(const item of mintedData) {
+                                if (item?.minter && (item?.mintingFee != undefined) && item?.mintAmount) {
+                                    mintingFeeData.set(item.minter, (mintingFeeData.get(item.minter) || 0) + item.mintingFee);
+                                    mintingAmountData.set(item.minter, (mintingAmountData.get(item.minter) || 0) + item.mintAmount);
+                                    totalMinted += item.mintAmount;
+                                }
+                            }
+
+                            // TODO: List acc haven't minted NFT from whitlist data
+                            const listWhitelist = await this.projectsSchemaRepository.findOne({
+                                where: {
+                                    nftContractAddress: collection.nftContractAddress
+                                }
+                            });
+                            let listAccMintedInWhitelist: WhiteListUserData[] = [];
+                            let listAccUnMintedInWhitelist: WhiteListUserData[] = [];
+                            if (listWhitelist) {
+                                const whitelist = listWhitelist.whiteList;
+                                if (whitelist) {
+                                    for (const whitelistData of whitelist) {
+                                        if (whitelistData.phaseId == 1){
+                                            const userData = whitelistData.userData;
+                                            if (userData) {
+                                                for (const user of userData) {
+                                                    if ( user.whitelistAmount && user.whitelistAmount > 0
+                                                        && (user.claimedAmount != undefined) && (user.claimedAmount > 0)
+                                                    ) {
+                                                        listAccMintedInWhitelist.push(user);
+                                                    }
+
+                                                    if ( user.whitelistAmount && user.whitelistAmount > 0
+                                                        && (user.claimedAmount != undefined) && (user.claimedAmount == 0)
+                                                    ) {
+                                                        listAccUnMintedInWhitelist.push(user);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            data.push({
+                                nftContractAddress: collection.nftContractAddress,
+                                mintedData: mintedData,
+                                listAccMintedInWhitelist: listAccMintedInWhitelist,
+                                listAccUnMintedInWhitelist: listAccUnMintedInWhitelist,
+                                listAccMintedInWhitelistAddress: listAccMintedInWhitelist.map((item) => (item.address)),
+                                listAccUnMintedInWhitelistAddress: listAccUnMintedInWhitelist.map((item) => (item.address))
+                            });
+                        } catch (e) {
+                            return this.response.send({
+                                status: STATUS.FAILED,
+                                message: e.message
+                            });
+                        }
+                    }
+                }
+                let sortedMintingFeeData = new Map([...mintingFeeData.entries()].sort((a, b) => a[1] - b[1]));
+                let sortedMintingAmountData = new Map([...mintingAmountData.entries()].sort((a, b) => a[1] - b[1]));
+                return this.response.send({
+                    status: STATUS.OK,
+                    message: MESSAGE.SUCCESS,
+                    ret: data,
+                    retCount: data.length,
+                    mintingFeeData: Object.fromEntries(mintingFeeData),
+                    sortedMintingFeeData: Object.fromEntries(sortedMintingFeeData),
+                    mintingAmountData: Object.fromEntries(mintingAmountData),
+                    sortedMintingAmountData: Object.fromEntries(sortedMintingAmountData),
+                    totalMinted: totalMinted
+                });
+            } catch (e) {
+                console.log(e.message);
+            }
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.OK,
+                message: MESSAGE.SUCCESS
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
     @post('/ad/adSearchNFTOfCollectionByTraits')
     async adSearchNFTOfCollectionByTraits(
         @requestBody(RequestSearchNFTOfCollectionByTraitsBody) req:ReqSearchNFTOfCollectionByTraitsType
@@ -3902,6 +4060,95 @@ export class ApiController {
             // };
             // // @ts-ignore
             // return this.response.send({status: STATUS.OK, ret});
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: 'For checking only!'
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    @post('/ad/exportData')
+    async exportData(
+        @requestBody(RequestResetAllQueueBody) req:ReqResetAllQueueType
+    ): Promise<ResponseBody | Response> {
+        try {
+            // const collectionAddres = `5GszY1BAfQ7EpzmF13Y7zkzPAuQjW2PXNwBRaTNsSgVgoEUf`;
+            // const bidWin = await this.bidWinEventSchemaRepository.find({
+            //     where: {
+            //         nftContractAddress: collectionAddres
+            //     },
+            //     fields: {
+            //         _id: true,
+            //         blockNumber: true,
+            //         buyer: true,
+            //         seller: true,
+            //         nftContractAddress: true,
+            //         tokenID: true,
+            //         price: true,
+            //         platformFee: true,
+            //         royaltyFee: true,
+            //         createdTime: true,
+            //         updatedTime: true,
+            //     }
+            // });
+            // const purchaseEvents = await this.purchaseEventSchemaRepository.find({
+            //     where: {
+            //         nftContractAddress: collectionAddres
+            //     }
+            // });
+            // const workbook = new Excel.Workbook();
+            // const worksheetBidAccepted = workbook.addWorksheet('Bid Accepted');
+            // const worksheetPurchase = workbook.addWorksheet('Purchase');
+            // const bidAcceptedColumns = [
+            //     { key: '_id', header: 'ID' },
+            //     { key: 'blockNumber', header: 'Block Number' },
+            //     { key: 'buyer', header: 'Buyer' },
+            //     { key: 'seller', header: 'Seller' },
+            //     { key: 'nftContractAddress', header: 'Collection Address' },
+            //     { key: 'tokenID', header: 'Token ID' },
+            //     { key: 'price', header: 'Price' },
+            //     { key: 'platformFee', header: 'Platform Fee' },
+            //     { key: 'royaltyFee', header: 'Royalty Fee' },
+            //     { key: 'createdTime', header: 'Created Time' },
+            //     { key: 'updatedTime', header: 'Updated Time' },
+            // ];
+            // worksheetBidAccepted.columns = bidAcceptedColumns;
+            //
+            // const purchaseColumns = [
+            //     { key: '_id', header: 'ID' },
+            //     { key: 'blockNumber', header: 'Block Number' },
+            //     { key: 'buyer', header: 'Buyer' },
+            //     { key: 'seller', header: 'Seller' },
+            //     { key: 'nftContractAddress', header: 'Collection Address' },
+            //     { key: 'tokenID', header: 'Token ID' },
+            //     { key: 'price', header: 'Price' },
+            //     { key: 'platformFee', header: 'Platform Fee' },
+            //     { key: 'royaltyFee', header: 'Royalty Fee' },
+            //     { key: 'createdTime', header: 'Created Time' },
+            //     { key: 'updatedTime', header: 'Updated Time' },
+            // ];
+            // worksheetPurchase.columns = purchaseColumns;
+            //
+            // for (const bid of bidWin) {
+            //     worksheetBidAccepted.addRow(bid);
+            // }
+            //
+            // for (const purchase of purchaseEvents) {
+            //     worksheetPurchase.addRow(purchase);
+            // }
+            //
+            // const exportPath = path.resolve(__dirname, 'exportedData.xlsx');
+            // await workbook.xlsx.writeFile(exportPath);
+            //
+            // console.log("Finished writing data");
+
             return this.response.send({
                 status: STATUS.FAILED,
                 message: 'For checking only!'
