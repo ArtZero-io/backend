@@ -4088,7 +4088,7 @@ export class ApiController {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
-            let data = await this.bidsSchemaRepository.findOne({
+            let data = await this.bidsSchemaRepository.find({
                 where: {
                     nftContractAddress: nftContractAddress,
                 }
