@@ -141,7 +141,7 @@ import {
     ReqAdUpdateCollectionType,
     RequestAdUpdateCollectionBody,
     ReqAdGetListMinterType,
-    RequestAdGetListMinterBody,
+    RequestAdGetListMinterBody, ReqGetBidByCollectionType, RequestGetBidByCollectionBody,
 } from "../utils/Message";
 import { MESSAGE, STATUS} from "../utils/constant";
 import {
@@ -4063,6 +4063,41 @@ export class ApiController {
             return this.response.send({
                 status: STATUS.FAILED,
                 message: 'For checking only!'
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    @post('/getBidByCollection')
+    async getBidByCollection(
+        @requestBody(RequestGetBidByCollectionBody) req:ReqGetBidByCollectionType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req || !req.nftContractAddress) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            let nftContractAddress = req.nftContractAddress;
+            if (!isValidAddressPolkadotAddress(nftContractAddress)) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
+            }
+            let data = await this.bidsSchemaRepository.findOne({
+                where: {
+                    nftContractAddress: nftContractAddress,
+                }
+            });
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.OK,
+                message: MESSAGE.SUCCESS,
+                ret: data
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);

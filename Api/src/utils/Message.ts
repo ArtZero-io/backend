@@ -1576,3 +1576,32 @@ export const RequestAdGetListMinterBody = {
         'application/json': {schema: ReqAdGetListMinterSchema},
     },
 };
+
+// GET ALL BID BY COLLECTION
+export type ReqGetBidByCollectionType = {
+    userName: string,
+    password: string,
+    nftContractAddress: string
+};
+const ReqGetBidByCollectionSchema: SchemaObject = {
+    type: 'object',
+    required: ['userName', 'password', 'nftContractAddress'],
+    properties: {
+        userName: {
+            type: 'string',
+        },
+        password: {
+            type: 'string',
+        },
+        nftContractAddress: {
+            type: 'string',
+        }
+    },
+};
+export const RequestGetBidByCollectionBody = {
+    description: 'The input of GetBidByCollection function',
+    required: true,
+    content: {
+        'application/json': {schema: ReqGetBidByCollectionSchema},
+    },
+};
