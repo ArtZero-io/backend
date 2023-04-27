@@ -4075,7 +4075,7 @@ export class ApiController {
         }
     }
 
-    @post('/getBidByCollection')
+    @post('/ad/getBidByCollection')
     async getBidByCollection(
         @requestBody(RequestGetBidByCollectionBody) req:ReqGetBidByCollectionType
     ): Promise<ResponseBody | Response> {
