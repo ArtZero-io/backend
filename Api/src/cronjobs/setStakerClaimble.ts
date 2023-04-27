@@ -35,7 +35,7 @@ export class CronJobSetStakerClaimbe implements Provider<CronJob> {
 
                         if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) return;
                         try {
-                            await setClaimedStatus();
+                            // await setClaimedStatus();
                         } catch (e) {
                             console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - ERROR: ${e.message}`);
                         }

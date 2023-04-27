@@ -79,7 +79,8 @@
     "save-file-by-url": "^0.4.2",
     "sharp": "^0.30.4",
     "tslib": "^2.0.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "winston": "^3.8.2"
   },
   "devDependencies": {
     "@loopback/build": "^9.0.8",

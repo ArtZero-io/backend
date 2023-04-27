@@ -78,7 +78,7 @@ import {collection_manager} from "../contracts/collection_manager";
 import BN from "bn.js";
 import FormData from "form-data";
 import {Keyring} from "@polkadot/keyring";
-import {convertToUTCTime, isBlackListCollection} from "../utils/Tools";
+import {convertToUTCTime, isBlackListCollection, logger, sleep} from "../utils/Tools";
 import {globalApi, localApi} from "../index";
 import {launchpad_manager} from "../contracts/launchpad_manager";
 import dotenv from "dotenv";
@@ -2963,7 +2963,10 @@ export async function push_to_cloudflare(
     global_vars.is_push_to_cloudflare_status = false;
 }
 
-export async function setClaimedStatus():Promise<object> {
+export async function setClaimedStatus(
+    globalApi: ApiPromise
+):Promise<object> {
+    logger.warn(`Run setClaimedStatus now!`);
     try {
         if (!process.env.CALLER) return {
             count: 0,
@@ -2975,22 +2978,19 @@ export async function setClaimedStatus():Promise<object> {
             staking.CONTRACT_ADDRESS
         );
         staking_calls.setContract(staking_contract);
-
-        // let admin_address = await staking_calls.getAdminAddress(process.env.CALLER);
-        // console.log("admin_address",admin_address);
         let is_locked = await staking_calls.getIsLocked(process.env.CALLER);
-        console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - is_locked: `, is_locked);
+        logger.warn(`is_locked: ${is_locked}`);
         let is_reward_started = await staking_calls.getRewardStarted(process.env.CALLER);
-        console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - is_reward_started `, is_reward_started);
-        console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - is_reward_started must be FALSE and is_locked must be TRUE to set Claimable`);
-        //is_reward_started must be FALSE and is_locked must be TRUE to set Claimable
+        logger.warn(`is_reward_started: ${is_reward_started}`);
+        logger.warn(`is_reward_started must be FALSE and is_locked must be TRUE to set Claimable`);
         const keyring = new Keyring({type: 'sr25519'});
         const keypair = keyring.createFromUri((process.env.PHRASE) ? process.env.PHRASE : '');
-        console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - Caller: `, keypair.address);
+        logger.warn(`Caller: ${keypair.address}`);
         let is_admin = await staking_calls.isAdmin(process.env.CALLER, keypair.address);
-        console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - is_admin: `, is_admin);
+        logger.warn(`is_admin: ${is_admin}`);
+        logger.warn(`process.env.CALLER: ${process.env.CALLER}`);
         if (!is_admin) {
-            console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - Caller: ${keypair.address} is not admin`);
+            logger.warn(`Caller: ${keypair.address} is not admin`);
             return {
                 count: 0,
                 listAddress: []
@@ -2999,30 +2999,33 @@ export async function setClaimedStatus():Promise<object> {
         if (is_locked && !is_reward_started) {
             let listAddress: string[] = [];
             let staker_count = await staking_calls.getTotalCountOfStakeholders(process.env.CALLER);
-            console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE}:`, staker_count);
+            logger.warn(`staker_count: ${staker_count}`);
             for (let i = 0; i < staker_count; i++) {
                 try {
                     let staker = await staking_calls.getStakedAccountsAccountByIndex(process.env.CALLER, i);
+                    logger.warn(`staker: ${staker}`);
                     let isClaimed = await staking_calls.isClaimed(process.env.CALLER, staker);
-                    console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE}: `, i + 1, "staker", staker, "is claimed", isClaimed);
-                    console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE} - set isClaimed to FALSE for`, staker);
+                    logger.warn(`setClaimedStatus: ${i + 1} staker: ${staker} is claimed ${isClaimed}`);
+                    logger.warn(`setClaimedStatus - set isClaimed to FALSE for ${staker}`);
                     await staking_calls.setClaimedStatus(keypair, process.env.CALLER, staker);
                     isClaimed = await staking_calls.isClaimed(process.env.CALLER, staker);
-                    console.log(`${CONFIG_TYPE_NAME.SET_STAKER_CLAIMBE}:`, i + 1, "staker", staker, "is claimed", isClaimed);
+                    logger.warn(`setClaimedStatus: ${i + 1} staker: ${staker} is claimed ${isClaimed}`);
                     if (staker) {
                         listAddress.push(staker);
                     }
+                    await sleep(1700);
                 } catch (e) {
-                    console.log(`ERROR: ${e.messages}`);
+                    logger.error(`ERROR: ${e.messages}`);
                 }
             }
+            logger.warn(`Process ${staker_count} accounts -  COMPLETED!`);
             return {
                 count: staker_count,
                 listAddress: listAddress
             }
         }
     } catch (e) {
-        console.log(`ERROR: ${e.messages}`);
+        logger.error(`ERROR: ${e.messages}`);
     }
     return {
         count: 0,

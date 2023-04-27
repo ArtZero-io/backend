@@ -1,6 +1,22 @@
 import {BlackListRepository} from "../repositories";
 import {BLACK_LIST_TYPE} from "./constant";
-
+import dotenv from "dotenv";
+import winston from "winston";
+dotenv.config();
+export const logger = winston.createLogger({
+    level: "silly",
+    format: winston.format.combine(
+        winston.format.timestamp(), // adds a timestamp property
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({filename: "logs/setClaimedStatus_error.log", level: "error"}),
+        new winston.transports.File({filename: "logs/setClaimedStatus_info.log", level: "info"}),
+        new winston.transports.File({filename: "logs/setClaimedStatus_warn.log", level: "warn"}),
+        new winston.transports.File({filename: "logs/setClaimedStatus.log"}),
+    ],
+});
 export const sleep = (waitTimeInMs: number) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
 export function convertToUTCTime(date: Date) {
     return date.toISOString().replace(/T/, ' ').replace(/\..+/, '');

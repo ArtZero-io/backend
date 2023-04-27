@@ -3143,40 +3143,40 @@ export class ApiController {
         }
     }
 
-    @post('/api/config/triggerRewards')
-    async triggerRewards(
-        @requestBody(RequestTriggerRewardsBody) req:ReqTriggerRewardsType
-    ): Promise<ResponseBody | Response> {
-        try {
-            if (!req || !req.userName || !req.password) {
-                // @ts-ignore
-                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
-            }
-            const userName = req?.userName;
-            const password = req?.password;
-            if (userName !== process.env.TRIGGER_REWARDS_USER_NAME || password !== process.env.TRIGGER_REWARDS_PASSWORD) {
-                // @ts-ignore
-                return this.response.send({
-                    status: STATUS.FAILED,
-                    message: MESSAGE.INVALID_AUTHENTICATION,
-                });
-            }
-            const ret = await setClaimedStatus();
-            // @ts-ignore
-            return this.response.send({
-                status: STATUS.OK,
-                message: MESSAGE.SUCCESS,
-                ret: ret
-            });
-        } catch (e) {
-            console.log(`ERROR: ${e.message}`);
-            // @ts-ignore
-            return this.response.send({
-                status: STATUS.FAILED,
-                message: e.message
-            });
-        }
-    }
+    // @post('/api/config/triggerRewards')
+    // async triggerRewards(
+    //     @requestBody(RequestTriggerRewardsBody) req:ReqTriggerRewardsType
+    // ): Promise<ResponseBody | Response> {
+    //     try {
+    //         if (!req || !req.userName || !req.password) {
+    //             // @ts-ignore
+    //             return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+    //         }
+    //         const userName = req?.userName;
+    //         const password = req?.password;
+    //         if (userName !== process.env.TRIGGER_REWARDS_USER_NAME || password !== process.env.TRIGGER_REWARDS_PASSWORD) {
+    //             // @ts-ignore
+    //             return this.response.send({
+    //                 status: STATUS.FAILED,
+    //                 message: MESSAGE.INVALID_AUTHENTICATION,
+    //             });
+    //         }
+    //         setClaimedStatus();
+    //         // @ts-ignore
+    //         return this.response.send({
+    //             status: STATUS.OK,
+    //             message: MESSAGE.SUCCESS,
+    //             ret: {info: `Processing...`}
+    //         });
+    //     } catch (e) {
+    //         console.log(`ERROR: ${e.message}`);
+    //         // @ts-ignore
+    //         return this.response.send({
+    //             status: STATUS.FAILED,
+    //             message: e.message
+    //         });
+    //     }
+    // }
 
     @post('/api/config/reset-all-queue')
     async resetAllQueue(
