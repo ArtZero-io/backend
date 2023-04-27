@@ -1579,21 +1579,29 @@ export const RequestAdGetListMinterBody = {
 
 // GET ALL BID BY COLLECTION
 export type ReqGetBidByCollectionType = {
-    nftContractAddress: string
+    userName: string,
+    password: string,
+    nftContractAddress?: string
 };
 const ReqGetBidByCollectionSchema: SchemaObject = {
     type: 'object',
-    required: ['nftContractAddress'],
+    required: ['userName', 'password'],
     properties: {
+        userName: {
+            type: 'string',
+        },
+        password: {
+            type: 'string',
+        },
         nftContractAddress: {
             type: 'string',
-        }
+        },
     },
 };
 export const RequestGetBidByCollectionBody = {
     description: 'The input of GetBidByCollection function',
     required: true,
     content: {
-        'application/x-www-form-urlencoded': {schema: ReqGetBidByCollectionSchema},
+        'application/json': {schema: ReqGetBidByCollectionSchema},
     },
 };

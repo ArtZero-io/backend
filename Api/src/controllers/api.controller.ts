@@ -177,7 +177,7 @@ import {
     nfts,
     nftqueues,
     WhiteListPhaseData,
-    WhiteListUserData
+    WhiteListUserData, bids
 } from "../models";
 import {global_vars, SOCKET_STATUS} from "../cronjobs/global";
 import {globalApi} from "../index";
@@ -198,6 +198,7 @@ import * as launchpad_psp34_nft_standard_calls from "../contracts/launchpad_psp3
 import Excel from 'exceljs';
 import fs from "fs";
 import path from "path";
+import BN from "bn.js";
 dotenv.config();
 
 const provider = new WsProvider(process.env.WSSPROVIDER_API);
@@ -4079,25 +4080,66 @@ export class ApiController {
         @requestBody(RequestGetBidByCollectionBody) req:ReqGetBidByCollectionType
     ): Promise<ResponseBody | Response> {
         try {
-            if (!req || !req.nftContractAddress) {
+            if (!req || !req.userName || !req.password) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
-            let nftContractAddress = req.nftContractAddress;
-            if (!isValidAddressPolkadotAddress(nftContractAddress)) {
+            const userName = req?.userName;
+            const password = req?.password;
+            const nftContractAddress = req?.nftContractAddress;
+            if (userName !== process.env.ADMIN_USER_NAME || password !== process.env.ADMIN_PASSWORD) {
                 // @ts-ignore
-                return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_AUTHENTICATION,
+                });
             }
-            let data = await this.bidsSchemaRepository.find({
-                where: {
-                    nftContractAddress: nftContractAddress,
+            let totalBid: number = 0;
+            let nftLive: nfts[] = []
+            if (nftContractAddress) {
+                console.log(`Get all bids for ${nftContractAddress}`);
+                if (!isValidAddressPolkadotAddress(nftContractAddress)) {
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
                 }
-            });
+                nftLive = await this.nfTsSchemaRepository.find({
+                    where: {
+                        nftContractAddress: nftContractAddress,
+                        is_for_sale: true
+                    }
+                });
+            } else {
+                console.log(`Get all bids for all collections.`);
+                nftLive = await this.nfTsSchemaRepository.find({
+                    where: {
+                        is_for_sale: true
+                    }
+                });
+            }
+            console.log(`Total NFT lived: ${nftLive.length}`);
+            for (const nft of nftLive) {
+                const bids = await this.bidsSchemaRepository.find({
+                    where: {
+                        nftContractAddress: nft.nftContractAddress,
+                        tokenID: nft.tokenID
+                    }
+                });
+                console.log(`Total bids of ${nft.tokenID} of collection ${nft.nftContractAddress}: ${bids.length}`);
+                for (const bid of bids) {
+                    console.log(`Sum of ${bid.bid_value} from ${bid.tokenID} of collection ${bid.nftContractAddress}`);
+                    if (bid.bid_value) {
+                        totalBid += parseFloat((new BN(bid.bid_value)).toString());
+                    }
+                }
+            }
+
             // @ts-ignore
             return this.response.send({
                 status: STATUS.OK,
                 message: MESSAGE.SUCCESS,
-                ret: data
+                ret: {
+                    totalBid: totalBid
+                }
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
