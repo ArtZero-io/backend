@@ -11,6 +11,7 @@ import {ApiBase} from "@polkadot/api/base";
 import {Response} from "@loopback/rest";
 import {ProjectsSchemaRepository} from "../repositories";
 import dotenv from "dotenv";
+import {globalApi} from "../scripts/getTimestamp";
 dotenv.config();
 
 // @ts-ignore
@@ -299,4 +300,23 @@ export async function checkProjectSchema(nftContractAddress: string, projectsRep
         }
     });
     return !!project;
+}
+
+export async function getTimestampFromBlockNumber(api: ApiPromise, blockNumber: number): Promise<number> {
+    let timestamp = 0;
+    try {
+        const blockHash = await api.rpc.chain.getBlockHash(blockNumber);
+        const signedBlock = await api.rpc.chain.getBlock(blockHash);
+        signedBlock?.block?.extrinsics?.forEach(
+            ({ method: { args, section, method: extrinsicsMethod } }) => {
+                if (section === "timestamp" && extrinsicsMethod === "set") {
+                    timestamp = parseInt(args[0].toString());
+                    // console.log(`blockNumber: ${blockNumber} - timestamp: ${args[0].toString()} - Time: ${(new Date(timestamp)).toUTCString()}`);
+                }
+            }
+        );
+    } catch (e) {
+        console.log(`ERROR: getTimestampFromBlockNumber - ${e.message}`);
+    }
+    return timestamp;
 }
