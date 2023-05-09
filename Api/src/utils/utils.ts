@@ -11,7 +11,7 @@ import {ApiBase} from "@polkadot/api/base";
 import {Response} from "@loopback/rest";
 import {ProjectsSchemaRepository} from "../repositories";
 import dotenv from "dotenv";
-import {globalApi} from "../scripts/getTimestamp";
+// import {globalApi} from "../scripts/getTimestamp";
 dotenv.config();
 
 // @ts-ignore
