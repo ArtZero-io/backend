@@ -2551,22 +2551,41 @@ export class ApiController {
             if (!limit) limit = 15;
             if (isActive == null) isActive = true;
             let data: collections[];
-            const pattern = new RegExp('^' + keywords + '.*', "i");
+            // const pattern = new RegExp('^' + keywords + '.*', "i");
+            let paramTmp = {};
+            if (isActive) {
+                paramTmp = {
+                    ...paramTmp,
+                    isActive: isActive
+                };
+            }
+            if (keywords) {
+                paramTmp = {
+                    ...paramTmp,
+                    name: {like: `${keywords}`, options: "i" }
+                };
+            }
             if (!ignoreNoNFT) {
+                paramTmp = {
+                    ...paramTmp,
+                    nft_count: {gt: 0}
+                };
                 data = await this.collectionsSchemaRepository.find({
-                    where: {
-                        isActive: isActive,
-                        nft_count: {gt: 0},
-                        name: {regexp: pattern},
-                    },
+                    // where: {
+                    //     isActive: isActive,
+                    //     nft_count: {gt: 0},
+                    //     name: {regexp: pattern},
+                    // },
+                    where: paramTmp,
                     limit: limit
                 });
             } else {
                 data = await this.collectionsSchemaRepository.find({
-                    where: {
-                        isActive: isActive,
-                        name: {regexp: pattern},
-                    },
+                    // where: {
+                    //     isActive: isActive,
+                    //     name: {regexp: pattern},
+                    // },
+                    where: paramTmp,
                     limit: limit
                 });
             }
