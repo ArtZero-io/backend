@@ -2504,7 +2504,7 @@ export class ApiController {
             if (!limit) limit = 15;
             if (!offset) offset = 0;
             let data: bidwinevents[];
-            const order = (req?.sort && req?.sort == 1) ? "blockNumber DESC" : "blockNumber ASC";
+            const order = (req?.sort && req?.sort == 1) ? "blockNumber ASC" : "blockNumber DESC";
             if (collection_address) {
                 data = await this.bidWinEventSchemaRepository.find({
                     where: {
