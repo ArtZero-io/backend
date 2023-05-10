@@ -1,4 +1,6 @@
 import {SchemaObject} from "@loopback/rest";
+import {Filter} from "@loopback/repository";
+import {launchpadmintingevents} from "../models";
 
 export type ResponseBody = {
     status: string,
@@ -1160,6 +1162,44 @@ export const RequestSearchNFTOfCollectionByTraitsBody = {
     required: true,
     content: {
         'application/x-www-form-urlencoded': {schema: ReqSearchNFTOfCollectionByTraitsSchema},
+    },
+};
+
+// GET LAUNCHPAD MINTING EVENT
+export type ReqGetLaunchpadMintingEventType = {
+    nftContractAddress: string,
+    keyword?: string,
+    limit?: number,
+    offset?: number,
+    sort?: number,
+    filter?: Filter<launchpadmintingevents>
+};
+const ReqGetLaunchpadMintingEventSchema: SchemaObject = {
+    type: 'object',
+    required: ['nftContractAddress'],
+    properties: {
+        nftContractAddress: {
+            type: 'string',
+        },
+        traitFilters: {
+            type: 'string'
+        },
+        limit: {
+            type: 'number',
+        },
+        offset: {
+            type: 'number',
+        },
+        sort: {
+            type: 'number',
+        },
+    },
+};
+export const RequestGetLaunchpadMintingEventBody = {
+    description: 'The input of getLaunchpadMintingEvent function',
+    required: true,
+    content: {
+        'application/x-www-form-urlencoded': {schema: ReqGetLaunchpadMintingEventSchema},
     },
 };
 

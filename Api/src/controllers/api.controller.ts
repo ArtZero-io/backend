@@ -141,7 +141,10 @@ import {
     ReqAdUpdateCollectionType,
     RequestAdUpdateCollectionBody,
     ReqAdGetListMinterType,
-    RequestAdGetListMinterBody, ReqGetBidByCollectionType, RequestGetBidByCollectionBody,
+    RequestAdGetListMinterBody,
+    ReqGetBidByCollectionType,
+    RequestGetBidByCollectionBody,
+    ReqGetLaunchpadMintingEventType, RequestGetLaunchpadMintingEventBody,
 } from "../utils/Message";
 import { MESSAGE, STATUS} from "../utils/constant";
 import {
@@ -310,7 +313,7 @@ export class ApiController {
         @repository(WithdrawEventSchemaRepository)
         public withdrawEventSchemaRepository: WithdrawEventSchemaRepository,
         @repository(LaunchpadMintingEventSchemaRepository)
-        public luanchpadMintingEventSchemaRepository: LaunchpadMintingEventSchemaRepository,
+        public launchpadMintingEventSchemaRepository: LaunchpadMintingEventSchemaRepository,
         @repository(TmpDataRepository)
         public tmpDataRepository: TmpDataRepository,
     ) {
@@ -3501,8 +3504,19 @@ export class ApiController {
     ): Promise<Response> {
         const data = await this.withdrawEventSchemaRepository.find(filter);
         const eventCount = await this.withdrawEventSchemaRepository.count(filter?.where);
+        let totalBalanceAmount = 0;
+        for(const withdrawEvent of data) {
+            if (withdrawEvent?.withdrawAmount) {
+                totalBalanceAmount += withdrawEvent.withdrawAmount;
+            }
+        }
         // @ts-ignore
-        return this.response.send({status: STATUS.OK, ret: data, totalCount: eventCount});
+        return this.response.send({
+            status: STATUS.OK,
+            ret: data,
+            totalCount: eventCount,
+            totalBalanceAmount: totalBalanceAmount
+        });
     }
 
     @get('/api/launchpad-minting-event-schemas')
@@ -3520,10 +3534,73 @@ export class ApiController {
     async getLaunchpadMintingEvent(
         @param.filter(launchpadmintingevents) filter?: Filter<launchpadmintingevents>,
     ): Promise<Response> {
-        const data = await this.luanchpadMintingEventSchemaRepository.find(filter);
-        const eventCount = await this.luanchpadMintingEventSchemaRepository.count(filter?.where);
+        const data = await this.launchpadMintingEventSchemaRepository.find(filter);
+        const eventCount = await this.launchpadMintingEventSchemaRepository.count(filter?.where);
         // @ts-ignore
         return this.response.send({status: STATUS.OK, ret: data, totalCount: eventCount});
+    }
+    @get('/api/launchpad-minting-event-schemas-v1')
+    async getLaunchpadMintingEventV1(
+        @requestBody(RequestGetLaunchpadMintingEventBody) req:ReqGetLaunchpadMintingEventType
+    ): Promise<ResponseBody | Response> {
+        if (!req || !req.nftContractAddress) {
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: MESSAGE.NO_INPUT,
+                ret: [],
+                totalCount: 0
+            });
+        }
+        let keyword = req?.keyword;
+        let limit = req?.limit || 24;
+        let offset = req?.offset || 0;
+        let nftContractAddress = req.nftContractAddress;
+        let collectionInfo = await this.collectionsSchemaRepository.findOne({
+            where: {
+                nftContractAddress: nftContractAddress,
+            }
+        });
+        if (!collectionInfo) {
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: MESSAGE.NOT_EXIST_COLLECTION_ADDRESS,
+                ret: [],
+                totalCount: 0
+            });
+        }
+
+        let paramTmp = {};
+        if (keyword) {
+            paramTmp = {...paramTmp, minter: {like: `${keyword}`, options: "i" }};
+        }
+        const filterData = {
+            nftContractAddress: nftContractAddress,
+            ...paramTmp
+        };
+        console.log(filterData);
+        const data = await this.launchpadMintingEventSchemaRepository.find({
+            where: filterData,
+            limit: limit,
+            offset: offset
+        });
+        let totalMintedAmount = 0;
+        for(const mintEvent of data) {
+            if (mintEvent?.mintAmount) {
+                totalMintedAmount += mintEvent.mintAmount;
+            }
+        }
+        const eventCount = await this.launchpadMintingEventSchemaRepository.count({
+            nftContractAddress: nftContractAddress
+        });
+        // @ts-ignore
+        return this.response.send({
+            status: STATUS.OK,
+            ret: data,
+            totalCount: eventCount,
+            totalMintedAmount: totalMintedAmount
+        });
     }
 
     @post('/api/checking/images-and-json')
@@ -3867,7 +3944,7 @@ export class ApiController {
                                 nftContractAddress: collection.nftContractAddress,
                                 mode: mode
                             };
-                            const mintedData = await this.luanchpadMintingEventSchemaRepository.find({
+                            const mintedData = await this.launchpadMintingEventSchemaRepository.find({
                                 where: filterMode
                             });
                             for(const item of mintedData) {
