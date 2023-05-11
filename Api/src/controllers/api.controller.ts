@@ -3539,7 +3539,7 @@ export class ApiController {
         // @ts-ignore
         return this.response.send({status: STATUS.OK, ret: data, totalCount: eventCount});
     }
-    @get('/api/launchpad-minting-event-schemas-v1')
+    @post('/api/launchpad-minting-event-schemas-v1')
     async getLaunchpadMintingEventV1(
         @requestBody(RequestGetLaunchpadMintingEventBody) req:ReqGetLaunchpadMintingEventType
     ): Promise<ResponseBody | Response> {
