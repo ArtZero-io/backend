@@ -3000,14 +3000,16 @@ export async function setClaimedStatus(
             let listAddress: string[] = [];
             let staker_count = await staking_calls.getTotalCountOfStakeholders(process.env.CALLER);
             logger.warn(`staker_count: ${staker_count}`);
-            for (let i = 0; i < staker_count; i++) {
+            for (let i = 1; i < 2; i++) {
                 try {
                     let staker = await staking_calls.getStakedAccountsAccountByIndex(process.env.CALLER, i);
                     logger.warn(`staker: ${staker}`);
                     let isClaimed = await staking_calls.isClaimed(process.env.CALLER, staker);
                     logger.warn(`setClaimedStatus: ${i + 1} staker: ${staker} is claimed ${isClaimed}`);
                     logger.warn(`setClaimedStatus - set isClaimed to FALSE for ${staker}`);
-                    await staking_calls.setClaimedStatus(keypair, process.env.CALLER, staker);
+                    if (isClaimed) {
+                        await staking_calls.setClaimedStatus(keypair, process.env.CALLER, staker);
+                    }
                     isClaimed = await staking_calls.isClaimed(process.env.CALLER, staker);
                     logger.warn(`setClaimedStatus: ${i + 1} staker: ${staker} is claimed ${isClaimed}`);
                     if (staker) {

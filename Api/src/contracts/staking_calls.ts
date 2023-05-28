@@ -186,11 +186,15 @@ export async function setClaimedStatus(keypair: KeyringPair, caller: string, acc
 }
 
 export async function isAdmin(caller_account: any, account: string) {
+    console.log(staking_contract);
     if (!staking_contract || !caller_account) {
         console.log("invalid inputs");
         return null;
     }
-    const address = caller_account?.address;
+    const address = caller_account;
+    console.log({staking_contract_address: staking_contract.address.toString()});
+    console.log({address: address});
+    console.log({account: account});
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
@@ -204,7 +208,10 @@ export async function isAdmin(caller_account: any, account: string) {
         '3739740293',
         account
     );
+    console.log(result.toHuman());
     if (result.isOk && output) {
+        // @ts-ignore
+        console.log(output.toHuman());
         // @ts-ignore
         return output.toHuman()?.Ok;
     }
