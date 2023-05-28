@@ -82,6 +82,8 @@ import {convertToUTCTime, isBlackListCollection, logger, sleep} from "../utils/T
 import {globalApi, localApi} from "../index";
 import {launchpad_manager} from "../contracts/launchpad_manager";
 import dotenv from "dotenv";
+import {KeyringPair$Json} from "@polkadot/keyring/types";
+import {u8aToString} from "@polkadot/util";
 dotenv.config();
 
 export async function check_new_collections(
@@ -2984,8 +2986,12 @@ export async function setClaimedStatus(
         logger.warn(`is_reward_started: ${is_reward_started}`);
         logger.warn(`is_reward_started must be FALSE and is_locked must be TRUE to set Claimable`);
         const keyring = new Keyring({type: 'sr25519'});
-        const keypair = keyring.createFromUri((process.env.PHRASE) ? process.env.PHRASE : '');
-        logger.warn(`Caller: ${keypair.address}`);
+        // const keypair = keyring.createFromUri((process.env.PHRASE) ? process.env.PHRASE : '');
+        const jsonString = fs.readFileSync("file_account.json");
+        const keypair = keyring.createFromJson(JSON.parse(jsonString.toString()) as KeyringPair$Json, false);
+
+        logger.warn(keypair);
+        // logger.warn(`Caller: ${keypair.address}`);
         let is_admin = await staking_calls.isAdmin(process.env.CALLER, keypair.address);
         logger.warn(`is_admin: ${is_admin}`);
         logger.warn(`process.env.CALLER: ${process.env.CALLER}`);
