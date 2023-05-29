@@ -27,6 +27,16 @@ export class bids extends Entity {
   @property({
     type: 'string',
   })
+  azDomainName?: string;
+
+  @property({
+    type: 'boolean',
+  })
+  isAzDomain?: boolean;
+
+  @property({
+    type: 'string',
+  })
   bidder?: string;
 
   @property({

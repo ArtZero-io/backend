@@ -35,6 +35,16 @@ export class bidwinevents extends Entity {
   tokenID?: number;
 
   @property({
+    type: 'string',
+  })
+  azDomainName?: string;
+
+  @property({
+    type: 'boolean',
+  })
+  isAzDomain?: boolean;
+
+  @property({
     type: 'number',
   })
   price?: number;
