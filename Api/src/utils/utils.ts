@@ -320,3 +320,46 @@ export async function getTimestampFromBlockNumber(api: ApiPromise, blockNumber: 
     }
     return timestamp;
 }
+
+export function isAzEnabled(azDomainAddress?: string): {
+    isAzDomain: boolean,
+    isEnabled: boolean
+} {
+    try {
+        if (!azDomainAddress) {
+            return {
+                isAzDomain: false,
+                isEnabled: false
+            };
+        }
+        let azeroDomainConfig = process.env.AZERO_DOMAIN_LIST;
+        if (azeroDomainConfig) {
+            azeroDomainConfig = azeroDomainConfig.replace('[','').replace(']','');
+            const tmp = azeroDomainConfig.split(',');
+            console.log(tmp);
+            for (const data of tmp) {
+                const info = data.split('-');
+                const address = info[0];
+                const isEnable = info[1] === "true";
+                console.log(`Address: ${address} isEnable: ${isEnable}`);
+                // Check and return the first address that is matched
+                if (azDomainAddress === address) {
+                    return {
+                        isAzDomain: true,
+                        isEnabled: isEnable
+                    };
+                }
+            }
+            return {
+                isAzDomain: false,
+                isEnabled: false
+            };
+        }
+    } catch (e) {
+        console.log(`ERROR - isAzEnabled: ${e.messages}`);
+    }
+    return {
+        isAzDomain: false,
+        isEnabled: false
+    };
+}

@@ -14,7 +14,7 @@ import {
 } from '@loopback/rest';
 
 import {
-    AddRewardEventSchemaRepository,
+    AddRewardEventSchemaRepository, AzeroDomainEventRepository,
     BidQueueSchemaRepository,
     BidsSchemaRepository,
     BidWinEventSchemaRepository,
@@ -144,11 +144,14 @@ import {
     RequestAdGetListMinterBody,
     ReqGetBidByCollectionType,
     RequestGetBidByCollectionBody,
-    ReqGetLaunchpadMintingEventType, RequestGetLaunchpadMintingEventBody,
+    ReqGetLaunchpadMintingEventType,
+    RequestGetLaunchpadMintingEventBody,
+    ReqGetListOwnerNftType,
+    RequestGetListOwnerNftBody,
 } from "../utils/Message";
 import { MESSAGE, STATUS} from "../utils/constant";
 import {
-    getFile,
+    getFile, isAzEnabled,
     isValidAddressPolkadotAddress,
     isValidSignature,
     isValidTypeName, readOnlyGasLimit,
@@ -314,6 +317,8 @@ export class ApiController {
         public withdrawEventSchemaRepository: WithdrawEventSchemaRepository,
         @repository(LaunchpadMintingEventSchemaRepository)
         public launchpadMintingEventSchemaRepository: LaunchpadMintingEventSchemaRepository,
+        @repository(AzeroDomainEventRepository)
+        public azeroDomainEventRepository: AzeroDomainEventRepository,
         @repository(TmpDataRepository)
         public tmpDataRepository: TmpDataRepository,
     ) {
@@ -627,13 +632,26 @@ export class ApiController {
             }
             let collection_address = req?.collection_address;
             let tokenID = req?.token_id;
+            let azDomainName = req?.azDomainName;
             if (!collection_address) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_ADDRESS});
             }
-            if (!tokenID || tokenID < 0) {
-                // @ts-ignore
-                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
+            const azChecking = isAzEnabled(collection_address);
+            if (azChecking.isAzDomain) {
+                if (!azChecking.isEnabled) {
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS_INACTIVE});
+                }
+                if (!azDomainName) {
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_DOMAIN_NAME});
+                }
+            } else {
+                if (!tokenID || tokenID < 0) {
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
+                }
             }
             if (!isValidAddressPolkadotAddress(collection_address)) {
                 // @ts-ignore
@@ -657,13 +675,28 @@ export class ApiController {
             if (!queue_data) {
                 let newNftQueue: nftqueues | undefined = undefined;
                 try {
-                    newNftQueue = await this.nftQueueSchemaRepository.create({
-                        type: "update",
-                        nftContractAddress: collection_address,
-                        tokenID: tokenID,
-                        createdTime: new Date(),
-                        updatedTime: new Date()
-                    });
+                    const azChecking = isAzEnabled(collection_address);
+                    if (azChecking.isAzDomain) {
+                        if (azChecking.isEnabled) {
+                            newNftQueue = await this.nftQueueSchemaRepository.create({
+                                type: "update",
+                                nftContractAddress: collection_address,
+                                azDomainName: azDomainName,
+                                azEventName: "Register",
+                                isAzDomain: true,
+                                createdTime: new Date(),
+                                updatedTime: new Date()
+                            });
+                        }
+                    } else {
+                        newNftQueue = await this.nftQueueSchemaRepository.create({
+                            type: "update",
+                            nftContractAddress: collection_address,
+                            tokenID: tokenID,
+                            createdTime: new Date(),
+                            updatedTime: new Date()
+                        });
+                    }
                 } catch (e) {
                     console.log(`ERROR: ${e.message}`);
                 }
@@ -679,6 +712,7 @@ export class ApiController {
                                 this.nftQueueSchemaRepository,
                                 this.collectionsSchemaRepository,
                                 this.blackListRepository,
+                                this.azeroDomainEventRepository,
                                 newNftQueue
                             );
                         } catch (e) {
@@ -725,13 +759,26 @@ export class ApiController {
             let collection_address = req?.collection_address;
             let seller = req?.seller;
             let tokenID = req?.token_id;
+            let azDomainName = req?.azDomainName;
             if (!collection_address || !seller) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_ADDRESS});
             }
-            if (!tokenID || tokenID < 0) {
-                // @ts-ignore
-                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
+            const azChecking = isAzEnabled(collection_address);
+            if (azChecking.isAzDomain) {
+                if (!azChecking.isEnabled) {
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS_INACTIVE});
+                }
+                if (!azDomainName) {
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_DOMAIN_NAME});
+                }
+            } else {
+                if (!tokenID || tokenID < 0) {
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
+                }
             }
             if (
                 !isValidAddressPolkadotAddress(collection_address) ||
@@ -752,26 +799,27 @@ export class ApiController {
                     message: MESSAGE.NOT_EXIST_COLLECTION_ADDRESS,
                 });
             }
-            let queue_data = await this.bidQueueSchemaRepository.findOne({
-                where: {
-                    nftContractAddress: collection_address,
-                    tokenID: tokenID,
-                    seller: seller,
+            if (azChecking.isAzDomain) {
+                if (!azChecking.isEnabled) {
+                    return this.response.send({
+                        status: STATUS.FAILED,
+                        message: MESSAGE.NOT_EXIST_COLLECTION_ADDRESS,
+                    });
                 }
-            });
-            if (!queue_data) {
                 try {
                     const currentData = await this.bidQueueSchemaRepository.findOne({
                         where: {
                             nftContractAddress: collection_address,
-                            tokenID: tokenID,
+                            azDomainName: azDomainName,
+                            isAzDomain: true,
                             seller: seller,
                         }
                     });
                     if (!currentData) {
                         await this.bidQueueSchemaRepository.create({
                             nftContractAddress: collection_address,
-                            tokenID: tokenID,
+                            azDomainName: azDomainName,
+                            isAzDomain: true,
                             seller: seller,
                             createdTime: new Date(),
                             updatedTime: new Date()
@@ -779,7 +827,8 @@ export class ApiController {
                     } else {
                         await this.bidQueueSchemaRepository.updateById(currentData._id, {
                             nftContractAddress: collection_address,
-                            tokenID: tokenID,
+                            azDomainName: azDomainName,
+                            isAzDomain: true,
                             seller: seller,
                             updatedTime: new Date()
                         });
@@ -789,6 +838,45 @@ export class ApiController {
                 }
                 // @ts-ignore
                 return this.response.send({status: STATUS.OK, message: MESSAGE.SUCCESS});
+            } else {
+                let queue_data = await this.bidQueueSchemaRepository.findOne({
+                    where: {
+                        nftContractAddress: collection_address,
+                        tokenID: tokenID,
+                        seller: seller,
+                    }
+                });
+                if (!queue_data) {
+                    try {
+                        const currentData = await this.bidQueueSchemaRepository.findOne({
+                            where: {
+                                nftContractAddress: collection_address,
+                                tokenID: tokenID,
+                                seller: seller,
+                            }
+                        });
+                        if (!currentData) {
+                            await this.bidQueueSchemaRepository.create({
+                                nftContractAddress: collection_address,
+                                tokenID: tokenID,
+                                seller: seller,
+                                createdTime: new Date(),
+                                updatedTime: new Date()
+                            });
+                        } else {
+                            await this.bidQueueSchemaRepository.updateById(currentData._id, {
+                                nftContractAddress: collection_address,
+                                tokenID: tokenID,
+                                seller: seller,
+                                updatedTime: new Date()
+                            });
+                        }
+                    } catch (e) {
+                        console.log(`ERROR: ${e.message}`);
+                    }
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.OK, message: MESSAGE.SUCCESS});
+                }
             }
             // @ts-ignore
             return this.response.send({
@@ -1904,7 +1992,6 @@ export class ApiController {
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
             let collection_address = req.collection_address;
-            console.log({collection_address: collection_address});
             if (!isValidAddressPolkadotAddress(collection_address)) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
@@ -2141,33 +2228,64 @@ export class ApiController {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
-            let tokenID = req?.token_id;
             let collection_address = req.collection_address;
-            if (!tokenID || tokenID < 0) {
-                // @ts-ignore
-                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
-            }
             if (!isValidAddressPolkadotAddress(collection_address)) {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
-            let collection_data = await this.collectionsSchemaRepository.findOne({
-                where: {
-                    nftContractAddress: collection_address,
+            const azChecking = isAzEnabled(collection_address);
+            if (azChecking.isAzDomain) {
+                if (!azChecking.isEnabled) {
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS_INACTIVE});
                 }
-            });
-            if (!collection_data) {
+                let azDomainName = req?.azDomainName;
+                if (!azDomainName) {
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_DOMAIN_NAME});
+                }
+                let collection_data = await this.collectionsSchemaRepository.findOne({
+                    where: {
+                        nftContractAddress: collection_address,
+                    }
+                });
+                if (!collection_data) {
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
+                }
+                let data = await this.nfTsSchemaRepository.find({
+                    where: {
+                        nftContractAddress: collection_address,
+                        azDomainName: azDomainName,
+                        isAzDomain: true
+                    }
+                });
                 // @ts-ignore
-                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
-            }
-            let data = await this.nfTsSchemaRepository.find({
-                where: {
-                    nftContractAddress: collection_address,
-                    tokenID: tokenID,
+                return this.response.send({status: STATUS.OK, ret: data});
+            } else {
+                let tokenID = req?.token_id;
+                if (!tokenID || tokenID < 0) {
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_TOKEN_ID});
                 }
-            });
-            // @ts-ignore
-            return this.response.send({status: STATUS.OK, ret: data});
+                let collection_data = await this.collectionsSchemaRepository.findOne({
+                    where: {
+                        nftContractAddress: collection_address,
+                    }
+                });
+                if (!collection_data) {
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
+                }
+                let data = await this.nfTsSchemaRepository.find({
+                    where: {
+                        nftContractAddress: collection_address,
+                        tokenID: tokenID,
+                    }
+                });
+                // @ts-ignore
+                return this.response.send({status: STATUS.OK, ret: data});
+            }
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
             // @ts-ignore
@@ -2613,43 +2731,90 @@ export class ApiController {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
-            let collection_address = req?.collection_address;
-            let tokenID = req?.token_id;
             let owner = req?.owner;
-            if (!collection_address || !tokenID || tokenID < 0 || !owner) {
+            let collection_address = req?.collection_address;
+            const azChecking = isAzEnabled(collection_address);
+            if (azChecking.isAzDomain) {
+                if (!azChecking.isEnabled) {
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS_INACTIVE});
+                }
+                let azDomainName = req?.azDomainName;
+                if (!collection_address || !azDomainName || !owner) {
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_INPUT});
+                }
+                let bid_win = await this.bidWinEventSchemaRepository.find({
+                    where: {
+                        nftContractAddress: collection_address,
+                        azDomainName: azDomainName,
+                        isAzDomain: true
+                    }
+                });
+                let purchase = await this.purchaseEventSchemaRepository.find({
+                    where: {
+                        nftContractAddress: collection_address,
+                        azDomainName: azDomainName,
+                        isAzDomain: true
+                    }
+                });
+                let list = await this.newListEventSchemaRepository.find({
+                    where: {
+                        nftContractAddress: collection_address,
+                        azDomainName: azDomainName,
+                        isAzDomain: true
+                    }
+                });
+                let unList = await this.unListEventSchemaRepository.find({
+                    where: {
+                        nftContractAddress: collection_address,
+                        azDomainName: azDomainName,
+                        isAzDomain: true
+                    }
+                });
+                let result = bid_win.concat(purchase).concat(list).concat(unList);
+                result = result.sort(function (a: any, b: any) {
+                    return parseInt(b.blockNumber) - parseInt(a.blockNumber);
+                });
                 // @ts-ignore
-                return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_INPUT});
+                return this.response.send({status: STATUS.OK, ret: result});
+            } else {
+                let tokenID = req?.token_id;
+                if (!collection_address || !tokenID || tokenID < 0 || !owner) {
+                    // @ts-ignore
+                    return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_INPUT});
+                }
+                let bid_win = await this.bidWinEventSchemaRepository.find({
+                    where: {
+                        nftContractAddress: collection_address,
+                        tokenID: tokenID,
+                    }
+                });
+                let purchase = await this.purchaseEventSchemaRepository.find({
+                    where: {
+                        nftContractAddress: collection_address,
+                        tokenID: tokenID,
+                    }
+                });
+                let list = await this.newListEventSchemaRepository.find({
+                    where: {
+                        nftContractAddress: collection_address,
+                        tokenID: tokenID,
+                    }
+                });
+                let unList = await this.unListEventSchemaRepository.find({
+                    where: {
+                        nftContractAddress: collection_address,
+                        tokenID: tokenID,
+                    }
+                });
+                let result = bid_win.concat(purchase).concat(list).concat(unList);
+                result = result.sort(function (a: any, b: any) {
+                    return parseInt(b.blockNumber) - parseInt(a.blockNumber);
+                });
+                // @ts-ignore
+                return this.response.send({status: STATUS.OK, ret: result});
             }
-            let bid_win = await this.bidWinEventSchemaRepository.find({
-                where: {
-                    nftContractAddress: collection_address,
-                    tokenID: tokenID,
-                }
-            });
-            let purchase = await this.purchaseEventSchemaRepository.find({
-                where: {
-                    nftContractAddress: collection_address,
-                    tokenID: tokenID,
-                }
-            });
-            let list = await this.newListEventSchemaRepository.find({
-                where: {
-                    nftContractAddress: collection_address,
-                    tokenID: tokenID,
-                }
-            });
-            let unList = await this.unListEventSchemaRepository.find({
-                where: {
-                    nftContractAddress: collection_address,
-                    tokenID: tokenID,
-                }
-            });
-            let result = bid_win.concat(purchase).concat(list).concat(unList);
-            result = result.sort(function (a: any, b: any) {
-                return parseInt(b.blockNumber) - parseInt(a.blockNumber);
-            });
-            // @ts-ignore
-            return this.response.send({status: STATUS.OK, ret: result});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
             // @ts-ignore
@@ -3165,41 +3330,6 @@ export class ApiController {
         }
     }
 
-    // @post('/api/config/triggerRewards')
-    // async triggerRewards(
-    //     @requestBody(RequestTriggerRewardsBody) req:ReqTriggerRewardsType
-    // ): Promise<ResponseBody | Response> {
-    //     try {
-    //         if (!req || !req.userName || !req.password) {
-    //             // @ts-ignore
-    //             return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
-    //         }
-    //         const userName = req?.userName;
-    //         const password = req?.password;
-    //         if (userName !== process.env.TRIGGER_REWARDS_USER_NAME || password !== process.env.TRIGGER_REWARDS_PASSWORD) {
-    //             // @ts-ignore
-    //             return this.response.send({
-    //                 status: STATUS.FAILED,
-    //                 message: MESSAGE.INVALID_AUTHENTICATION,
-    //             });
-    //         }
-    //         setClaimedStatus();
-    //         // @ts-ignore
-    //         return this.response.send({
-    //             status: STATUS.OK,
-    //             message: MESSAGE.SUCCESS,
-    //             ret: {info: `Processing...`}
-    //         });
-    //     } catch (e) {
-    //         console.log(`ERROR: ${e.message}`);
-    //         // @ts-ignore
-    //         return this.response.send({
-    //             status: STATUS.FAILED,
-    //             message: e.message
-    //         });
-    //     }
-    // }
-
     @post('/api/config/reset-all-queue')
     async resetAllQueue(
         @requestBody(RequestResetAllQueueBody) req:ReqResetAllQueueType
@@ -3334,6 +3464,7 @@ export class ApiController {
             const nftQueueScanAllRepo = this.nftQueueScanAllSchemaRepository;
             const collectionsRepo = this.collectionsSchemaRepository;
             const collectionQueueRepo = this.collectionQueueSchemaRepository;
+            const azeroDomainEventRepo = this.azeroDomainEventRepository;
 
             const provider = new WsProvider(process.env.WSSPROVIDER);
             const apiTrigger = new ApiPromise({
@@ -3394,7 +3525,8 @@ export class ApiController {
                         nftQueueRepo,
                         nftQueueScanAllRepo,
                         collectionsRepo,
-                        collectionQueueRepo
+                        collectionQueueRepo,
+                        azeroDomainEventRepo
                     );
                 } catch (e) {
                     console.log(e);
@@ -4119,7 +4251,7 @@ export class ApiController {
             //     }
             //     let filterObject = {
             //         where: filterData,
-            //         order: [order,"_id DESC"],
+            //         order: [order],
             //         skip: offset,
             //         limit: limit
             //     };
@@ -4326,6 +4458,88 @@ export class ApiController {
                 status: STATUS.FAILED,
                 message: 'For checking only!'
             });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    @post('/ad/getListOwnerNft')
+    async getListOwnerNft(
+        @requestBody(RequestGetListOwnerNftBody) req:ReqGetListOwnerNftType
+    ): Promise<ResponseBody | Response> {
+        try {
+            // console.log(req);
+            if (!req || !req.nftContractAddress) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            const userName = req?.userName;
+            const password = req?.password;
+            let nftContractAddress = req?.nftContractAddress;
+            if (userName !== process.env.ADMIN_USER_NAME || password !== process.env.ADMIN_PASSWORD) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_AUTHENTICATION,
+                });
+            }
+            if (!nftContractAddress) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_INPUT,
+                });
+            }
+
+            if (!isValidAddressPolkadotAddress(nftContractAddress)) {
+                // @ts-ignore
+                return this.response.send({
+                    status: STATUS.FAILED,
+                    message: MESSAGE.INVALID_COLLECTION_ADDRESS,
+                });
+            }
+            try {
+                let foundCollection = await this.collectionsSchemaRepository.findOne({
+                    where: {
+                        nftContractAddress: nftContractAddress,
+                    }
+                });
+                if (!foundCollection) {
+                    // @ts-ignore
+                    return this.response.send({
+                        status: STATUS.FAILED,
+                        message: MESSAGE.INVALID_COLLECTION_ADDRESS,
+                    });
+                } else {
+                    try {
+                        const listNft = await this.nfTsSchemaRepository.find({
+                            where: {
+                                nftContractAddress: nftContractAddress
+                            }
+                        });
+                        return this.response.send({
+                            status: STATUS.OK,
+                            listNft: listNft,
+                            numberOwner: listNft.length
+                        });
+                    } catch (e) {
+                        return this.response.send({
+                            status: STATUS.FAILED,
+                            message: e.message
+                        });
+                    }
+                }
+            } catch (e) {
+                console.log(e.message);
+            }
+
+
+            return this.response.send({status: STATUS.OK});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
             // @ts-ignore

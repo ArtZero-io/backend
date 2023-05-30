@@ -44,7 +44,7 @@ import {
     RewardQueueSchemaRepository,
     ScannedBlocksSchemaRepository,
     StakingEventSchemaRepository,
-    UnListEventSchemaRepository, BlackListRepository
+    UnListEventSchemaRepository, BlackListRepository, AzeroDomainEventRepository
 } from "../repositories";
 import {
     collections,
@@ -681,6 +681,7 @@ export async function scanAllNFTs(
     nftQueueScanAllRepo: NftQueueScanAllSchemaRepository,
     collectionsRepo: CollectionsSchemaRepository,
     collectionQueueRepo: CollectionQueueSchemaRepository,
+    azeroDomainEventRepo: AzeroDomainEventRepository,
 ) {
     await delay(3000);
     if (global_vars.is_scan_all_NFTs) return;
@@ -809,6 +810,7 @@ export async function check_NFT_queue(
     nftQueueRepo: NftQueueSchemaRepository,
     collectionsRepo: CollectionsSchemaRepository,
     blackListRepo: BlackListRepository,
+    azeroDomainEventRepo: AzeroDomainEventRepository,
     nftQueueData?: nftqueues
 ) {
     if (global_vars.is_check_NFT_queue) return;
