@@ -1,12 +1,12 @@
 const marketplace = {
-  CONTRACT_ADDRESS: "5F8gyvsfuCqpvNywyRdUHy1EGvHG5GaUpVS64Tej6mAbwJ38",
+  CONTRACT_ADDRESS: "5Gh5Z5CxmzpU9UVFbZ9rXw2ph5SG4UymQCAWuiZXNkxeTVui",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xeefdf4ee2b22e6e32895115a912015f5afc91bca34845d292f03fed0dd08c968",
-      "language": "ink! 4.0.0-beta",
+      "hash": "0x430ca6a102e29d3170de224201c4c446f1d40d12a5386a29030c7082ab59e923",
+      "language": "ink! 4.0.1",
       "compiler": "rustc 1.69.0-nightly",
       "build_info": {
-        "build_mode": "Debug",
+        "build_mode": "Release",
         "cargo_contract_version": "2.0.0-rc",
         "rust_toolchain": "nightly-x86_64-unknown-linux-gnu",
         "wasm_opt_settings": {
@@ -79,7 +79,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -90,7 +90,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -101,7 +101,7 @@ const marketplace = {
                 "displayName": [
                   "Id"
                 ],
-                "type": 21
+                "type": 23
               }
             },
             {
@@ -129,7 +129,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -140,7 +140,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -151,7 +151,7 @@ const marketplace = {
                 "displayName": [
                   "Id"
                 ],
-                "type": 21
+                "type": 23
               }
             }
           ],
@@ -168,7 +168,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -179,7 +179,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -190,7 +190,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -201,7 +201,7 @@ const marketplace = {
                 "displayName": [
                   "Id"
                 ],
-                "type": 21
+                "type": 23
               }
             },
             {
@@ -251,7 +251,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -262,7 +262,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -273,7 +273,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -284,7 +284,7 @@ const marketplace = {
                 "displayName": [
                   "Id"
                 ],
-                "type": 21
+                "type": 23
               }
             },
             {
@@ -334,7 +334,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -345,7 +345,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -356,7 +356,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -367,7 +367,7 @@ const marketplace = {
                 "displayName": [
                   "Id"
                 ],
-                "type": 21
+                "type": 23
               }
             },
             {
@@ -406,7 +406,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -417,7 +417,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -428,7 +428,7 @@ const marketplace = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 38
+                "type": 40
               }
             },
             {
@@ -439,7 +439,7 @@ const marketplace = {
                 "displayName": [
                   "Id"
                 ],
-                "type": 21
+                "type": 23
               }
             },
             {
@@ -526,7 +526,7 @@ const marketplace = {
                 "displayName": [
                   "Id"
                 ],
-                "type": 21
+                "type": 23
               }
             },
             {
@@ -571,7 +571,7 @@ const marketplace = {
                 "displayName": [
                   "Id"
                 ],
-                "type": 21
+                "type": 23
               }
             }
           ],
@@ -607,7 +607,7 @@ const marketplace = {
                 "displayName": [
                   "Id"
                 ],
-                "type": 21
+                "type": 23
               }
             }
           ],
@@ -643,7 +643,7 @@ const marketplace = {
                 "displayName": [
                   "Id"
                 ],
-                "type": 21
+                "type": 23
               }
             }
           ],
@@ -679,7 +679,7 @@ const marketplace = {
                 "displayName": [
                   "Id"
                 ],
-                "type": 21
+                "type": 23
               }
             }
           ],
@@ -715,7 +715,7 @@ const marketplace = {
                 "displayName": [
                   "Id"
                 ],
-                "type": 21
+                "type": 23
               }
             },
             {
@@ -742,645 +742,6 @@ const marketplace = {
             "type": 15
           },
           "selector": "0x1856538b"
-        },
-        {
-          "args": [
-            {
-              "label": "collection_contract_address",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Set new collection contract address - Only Owner"
-          ],
-          "label": "set_collection_contract_address",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 15
-          },
-          "selector": "0xe84bde5a"
-        },
-        {
-          "args": [
-            {
-              "label": "platform_fee",
-              "type": {
-                "displayName": [
-                  "u32"
-                ],
-                "type": 4
-              }
-            }
-          ],
-          "docs": [
-            " Set Platform fee - only owner"
-          ],
-          "label": "set_platform_fee",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 15
-          },
-          "selector": "0x2c5b83f1"
-        },
-        {
-          "args": [
-            {
-              "label": "staking_contract_address",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Set new staking contract address - Only Owner"
-          ],
-          "label": "set_staking_contract_address",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 15
-          },
-          "selector": "0xcf051612"
-        },
-        {
-          "args": [
-            {
-              "label": "criteria",
-              "type": {
-                "displayName": [
-                  "Vec"
-                ],
-                "type": 9
-              }
-            },
-            {
-              "label": "rates",
-              "type": {
-                "displayName": [
-                  "Vec"
-                ],
-                "type": 12
-              }
-            }
-          ],
-          "docs": [
-            " Set criteria and discount rate - Only Owner 2 vectors same size"
-          ],
-          "label": "set_discount",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 15
-          },
-          "selector": "0x693e798c"
-        },
-        {
-          "args": [
-            {
-              "label": "receiver",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Receive hold amount"
-          ],
-          "label": "receive_hold_amount",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 15
-          },
-          "selector": "0x0ce0eacb"
-        },
-        {
-          "args": [
-            {
-              "label": "nft_contract_address",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "token_id",
-              "type": {
-                "displayName": [
-                  "Id"
-                ],
-                "type": 21
-              }
-            }
-          ],
-          "docs": [
-            " Get market list information using NFT Collection and token ID"
-          ],
-          "label": "get_nft_sale_info",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 22
-          },
-          "selector": "0xfd066a27"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get platform fee"
-          ],
-          "label": "get_platform_fee",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 25
-          },
-          "selector": "0xd11d7ceb"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get Staking Discount Criteria"
-          ],
-          "label": "get_staking_discount_criteria",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 26
-          },
-          "selector": "0xac3b80e4"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get Staking Discount Rates"
-          ],
-          "label": "get_staking_discount_rate",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 27
-          },
-          "selector": "0xc32f36d7"
-        },
-        {
-          "args": [
-            {
-              "label": "collection_contract_address",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Get listed token count by collection address"
-          ],
-          "label": "get_listed_token_count_by_collection_address",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 28
-          },
-          "selector": "0x7eecb2bb"
-        },
-        {
-          "args": [
-            {
-              "label": "nft_contract_address",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "user_account",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "index",
-              "type": {
-                "displayName": [
-                  "u128"
-                ],
-                "type": 6
-              }
-            }
-          ],
-          "docs": [
-            " Get all token ids currently for sale for a collection (nft_contract_address,user_account)"
-          ],
-          "label": "get_for_sale_token_id",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 29
-          },
-          "selector": "0x6ad3665a"
-        },
-        {
-          "args": [
-            {
-              "label": "nft_contract_address",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "user_account",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Get get total sale token ids of user account in a contract"
-          ],
-          "label": "get_sale_tokens_ids_count",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 31
-          },
-          "selector": "0x80e40497"
-        },
-        {
-          "args": [
-            {
-              "label": "nft_contract_address",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "user_account",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Get all token ids currently for sale by a collection (nft_contract_address,user_account)"
-          ],
-          "label": "total_tokens_for_sale",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 31
-          },
-          "selector": "0x153813dc"
-        },
-        {
-          "args": [
-            {
-              "label": "nft_contract_address",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "user_account",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "token_id",
-              "type": {
-                "displayName": [
-                  "Id"
-                ],
-                "type": 21
-              }
-            }
-          ],
-          "docs": [
-            " Get all bids from (NFT Contract Address, User Address, token ID)"
-          ],
-          "label": "get_all_bids",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 32
-          },
-          "selector": "0xb36025ae"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get collection contract address"
-          ],
-          "label": "get_collection_contract_address",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 34
-          },
-          "selector": "0x792a738a"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get staking contract address"
-          ],
-          "label": "get_staking_contract_address",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 34
-          },
-          "selector": "0x07c3a15f"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get total platform volume"
-          ],
-          "label": "get_total_volume",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 31
-          },
-          "selector": "0xe88330b2"
-        },
-        {
-          "args": [
-            {
-              "label": "collection_contract_address",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Get total Collection volume"
-          ],
-          "label": "get_volume_by_collection",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 31
-          },
-          "selector": "0xc4fd2cdc"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get platform total Profit"
-          ],
-          "label": "get_total_profit",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 31
-          },
-          "selector": "0xc7198ed4"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get platform current available profit"
-          ],
-          "label": "get_current_profit",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 31
-          },
-          "selector": "0xe741ad59"
-        },
-        {
-          "args": [
-            {
-              "label": "bidder",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Get hold amount of bidder"
-          ],
-          "label": "get_hold_amount_of_bidder",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 35
-          },
-          "selector": "0xa5f3c458"
-        },
-        {
-          "args": [
-            {
-              "label": "index",
-              "type": {
-                "displayName": [
-                  "u64"
-                ],
-                "type": 5
-              }
-            }
-          ],
-          "docs": [
-            " Get Hold Bidders by Index"
-          ],
-          "label": "get_hold_bidders_by_index",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 37
-          },
-          "selector": "0x67fb786c"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get Hold Bidder Count"
-          ],
-          "label": "get_hold_bidder_count",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 28
-          },
-          "selector": "0xd89d9ef2"
-        },
-        {
-          "args": [
-            {
-              "label": "value",
-              "type": {
-                "displayName": [
-                  "Balance"
-                ],
-                "type": 6
-              }
-            },
-            {
-              "label": "reciever",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Withdraw Profit - only Contract Owner."
-          ],
-          "label": "withdraw_profit",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 15
-          },
-          "selector": "0x8bb87aca"
         },
         {
           "args": [
@@ -1415,9 +776,26 @@ const marketplace = {
               "ink",
               "MessageResult"
             ],
-            "type": 39
+            "type": 24
           },
           "selector": "0x11f43efd"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Returns the address of the current owner."
+          ],
+          "label": "Ownable::owner",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 26
+          },
+          "selector": "0x4fa43c8c"
         },
         {
           "args": [],
@@ -1442,26 +820,95 @@ const marketplace = {
               "ink",
               "MessageResult"
             ],
-            "type": 39
+            "type": 24
           },
           "selector": "0x5e228753"
         },
         {
-          "args": [],
-          "docs": [
-            " Returns the address of the current owner."
+          "args": [
+            {
+              "label": "value",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "WithdrawFeeInput1"
+                ],
+                "type": 6
+              }
+            },
+            {
+              "label": "receiver",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "WithdrawFeeInput2"
+                ],
+                "type": 0
+              }
+            }
           ],
-          "label": "Ownable::owner",
-          "mutates": false,
+          "docs": [
+            " This function allows contract owner to withdraw contract balance to his account."
+          ],
+          "label": "AdminTrait::withdraw_fee",
+          "mutates": true,
           "payable": false,
           "returnType": {
             "displayName": [
               "ink",
               "MessageResult"
             ],
-            "type": 34
+            "type": 15
           },
-          "selector": "0x4fa43c8c"
+          "selector": "0x07573e99"
+        },
+        {
+          "args": [
+            {
+              "label": "nft_contract_address",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "token_id",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput2"
+                ],
+                "type": 23
+              }
+            },
+            {
+              "label": "receiver",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput3"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
+          ],
+          "label": "AdminTrait::tranfer_nft",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 15
+          },
+          "selector": "0xed1e1dfa"
         },
         {
           "args": [
@@ -1514,92 +961,6 @@ const marketplace = {
         {
           "args": [
             {
-              "label": "nft_contract_address",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput1"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "token_id",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput2"
-                ],
-                "type": 21
-              }
-            },
-            {
-              "label": "receiver",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput3"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
-          ],
-          "label": "AdminTrait::tranfer_nft",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 15
-          },
-          "selector": "0xed1e1dfa"
-        },
-        {
-          "args": [
-            {
-              "label": "value",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "WithdrawFeeInput1"
-                ],
-                "type": 6
-              }
-            },
-            {
-              "label": "receiver",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "WithdrawFeeInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " This function allows contract owner to withdraw contract balance to his account."
-          ],
-          "label": "AdminTrait::withdraw_fee",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 15
-          },
-          "selector": "0x07573e99"
-        },
-        {
-          "args": [
-            {
               "label": "code_hash",
               "type": {
                 "displayName": [
@@ -1624,6 +985,659 @@ const marketplace = {
             "type": 15
           },
           "selector": "0xa9e46760"
+        },
+        {
+          "args": [
+            {
+              "label": "receiver",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "ReceiveHoldAmountInput1"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [],
+          "label": "ArtZeroMarketplaceTrait::receive_hold_amount",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 15
+          },
+          "selector": "0xc1c21add"
+        },
+        {
+          "args": [
+            {
+              "label": "staking_contract_address",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "SetStakingContractAddressInput1"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [],
+          "label": "ArtZeroMarketplaceTrait::set_staking_contract_address",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 15
+          },
+          "selector": "0x22eea22c"
+        },
+        {
+          "args": [
+            {
+              "label": "collection_contract_address",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "GetVolumeByCollectionInput1"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Get total Collection volume"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_volume_by_collection",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 27
+          },
+          "selector": "0xe15e7a95"
+        },
+        {
+          "args": [
+            {
+              "label": "collection_contract_address",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "GetListedTokenCountByCollectionAddressInput1"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Get listed token count by collection address"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_listed_token_count_by_collection_address",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 28
+          },
+          "selector": "0xb5b56273"
+        },
+        {
+          "args": [
+            {
+              "label": "collection_contract_address",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "SetCollectionContractAddressInput1"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [],
+          "label": "ArtZeroMarketplaceTrait::set_collection_contract_address",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 15
+          },
+          "selector": "0x6c657127"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Get platform fee"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_platform_fee",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 29
+          },
+          "selector": "0x51c22618"
+        },
+        {
+          "args": [
+            {
+              "label": "platform_fee",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "SetPlatformFeeInput1"
+                ],
+                "type": 4
+              }
+            }
+          ],
+          "docs": [],
+          "label": "ArtZeroMarketplaceTrait::set_platform_fee",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 15
+          },
+          "selector": "0x8be523fb"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Get collection contract address"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_collection_contract_address",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 26
+          },
+          "selector": "0x93955560"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Get Staking Discount Criteria"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_staking_discount_criteria",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 30
+          },
+          "selector": "0x983d74fd"
+        },
+        {
+          "args": [
+            {
+              "label": "value",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "WithdrawProfitInput1"
+                ],
+                "type": 6
+              }
+            },
+            {
+              "label": "reciever",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "WithdrawProfitInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Withdraw Profit - only Contract Owner."
+          ],
+          "label": "ArtZeroMarketplaceTrait::withdraw_profit",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 15
+          },
+          "selector": "0xf232bfe4"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Get total platform volume"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_total_volume",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 27
+          },
+          "selector": "0xc15d33d5"
+        },
+        {
+          "args": [
+            {
+              "label": "nft_contract_address",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "GetNftSaleInfoInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "token_id",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "GetNftSaleInfoInput2"
+                ],
+                "type": 23
+              }
+            }
+          ],
+          "docs": [
+            " Get market list information using NFT Collection and token ID"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_nft_sale_info",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 31
+          },
+          "selector": "0x8de4d038"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Get platform total Profit"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_total_profit",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 27
+          },
+          "selector": "0x026733c6"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Get Hold Bidder Count"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_hold_bidder_count",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 28
+          },
+          "selector": "0xe54b6b05"
+        },
+        {
+          "args": [
+            {
+              "label": "nft_contract_address",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "GetSaleTokensIdsCountInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "user_account",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "GetSaleTokensIdsCountInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Get get total sale token ids of user account in a contract"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_sale_tokens_ids_count",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 27
+          },
+          "selector": "0x91440fa8"
+        },
+        {
+          "args": [
+            {
+              "label": "nft_contract_address",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "GetAllBidsInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "user_account",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "GetAllBidsInput2"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "token_id",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "GetAllBidsInput3"
+                ],
+                "type": 23
+              }
+            }
+          ],
+          "docs": [
+            " Get all bids from (NFT Contract Address, User Address, token ID)"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_all_bids",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 34
+          },
+          "selector": "0xd6bc3156"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Get staking contract address"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_staking_contract_address",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 26
+          },
+          "selector": "0x460816fa"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Get platform current available profit"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_current_profit",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 27
+          },
+          "selector": "0x50427ba8"
+        },
+        {
+          "args": [
+            {
+              "label": "criteria",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "SetDiscountInput1"
+                ],
+                "type": 9
+              }
+            },
+            {
+              "label": "rates",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "SetDiscountInput2"
+                ],
+                "type": 12
+              }
+            }
+          ],
+          "docs": [],
+          "label": "ArtZeroMarketplaceTrait::set_discount",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 15
+          },
+          "selector": "0x020c0a97"
+        },
+        {
+          "args": [
+            {
+              "label": "bidder",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "GetHoldAmountOfBidderInput1"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Get hold amount of bidder"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_hold_amount_of_bidder",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 36
+          },
+          "selector": "0x3122a567"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Get Staking Discount Rates"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_staking_discount_rate",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 38
+          },
+          "selector": "0x5db8b1aa"
+        },
+        {
+          "args": [
+            {
+              "label": "nft_contract_address",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "TotalTokensForSaleInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "user_account",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "TotalTokensForSaleInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Get all token ids currently for sale by a collection (nft_contract_address,user_account)"
+          ],
+          "label": "ArtZeroMarketplaceTrait::total_tokens_for_sale",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 27
+          },
+          "selector": "0xf686aa21"
+        },
+        {
+          "args": [
+            {
+              "label": "index",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "GetHoldBiddersByIndexInput1"
+                ],
+                "type": 5
+              }
+            }
+          ],
+          "docs": [
+            " Get Hold Bidders by Index"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_hold_bidders_by_index",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 39
+          },
+          "selector": "0xdf67943a"
+        },
+        {
+          "args": [
+            {
+              "label": "nft_contract_address",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "GetForSaleTokenIdInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "user_account",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "GetForSaleTokenIdInput2"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "index",
+              "type": {
+                "displayName": [
+                  "artzeromarketplacetrait_external",
+                  "GetForSaleTokenIdInput3"
+                ],
+                "type": 6
+              }
+            }
+          ],
+          "docs": [
+            " Get all token ids currently for sale for a collection (nft_contract_address,user_account)"
+          ],
+          "label": "ArtZeroMarketplaceTrait::get_for_sale_token_id",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 41
+          },
+          "selector": "0xa725c933"
         }
       ]
     },
@@ -1798,7 +1812,7 @@ const marketplace = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0xe085e048",
+                                        "key": "0x365b1e3d",
                                         "ty": 0
                                       }
                                     },
@@ -1807,7 +1821,7 @@ const marketplace = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0xe085e048",
+                                        "key": "0x365b1e3d",
                                         "ty": 5
                                       }
                                     },
@@ -1816,7 +1830,7 @@ const marketplace = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0xe085e048",
+                                        "key": "0x365b1e3d",
                                         "ty": 6
                                       }
                                     },
@@ -1825,7 +1839,7 @@ const marketplace = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0xe085e048",
+                                        "key": "0x365b1e3d",
                                         "ty": 7
                                       }
                                     },
@@ -1834,7 +1848,7 @@ const marketplace = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0xe085e048",
+                                        "key": "0x365b1e3d",
                                         "ty": 4
                                       }
                                     },
@@ -1844,7 +1858,7 @@ const marketplace = {
                                 "name": "ForSaleItem"
                               }
                             },
-                            "root_key": "0xe085e048"
+                            "root_key": "0x365b1e3d"
                           }
                         },
                         "name": "market_list"
@@ -1854,7 +1868,7 @@ const marketplace = {
                           "root": {
                             "layout": {
                               "enum": {
-                                "dispatchKey": "0x6425801d",
+                                "dispatchKey": "0xb085ed28",
                                 "name": "Id",
                                 "variants": {
                                   "0": {
@@ -1862,7 +1876,7 @@ const marketplace = {
                                       {
                                         "layout": {
                                           "leaf": {
-                                            "key": "0x6425801d",
+                                            "key": "0xb085ed28",
                                             "ty": 2
                                           }
                                         },
@@ -1876,7 +1890,7 @@ const marketplace = {
                                       {
                                         "layout": {
                                           "leaf": {
-                                            "key": "0x6425801d",
+                                            "key": "0xb085ed28",
                                             "ty": 8
                                           }
                                         },
@@ -1890,7 +1904,7 @@ const marketplace = {
                                       {
                                         "layout": {
                                           "leaf": {
-                                            "key": "0x6425801d",
+                                            "key": "0xb085ed28",
                                             "ty": 4
                                           }
                                         },
@@ -1904,7 +1918,7 @@ const marketplace = {
                                       {
                                         "layout": {
                                           "leaf": {
-                                            "key": "0x6425801d",
+                                            "key": "0xb085ed28",
                                             "ty": 5
                                           }
                                         },
@@ -1918,7 +1932,7 @@ const marketplace = {
                                       {
                                         "layout": {
                                           "leaf": {
-                                            "key": "0x6425801d",
+                                            "key": "0xb085ed28",
                                             "ty": 6
                                           }
                                         },
@@ -1932,7 +1946,7 @@ const marketplace = {
                                       {
                                         "layout": {
                                           "leaf": {
-                                            "key": "0x6425801d",
+                                            "key": "0xb085ed28",
                                             "ty": 9
                                           }
                                         },
@@ -1944,7 +1958,7 @@ const marketplace = {
                                 }
                               }
                             },
-                            "root_key": "0x6425801d"
+                            "root_key": "0xb085ed28"
                           }
                         },
                         "name": "sale_tokens_ids"
@@ -1954,11 +1968,11 @@ const marketplace = {
                           "root": {
                             "layout": {
                               "leaf": {
-                                "key": "0x29db47dd",
+                                "key": "0x517b20e4",
                                 "ty": 6
                               }
                             },
-                            "root_key": "0x29db47dd"
+                            "root_key": "0x517b20e4"
                           }
                         },
                         "name": "sale_tokens_ids_last_index"
@@ -1968,11 +1982,11 @@ const marketplace = {
                           "root": {
                             "layout": {
                               "leaf": {
-                                "key": "0x95cccd4a",
+                                "key": "0x7141e4b1",
                                 "ty": 6
                               }
                             },
-                            "root_key": "0x95cccd4a"
+                            "root_key": "0x7141e4b1"
                           }
                         },
                         "name": "hold_amount_bidders"
@@ -1982,11 +1996,11 @@ const marketplace = {
                           "root": {
                             "layout": {
                               "leaf": {
-                                "key": "0xdef3dadf",
+                                "key": "0x88e45476",
                                 "ty": 0
                               }
                             },
-                            "root_key": "0xdef3dadf"
+                            "root_key": "0x88e45476"
                           }
                         },
                         "name": "hold_bidders"
@@ -1996,11 +2010,11 @@ const marketplace = {
                           "root": {
                             "layout": {
                               "leaf": {
-                                "key": "0xcae85473",
+                                "key": "0x6c7612a4",
                                 "ty": 10
                               }
                             },
-                            "root_key": "0xcae85473"
+                            "root_key": "0x6c7612a4"
                           }
                         },
                         "name": "bidders"
@@ -2010,11 +2024,11 @@ const marketplace = {
                           "root": {
                             "layout": {
                               "leaf": {
-                                "key": "0xcc2c42ce",
+                                "key": "0x35ec400a",
                                 "ty": 5
                               }
                             },
-                            "root_key": "0xcc2c42ce"
+                            "root_key": "0x35ec400a"
                           }
                         },
                         "name": "listed_token_number_by_collection_address"
@@ -2033,11 +2047,11 @@ const marketplace = {
                           "root": {
                             "layout": {
                               "leaf": {
-                                "key": "0xf60a4864",
+                                "key": "0xeaa286de",
                                 "ty": 6
                               }
                             },
-                            "root_key": "0xf60a4864"
+                            "root_key": "0xeaa286de"
                           }
                         },
                         "name": "volume_by_collection"
@@ -2047,11 +2061,11 @@ const marketplace = {
                           "root": {
                             "layout": {
                               "leaf": {
-                                "key": "0x1956473f",
+                                "key": "0x468118d1",
                                 "ty": 6
                               }
                             },
-                            "root_key": "0x1956473f"
+                            "root_key": "0x468118d1"
                           }
                         },
                         "name": "volume_by_user"
@@ -2267,8 +2281,10 @@ const marketplace = {
             }
           },
           "path": [
-            "artzero_marketplace_psp34",
-            "artzero_marketplace_psp34",
+            "artzero_project",
+            "impls",
+            "marketplace",
+            "data",
             "BidInformation"
           ]
         }
@@ -2526,95 +2542,111 @@ const marketplace = {
                 },
                 {
                   "index": 21,
-                  "name": "InvalidInput"
+                  "name": "CollectionNotExist"
                 },
                 {
                   "index": 22,
-                  "name": "InvalidType"
+                  "name": "InvalidInput"
                 },
                 {
                   "index": 23,
-                  "name": "ClaimedAll"
+                  "name": "InvalidType"
                 },
                 {
                   "index": 24,
-                  "name": "TokenLimitReached"
+                  "name": "ClaimedAll"
                 },
                 {
                   "index": 25,
-                  "name": "UpdatePhase"
+                  "name": "TokenLimitReached"
                 },
                 {
                   "index": 26,
-                  "name": "PhaseNotExist"
+                  "name": "UpdatePhase"
                 },
                 {
                   "index": 27,
-                  "name": "PhaseExpired"
+                  "name": "PhaseNotExist"
                 },
                 {
                   "index": 28,
-                  "name": "WhitelistNotExist"
+                  "name": "PhaseExpired"
                 },
                 {
                   "index": 29,
-                  "name": "WithdrawFeeError"
+                  "name": "PhaseDeactivate"
                 },
                 {
                   "index": 30,
-                  "name": "WithdrawNFTError"
+                  "name": "WhitelistNotExist"
                 },
                 {
                   "index": 31,
-                  "name": "WithdrawPSP22Error"
+                  "name": "WithdrawFeeError"
                 },
                 {
                   "index": 32,
-                  "name": "NotListed"
+                  "name": "WithdrawNFTError"
                 },
                 {
                   "index": 33,
-                  "name": "BidAlreadyExist"
+                  "name": "WithdrawPSP22Error"
                 },
                 {
                   "index": 34,
-                  "name": "BidNotExist"
+                  "name": "NotListed"
                 },
                 {
                   "index": 35,
-                  "name": "NotInMarket"
+                  "name": "BidAlreadyExist"
                 },
                 {
                   "index": 36,
-                  "name": "NotForSale"
+                  "name": "BidNotExist"
                 },
                 {
                   "index": 37,
-                  "name": "NotInSaleList"
+                  "name": "NotInMarket"
                 },
                 {
                   "index": 38,
-                  "name": "InvalidBidLength"
+                  "name": "NotForSale"
                 },
                 {
                   "index": 39,
-                  "name": "InvalidCollectionOwner"
+                  "name": "NotInSaleList"
                 },
                 {
                   "index": 40,
-                  "name": "InvalidTime"
+                  "name": "InvalidBidLength"
                 },
                 {
                   "index": 41,
-                  "name": "RewardStarted"
+                  "name": "InvalidCollectionOwner"
                 },
                 {
                   "index": 42,
-                  "name": "RewardNotStarted"
+                  "name": "InvalidTime"
                 },
                 {
                   "index": 43,
+                  "name": "RewardStarted"
+                },
+                {
+                  "index": 44,
+                  "name": "RewardNotStarted"
+                },
+                {
+                  "index": 45,
+                  "name": "RewardNotAdded"
+                },
+                {
+                  "index": 46,
                   "name": "ClaimMustBeFalse"
+                },
+                {
+                  "index": 47,
+                  "name": "HoldAmountBidderNotExist"
                 },
                 {
                   "fields": [
@@ -2623,7 +2655,7 @@ const marketplace = {
                       "typeName": "OwnableError"
                     }
                   ],
-                  "index": 44,
+                  "index": 48,
                   "name": "OwnableError"
                 },
                 {
@@ -2633,8 +2665,32 @@ const marketplace = {
                       "typeName": "AccessControlError"
                     }
                   ],
-                  "index": 45,
+                  "index": 49,
                   "name": "AccessControlError"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 21,
+                      "typeName": "PSP22Error"
+                    }
+                  ],
+                  "index": 50,
+                  "name": "PSP22Error"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 22,
+                      "typeName": "PSP34Error"
+                    }
+                  ],
+                  "index": 51,
+                  "name": "PSP34Error"
+                },
+                {
+                  "index": 52,
+                  "name": "CheckedOperations"
                 }
               ]
             }
@@ -2720,6 +2776,114 @@ const marketplace = {
                 {
                   "fields": [
                     {
+                      "type": 9,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Custom"
+                },
+                {
+                  "index": 1,
+                  "name": "InsufficientBalance"
+                },
+                {
+                  "index": 2,
+                  "name": "InsufficientAllowance"
+                },
+                {
+                  "index": 3,
+                  "name": "ZeroRecipientAddress"
+                },
+                {
+                  "index": 4,
+                  "name": "ZeroSenderAddress"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 9,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 5,
+                  "name": "SafeTransferCheckFailed"
+                }
+              ]
+            }
+          },
+          "path": [
+            "openbrush_contracts",
+            "traits",
+            "errors",
+            "psp22",
+            "PSP22Error"
+          ]
+        }
+      },
+      {
+        "id": 22,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 9,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Custom"
+                },
+                {
+                  "index": 1,
+                  "name": "SelfApprove"
+                },
+                {
+                  "index": 2,
+                  "name": "NotApproved"
+                },
+                {
+                  "index": 3,
+                  "name": "TokenExists"
+                },
+                {
+                  "index": 4,
+                  "name": "TokenNotExists"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 9,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 5,
+                  "name": "SafeTransferCheckFailed"
+                }
+              ]
+            }
+          },
+          "path": [
+            "openbrush_contracts",
+            "traits",
+            "errors",
+            "psp34",
+            "PSP34Error"
+          ]
+        }
+      },
+      {
+        "id": 23,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
                       "type": 2,
                       "typeName": "u8"
                     }
@@ -2789,7 +2953,7 @@ const marketplace = {
         }
       },
       {
-        "id": 22,
+        "id": 24,
         "type": {
           "def": {
             "variant": {
@@ -2797,7 +2961,7 @@ const marketplace = {
                 {
                   "fields": [
                     {
-                      "type": 23
+                      "type": 25
                     }
                   ],
                   "index": 0,
@@ -2818,7 +2982,7 @@ const marketplace = {
           "params": [
             {
               "name": "T",
-              "type": 23
+              "type": 25
             },
             {
               "name": "E",
@@ -2831,80 +2995,6 @@ const marketplace = {
         }
       },
       {
-        "id": 23,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "index": 0,
-                  "name": "None"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 24
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Some"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 24
-            }
-          ],
-          "path": [
-            "Option"
-          ]
-        }
-      },
-      {
-        "id": 24,
-        "type": {
-          "def": {
-            "composite": {
-              "fields": [
-                {
-                  "name": "nft_owner",
-                  "type": 0,
-                  "typeName": "AccountId"
-                },
-                {
-                  "name": "listed_date",
-                  "type": 5,
-                  "typeName": "u64"
-                },
-                {
-                  "name": "price",
-                  "type": 6,
-                  "typeName": "Balance"
-                },
-                {
-                  "name": "is_for_sale",
-                  "type": 7,
-                  "typeName": "bool"
-                },
-                {
-                  "name": "royalty_fee_at_listing",
-                  "type": 4,
-                  "typeName": "u32"
-                }
-              ]
-            }
-          },
-          "path": [
-            "artzero_marketplace_psp34",
-            "artzero_marketplace_psp34",
-            "ForSaleItem"
-          ]
-        }
-      },
-      {
         "id": 25,
         "type": {
           "def": {
@@ -2913,7 +3003,7 @@ const marketplace = {
                 {
                   "fields": [
                     {
-                      "type": 4
+                      "type": 3
                     }
                   ],
                   "index": 0,
@@ -2922,7 +3012,7 @@ const marketplace = {
                 {
                   "fields": [
                     {
-                      "type": 14
+                      "type": 19
                     }
                   ],
                   "index": 1,
@@ -2934,11 +3024,11 @@ const marketplace = {
           "params": [
             {
               "name": "T",
-              "type": 4
+              "type": 3
             },
             {
               "name": "E",
-              "type": 14
+              "type": 19
             }
           ],
           "path": [
@@ -2955,7 +3045,7 @@ const marketplace = {
                 {
                   "fields": [
                     {
-                      "type": 9
+                      "type": 0
                     }
                   ],
                   "index": 0,
@@ -2976,7 +3066,7 @@ const marketplace = {
           "params": [
             {
               "name": "T",
-              "type": 9
+              "type": 0
             },
             {
               "name": "E",
@@ -2997,7 +3087,7 @@ const marketplace = {
                 {
                   "fields": [
                     {
-                      "type": 12
+                      "type": 6
                     }
                   ],
                   "index": 0,
@@ -3018,7 +3108,7 @@ const marketplace = {
           "params": [
             {
               "name": "T",
-              "type": 12
+              "type": 6
             },
             {
               "name": "E",
@@ -3081,7 +3171,7 @@ const marketplace = {
                 {
                   "fields": [
                     {
-                      "type": 30
+                      "type": 4
                     }
                   ],
                   "index": 0,
@@ -3102,7 +3192,7 @@ const marketplace = {
           "params": [
             {
               "name": "T",
-              "type": 30
+              "type": 4
             },
             {
               "name": "E",
@@ -3121,42 +3211,9 @@ const marketplace = {
             "variant": {
               "variants": [
                 {
-                  "index": 0,
-                  "name": "None"
-                },
-                {
                   "fields": [
                     {
-                      "type": 21
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Some"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 21
-            }
-          ],
-          "path": [
-            "Option"
-          ]
-        }
-      },
-      {
-        "id": 31,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 6
+                      "type": 9
                     }
                   ],
                   "index": 0,
@@ -3177,7 +3234,49 @@ const marketplace = {
           "params": [
             {
               "name": "T",
-              "type": 6
+              "type": 9
+            },
+            {
+              "name": "E",
+              "type": 14
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 31,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 32
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 14
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 32
             },
             {
               "name": "E",
@@ -3196,9 +3295,85 @@ const marketplace = {
             "variant": {
               "variants": [
                 {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
                   "fields": [
                     {
                       "type": 33
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 33
+            }
+          ],
+          "path": [
+            "Option"
+          ]
+        }
+      },
+      {
+        "id": 33,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "nft_owner",
+                  "type": 0,
+                  "typeName": "AccountId"
+                },
+                {
+                  "name": "listed_date",
+                  "type": 5,
+                  "typeName": "u64"
+                },
+                {
+                  "name": "price",
+                  "type": 6,
+                  "typeName": "Balance"
+                },
+                {
+                  "name": "is_for_sale",
+                  "type": 7,
+                  "typeName": "bool"
+                },
+                {
+                  "name": "royalty_fee_at_listing",
+                  "type": 4,
+                  "typeName": "u32"
+                }
+              ]
+            }
+          },
+          "path": [
+            "artzero_project",
+            "impls",
+            "marketplace",
+            "data",
+            "ForSaleItem"
+          ]
+        }
+      },
+      {
+        "id": 34,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 35
                     }
                   ],
                   "index": 0,
@@ -3219,7 +3394,7 @@ const marketplace = {
           "params": [
             {
               "name": "T",
-              "type": 33
+              "type": 35
             },
             {
               "name": "E",
@@ -3232,7 +3407,7 @@ const marketplace = {
         }
       },
       {
-        "id": 33,
+        "id": 35,
         "type": {
           "def": {
             "variant": {
@@ -3265,91 +3440,49 @@ const marketplace = {
         }
       },
       {
-        "id": 34,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 0
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 14
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 0
-            },
-            {
-              "name": "E",
-              "type": 14
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 35,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 36
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 14
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 36
-            },
-            {
-              "name": "E",
-              "type": 14
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
         "id": 36,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 37
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 14
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 37
+            },
+            {
+              "name": "E",
+              "type": 14
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 37,
         "type": {
           "def": {
             "variant": {
@@ -3382,7 +3515,7 @@ const marketplace = {
         }
       },
       {
-        "id": 37,
+        "id": 38,
         "type": {
           "def": {
             "variant": {
@@ -3390,7 +3523,7 @@ const marketplace = {
                 {
                   "fields": [
                     {
-                      "type": 38
+                      "type": 12
                     }
                   ],
                   "index": 0,
@@ -3411,7 +3544,7 @@ const marketplace = {
           "params": [
             {
               "name": "T",
-              "type": 38
+              "type": 12
             },
             {
               "name": "E",
@@ -3420,39 +3553,6 @@ const marketplace = {
           ],
           "path": [
             "Result"
-          ]
-        }
-      },
-      {
-        "id": 38,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "index": 0,
-                  "name": "None"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 0
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Some"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 0
-            }
-          ],
-          "path": [
-            "Option"
           ]
         }
       },
@@ -3505,9 +3605,42 @@ const marketplace = {
             "variant": {
               "variants": [
                 {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
                   "fields": [
                     {
-                      "type": 3
+                      "type": 0
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 0
+            }
+          ],
+          "path": [
+            "Option"
+          ]
+        }
+      },
+      {
+        "id": 41,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 42
                     }
                   ],
                   "index": 0,
@@ -3516,7 +3649,7 @@ const marketplace = {
                 {
                   "fields": [
                     {
-                      "type": 19
+                      "type": 14
                     }
                   ],
                   "index": 1,
@@ -3528,15 +3661,48 @@ const marketplace = {
           "params": [
             {
               "name": "T",
-              "type": 3
+              "type": 42
             },
             {
               "name": "E",
-              "type": 19
+              "type": 14
             }
           ],
           "path": [
             "Result"
+          ]
+        }
+      },
+      {
+        "id": 42,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 23
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 23
+            }
+          ],
+          "path": [
+            "Option"
           ]
         }
       }

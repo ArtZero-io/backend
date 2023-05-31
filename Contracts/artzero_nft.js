@@ -1,10 +1,10 @@
 const artzero_nft = {
-  CONTRACT_ADDRESS: "5FkVyhF4KVMwgVTbRwvDgnJ7oe8tfZ9A7v2sEiqQPccHkUNC",
+  CONTRACT_ADDRESS: "5Ejyo9C59PX579JjiBR6xLkgXJBf9Lt5EinzHBysqrLNzEyJ",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x34a8a19142dfc443a3be1291b5730d59bae45ad7d70134a5e0b371b6977c40db",
-      "language": "ink! 4.0.0-beta",
-      "compiler": "rustc 1.69.0-nightly",
+      "hash": "0x87de62029c759dae7f49e29f37b9e6c2ac8dfb7744fb663c5ba52d805e691e36",
+      "language": "ink! 4.0.1",
+      "compiler": "rustc 1.70.0-nightly",
       "build_info": {
         "build_mode": "Debug",
         "cargo_contract_version": "2.0.0-rc",
@@ -149,7 +149,112 @@ const artzero_nft = {
         }
       ],
       "docs": [],
-      "events": [],
+      "events": [
+        {
+          "args": [
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "value",
+              "type": {
+                "displayName": [
+                  "Balance"
+                ],
+                "type": 7
+              }
+            },
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "receiver",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Event emitted when withdrawing fee"
+          ],
+          "label": "WithdrawFeeEvent"
+        },
+        {
+          "args": [
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "mode",
+              "type": {
+                "displayName": [
+                  "MintingMode"
+                ],
+                "type": 61
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "minter",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "phase_id",
+              "type": {
+                "displayName": [
+                  "u8"
+                ],
+                "type": 2
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "mint_amount",
+              "type": {
+                "displayName": [
+                  "u64"
+                ],
+                "type": 6
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "minting_fee",
+              "type": {
+                "displayName": [
+                  "Balance"
+                ],
+                "type": 7
+              }
+            },
+            {
+              "docs": [],
+              "indexed": false,
+              "label": "project_mint_fee",
+              "type": {
+                "displayName": [
+                  "Balance"
+                ],
+                "type": 7
+              }
+            }
+          ],
+          "docs": [
+            " Event emitted when minting"
+          ],
+          "label": "LaunchpadMintingEvent"
+        }
+      ],
       "lang_error": {
         "displayName": [
           "ink",
@@ -292,6 +397,96 @@ const artzero_nft = {
             "type": 17
           },
           "selector": "0xe32d5d92"
+        },
+        {
+          "args": [
+            {
+              "label": "phase_id",
+              "type": {
+                "displayName": [
+                  "u8"
+                ],
+                "type": 2
+              }
+            },
+            {
+              "label": "accounts",
+              "type": {
+                "displayName": [
+                  "Vec"
+                ],
+                "type": 24
+              }
+            },
+            {
+              "label": "whitelist_amounts",
+              "type": {
+                "displayName": [
+                  "Vec"
+                ],
+                "type": 14
+              }
+            },
+            {
+              "label": "whitelist_prices",
+              "type": {
+                "displayName": [
+                  "Vec"
+                ],
+                "type": 13
+              }
+            }
+          ],
+          "docs": [
+            " Add multi whitelists - Only Admin Role can change"
+          ],
+          "label": "add_multi_whitelists",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 17
+          },
+          "selector": "0x40bc79f3"
+        },
+        {
+          "args": [
+            {
+              "label": "phase_id",
+              "type": {
+                "displayName": [
+                  "u8"
+                ],
+                "type": 2
+              }
+            },
+            {
+              "label": "accounts",
+              "type": {
+                "displayName": [
+                  "Vec"
+                ],
+                "type": 24
+              }
+            }
+          ],
+          "docs": [
+            " Add new whitelist - Only Admin Role can change"
+          ],
+          "label": "clear_whitelist_phase",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 17
+          },
+          "selector": "0x149f3f30"
         },
         {
           "args": [
@@ -445,517 +640,6 @@ const artzero_nft = {
           "selector": "0x2e50fe5f"
         },
         {
-          "args": [
-            {
-              "label": "phase_id",
-              "type": {
-                "displayName": [
-                  "u8"
-                ],
-                "type": 2
-              }
-            }
-          ],
-          "docs": [
-            " Deactive Phase - Only Admin Role can change"
-          ],
-          "label": "deactive_phase",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 17
-          },
-          "selector": "0xc8066cce"
-        },
-        {
-          "args": [
-            {
-              "label": "phase_id",
-              "type": {
-                "displayName": [
-                  "u8"
-                ],
-                "type": 2
-              }
-            },
-            {
-              "label": "phase_code",
-              "type": {
-                "displayName": [
-                  "String"
-                ],
-                "type": 10
-              }
-            },
-            {
-              "label": "is_public",
-              "type": {
-                "displayName": [
-                  "bool"
-                ],
-                "type": 9
-              }
-            },
-            {
-              "label": "public_minting_fee",
-              "type": {
-                "displayName": [
-                  "Balance"
-                ],
-                "type": 7
-              }
-            },
-            {
-              "label": "public_minting_amount",
-              "type": {
-                "displayName": [
-                  "u64"
-                ],
-                "type": 6
-              }
-            },
-            {
-              "label": "public_max_minting_amount",
-              "type": {
-                "displayName": [
-                  "u64"
-                ],
-                "type": 6
-              }
-            },
-            {
-              "label": "start_time",
-              "type": {
-                "displayName": [
-                  "Timestamp"
-                ],
-                "type": 6
-              }
-            },
-            {
-              "label": "end_time",
-              "type": {
-                "displayName": [
-                  "Timestamp"
-                ],
-                "type": 6
-              }
-            }
-          ],
-          "docs": [
-            " Update phase schedule - Only Admin Role can change"
-          ],
-          "label": "update_schedule_phase",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 17
-          },
-          "selector": "0xe7c56b96"
-        },
-        {
-          "args": [
-            {
-              "label": "id_phases",
-              "type": {
-                "displayName": [
-                  "Vec"
-                ],
-                "type": 8
-              }
-            },
-            {
-              "label": "code_phases",
-              "type": {
-                "displayName": [
-                  "Vec"
-                ],
-                "type": 11
-              }
-            },
-            {
-              "label": "is_public_phases",
-              "type": {
-                "displayName": [
-                  "Vec"
-                ],
-                "type": 12
-              }
-            },
-            {
-              "label": "public_minting_fee_phases",
-              "type": {
-                "displayName": [
-                  "Vec"
-                ],
-                "type": 13
-              }
-            },
-            {
-              "label": "public_minting_amount_phases",
-              "type": {
-                "displayName": [
-                  "Vec"
-                ],
-                "type": 14
-              }
-            },
-            {
-              "label": "public_max_minting_amount_phases",
-              "type": {
-                "displayName": [
-                  "Vec"
-                ],
-                "type": 14
-              }
-            },
-            {
-              "label": "start_time_phases",
-              "type": {
-                "displayName": [
-                  "Vec"
-                ],
-                "type": 14
-              }
-            },
-            {
-              "label": "end_time_phases",
-              "type": {
-                "displayName": [
-                  "Vec"
-                ],
-                "type": 14
-              }
-            }
-          ],
-          "docs": [],
-          "label": "update_schedule_phases",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 17
-          },
-          "selector": "0x7b2a806c"
-        },
-        {
-          "args": [
-            {
-              "label": "project_info",
-              "type": {
-                "displayName": [
-                  "String"
-                ],
-                "type": 10
-              }
-            }
-          ],
-          "docs": [
-            " Edit project information  - Only Admin Role can change"
-          ],
-          "label": "edit_project_information",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 22
-          },
-          "selector": "0x05a37bb7"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get owner claimed amount"
-          ],
-          "label": "get_owner_claimed_amount",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 24
-          },
-          "selector": "0xe56ba18e"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get owner available amount"
-          ],
-          "label": "get_owner_available_amount",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 24
-          },
-          "selector": "0x6aaafa92"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get limit phase count"
-          ],
-          "label": "get_limit_phase_count",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 25
-          },
-          "selector": "0xa7a30065"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get public minted count"
-          ],
-          "label": "get_public_minted_count",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 24
-          },
-          "selector": "0x71b62650"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get limit phase count"
-          ],
-          "label": "get_project_info",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 26
-          },
-          "selector": "0x9439195c"
-        },
-        {
-          "args": [
-            {
-              "label": "phase_id",
-              "type": {
-                "displayName": [
-                  "u8"
-                ],
-                "type": 2
-              }
-            }
-          ],
-          "docs": [
-            " Get Phase Schedule by Phase Id"
-          ],
-          "label": "get_phase_schedule_by_id",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 27
-          },
-          "selector": "0x0015cfc2"
-        },
-        {
-          "args": [
-            {
-              "label": "account",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "phase_id",
-              "type": {
-                "displayName": [
-                  "u8"
-                ],
-                "type": 2
-              }
-            }
-          ],
-          "docs": [
-            " Get whitelist information by phase code"
-          ],
-          "label": "get_whitelist_by_account_id",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 30
-          },
-          "selector": "0xfcaa85cb"
-        },
-        {
-          "args": [
-            {
-              "label": "phase_id",
-              "type": {
-                "displayName": [
-                  "u8"
-                ],
-                "type": 2
-              }
-            },
-            {
-              "label": "account_index",
-              "type": {
-                "displayName": [
-                  "u64"
-                ],
-                "type": 6
-              }
-            }
-          ],
-          "docs": [
-            " Get phase Account Link"
-          ],
-          "label": "get_phase_account_link",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 33
-          },
-          "selector": "0xbd348340"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get current phase"
-          ],
-          "label": "get_current_phase",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 34
-          },
-          "selector": "0x645c00bb"
-        },
-        {
-          "args": [
-            {
-              "label": "time",
-              "type": {
-                "displayName": [
-                  "Timestamp"
-                ],
-                "type": 6
-              }
-            }
-          ],
-          "docs": [
-            " Check time in a phase"
-          ],
-          "label": "is_in_schedule_phase",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 34
-          },
-          "selector": "0x0852eb48"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get Whitelist Count"
-          ],
-          "label": "get_whitelist_count",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 24
-          },
-          "selector": "0x881eeb32"
-        },
-        {
-          "args": [],
-          "docs": [
-            "Get phase Count"
-          ],
-          "label": "get_last_phase_id",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 25
-          },
-          "selector": "0xb077d60d"
-        },
-        {
-          "args": [],
-          "docs": [
-            "Get active phase count"
-          ],
-          "label": "get_active_phase_count",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 25
-          },
-          "selector": "0x8f485a88"
-        },
-        {
           "args": [],
           "docs": [
             "Get Token Count"
@@ -968,106 +652,9 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 24
+            "type": 25
           },
           "selector": "0x41e2a4d7"
-        },
-        {
-          "args": [
-            {
-              "label": "account_id",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "phase_id",
-              "type": {
-                "displayName": [
-                  "u8"
-                ],
-                "type": 2
-              }
-            }
-          ],
-          "docs": [
-            "Get Phase Account Public Claimed Amount"
-          ],
-          "label": "get_phase_account_public_claimed_amount",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 36
-          },
-          "selector": "0x4b348bab"
-        },
-        {
-          "args": [
-            {
-              "label": "phase_id",
-              "type": {
-                "displayName": [
-                  "u8"
-                ],
-                "type": 2
-              }
-            }
-          ],
-          "docs": [
-            "Get Phase Account Last Index by Phase Id"
-          ],
-          "label": "get_phase_account_last_index",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 24
-          },
-          "selector": "0xae98a70a"
-        },
-        {
-          "args": [],
-          "docs": [
-            "Get Total Supply"
-          ],
-          "label": "get_total_supply",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 24
-          },
-          "selector": "0xb079adab"
-        },
-        {
-          "args": [],
-          "docs": [
-            "Get Available Token Amount"
-          ],
-          "label": "get_available_token_amount",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 24
-          },
-          "selector": "0x95a79e40"
         },
         {
           "args": [],
@@ -1082,36 +669,9 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 33
+            "type": 26
           },
           "selector": "0x4fa43c8c"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Leaves the contract without owner. It will not be possible to call",
-            " owner's functions anymore. Can only be called by the current owner.",
-            "",
-            " NOTE: Renouncing ownership will leave the contract without an owner,",
-            " thereby removing any functionality that is only available to the owner.",
-            "",
-            " On success a `OwnershipTransferred` event is emitted.",
-            "",
-            " # Errors",
-            "",
-            " Panics with `CallerIsNotOwner` error if caller is not owner"
-          ],
-          "label": "Ownable::renounce_ownership",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 38
-          },
-          "selector": "0x5e228753"
         },
         {
           "args": [
@@ -1146,152 +706,26 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 38
+            "type": 27
           },
           "selector": "0x11f43efd"
         },
         {
-          "args": [
-            {
-              "label": "owner",
-              "type": {
-                "displayName": [
-                  "psp34_external",
-                  "BalanceOfInput1"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Returns the balance of the owner.",
-            "",
-            " This represents the amount of unique tokens the owner has."
-          ],
-          "label": "PSP34::balance_of",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 40
-          },
-          "selector": "0xcde7e55f"
-        },
-        {
           "args": [],
           "docs": [
-            " Returns current NFT total supply."
-          ],
-          "label": "PSP34::total_supply",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 41
-          },
-          "selector": "0x628413fe"
-        },
-        {
-          "args": [
-            {
-              "label": "owner",
-              "type": {
-                "displayName": [
-                  "psp34_external",
-                  "AllowanceInput1"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "operator",
-              "type": {
-                "displayName": [
-                  "psp34_external",
-                  "AllowanceInput2"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "id",
-              "type": {
-                "displayName": [
-                  "psp34_external",
-                  "AllowanceInput3"
-                ],
-                "type": 42
-              }
-            }
-          ],
-          "docs": [
-            " Returns `true` if the operator is approved by the owner to withdraw `id` token.",
-            " If `id` is `None`, returns `true` if the operator is approved to withdraw all owner's tokens."
-          ],
-          "label": "PSP34::allowance",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 44
-          },
-          "selector": "0x4790f55a"
-        },
-        {
-          "args": [
-            {
-              "label": "operator",
-              "type": {
-                "displayName": [
-                  "psp34_external",
-                  "ApproveInput1"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "id",
-              "type": {
-                "displayName": [
-                  "psp34_external",
-                  "ApproveInput2"
-                ],
-                "type": 42
-              }
-            },
-            {
-              "label": "approved",
-              "type": {
-                "displayName": [
-                  "psp34_external",
-                  "ApproveInput3"
-                ],
-                "type": 9
-              }
-            }
-          ],
-          "docs": [
-            " Approves `operator` to withdraw the `id` token from the caller's account.",
-            " If `id` is `None` approves or disapproves the operator for all tokens of the caller.",
+            " Leaves the contract without owner. It will not be possible to call",
+            " owner's functions anymore. Can only be called by the current owner.",
             "",
-            " On success a `Approval` event is emitted.",
+            " NOTE: Renouncing ownership will leave the contract without an owner,",
+            " thereby removing any functionality that is only available to the owner.",
+            "",
+            " On success a `OwnershipTransferred` event is emitted.",
             "",
             " # Errors",
             "",
-            " Returns `SelfApprove` error if it is self approve.",
-            "",
-            " Returns `NotApproved` error if caller is not owner of `id`."
+            " Panics with `CallerIsNotOwner` error if caller is not owner"
           ],
-          "label": "PSP34::approve",
+          "label": "Ownable::renounce_ownership",
           "mutates": true,
           "payable": false,
           "returnType": {
@@ -1299,28 +733,9 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 45
+            "type": 27
           },
-          "selector": "0x1932a8b0"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Returns the collection `Id` of the NFT token.",
-            "",
-            " This can represents the relationship between tokens/contracts/pallets."
-          ],
-          "label": "PSP34::collection_id",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 48
-          },
-          "selector": "0xffa27a5f"
+          "selector": "0x5e228753"
         },
         {
           "args": [
@@ -1341,7 +756,7 @@ const artzero_nft = {
                   "psp34_external",
                   "TransferInput2"
                 ],
-                "type": 43
+                "type": 29
               }
             },
             {
@@ -1376,9 +791,113 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 45
+            "type": 30
           },
           "selector": "0x3128d61b"
+        },
+        {
+          "args": [
+            {
+              "label": "operator",
+              "type": {
+                "displayName": [
+                  "psp34_external",
+                  "ApproveInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "id",
+              "type": {
+                "displayName": [
+                  "psp34_external",
+                  "ApproveInput2"
+                ],
+                "type": 32
+              }
+            },
+            {
+              "label": "approved",
+              "type": {
+                "displayName": [
+                  "psp34_external",
+                  "ApproveInput3"
+                ],
+                "type": 9
+              }
+            }
+          ],
+          "docs": [
+            " Approves `operator` to withdraw the `id` token from the caller's account.",
+            " If `id` is `None` approves or disapproves the operator for all tokens of the caller.",
+            "",
+            " On success a `Approval` event is emitted.",
+            "",
+            " # Errors",
+            "",
+            " Returns `SelfApprove` error if it is self approve.",
+            "",
+            " Returns `NotApproved` error if caller is not owner of `id`."
+          ],
+          "label": "PSP34::approve",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 30
+          },
+          "selector": "0x1932a8b0"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Returns current NFT total supply."
+          ],
+          "label": "PSP34::total_supply",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 33
+          },
+          "selector": "0x628413fe"
+        },
+        {
+          "args": [
+            {
+              "label": "owner",
+              "type": {
+                "displayName": [
+                  "psp34_external",
+                  "BalanceOfInput1"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Returns the balance of the owner.",
+            "",
+            " This represents the amount of unique tokens the owner has."
+          ],
+          "label": "PSP34::balance_of",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 34
+          },
+          "selector": "0xcde7e55f"
         },
         {
           "args": [
@@ -1389,7 +908,7 @@ const artzero_nft = {
                   "psp34_external",
                   "OwnerOfInput1"
                 ],
-                "type": 43
+                "type": 29
               }
             }
           ],
@@ -1404,9 +923,77 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 49
+            "type": 35
           },
           "selector": "0x1168624d"
+        },
+        {
+          "args": [
+            {
+              "label": "owner",
+              "type": {
+                "displayName": [
+                  "psp34_external",
+                  "AllowanceInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "operator",
+              "type": {
+                "displayName": [
+                  "psp34_external",
+                  "AllowanceInput2"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "id",
+              "type": {
+                "displayName": [
+                  "psp34_external",
+                  "AllowanceInput3"
+                ],
+                "type": 32
+              }
+            }
+          ],
+          "docs": [
+            " Returns `true` if the operator is approved by the owner to withdraw `id` token.",
+            " If `id` is `None`, returns `true` if the operator is approved to withdraw all owner's tokens."
+          ],
+          "label": "PSP34::allowance",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 37
+          },
+          "selector": "0x4790f55a"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Returns the collection `Id` of the NFT token.",
+            "",
+            " This can represents the relationship between tokens/contracts/pallets."
+          ],
+          "label": "PSP34::collection_id",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 38
+          },
+          "selector": "0xffa27a5f"
         },
         {
           "args": [
@@ -1417,7 +1004,7 @@ const artzero_nft = {
                   "psp34metadata_external",
                   "GetAttributeInput1"
                 ],
-                "type": 43
+                "type": 29
               }
             },
             {
@@ -1444,7 +1031,7 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 51
+            "type": 39
           },
           "selector": "0xf19d48d1"
         },
@@ -1475,7 +1062,7 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 53
+            "type": 41
           },
           "selector": "0xcd0340d0"
         },
@@ -1516,171 +1103,9 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 53
+            "type": 41
           },
           "selector": "0x3bcfb511"
-        },
-        {
-          "args": [],
-          "docs": [
-            " This function return how many unique attributes in the contract"
-          ],
-          "label": "Psp34Traits::get_attribute_count",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 40
-          },
-          "selector": "0x61c50d69"
-        },
-        {
-          "args": [
-            {
-              "label": "token_id",
-              "type": {
-                "displayName": [
-                  "psp34traits_external",
-                  "LockInput1"
-                ],
-                "type": 43
-              }
-            }
-          ],
-          "docs": [
-            " This function lets NFT owner to lock their NFT. Once locked, the NFT traits (attributes) can not be changed"
-          ],
-          "label": "Psp34Traits::lock",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 17
-          },
-          "selector": "0xa7245b9b"
-        },
-        {
-          "args": [],
-          "docs": [
-            " This function returns how many NFTs have been locked by its owners"
-          ],
-          "label": "Psp34Traits::get_locked_token_count",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 24
-          },
-          "selector": "0x8fe2ce73"
-        },
-        {
-          "args": [],
-          "docs": [
-            " This function return the latest token ID, everytime new NFT is mint, last_token_id is increased by 1 in mint function. Note: This is not the same as the total supply return by the psp34 function as NFT can be burnt."
-          ],
-          "label": "Psp34Traits::get_last_token_id",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 24
-          },
-          "selector": "0x6f315836"
-        },
-        {
-          "args": [
-            {
-              "label": "token_id",
-              "type": {
-                "displayName": [
-                  "psp34traits_external",
-                  "IsLockedNftInput1"
-                ],
-                "type": 43
-              }
-            }
-          ],
-          "docs": [
-            " This function check if an NFT is locked or not"
-          ],
-          "label": "Psp34Traits::is_locked_nft",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 44
-          },
-          "selector": "0x59271420"
-        },
-        {
-          "args": [
-            {
-              "label": "token_id",
-              "type": {
-                "displayName": [
-                  "psp34traits_external",
-                  "GetAttributesInput1"
-                ],
-                "type": 43
-              }
-            },
-            {
-              "label": "attributes",
-              "type": {
-                "displayName": [
-                  "psp34traits_external",
-                  "GetAttributesInput2"
-                ],
-                "type": 11
-              }
-            }
-          ],
-          "docs": [
-            " This function returns all available attributes of each NFT"
-          ],
-          "label": "Psp34Traits::get_attributes",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 55
-          },
-          "selector": "0x18209102"
-        },
-        {
-          "args": [],
-          "docs": [
-            " This function return the owner of the NFT Contract"
-          ],
-          "label": "Psp34Traits::get_owner",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 33
-          },
-          "selector": "0x8e1d8d71"
         },
         {
           "args": [
@@ -1706,9 +1131,26 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 56
+            "type": 43
           },
           "selector": "0xfcfe34de"
+        },
+        {
+          "args": [],
+          "docs": [
+            " This function returns how many NFTs have been locked by its owners"
+          ],
+          "label": "Psp34Traits::get_locked_token_count",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 25
+          },
+          "selector": "0x8fe2ce73"
         },
         {
           "args": [
@@ -1717,16 +1159,26 @@ const artzero_nft = {
               "type": {
                 "displayName": [
                   "psp34traits_external",
-                  "TokenUriInput1"
+                  "GetAttributesInput1"
                 ],
-                "type": 6
+                "type": 29
+              }
+            },
+            {
+              "label": "attributes",
+              "type": {
+                "displayName": [
+                  "psp34traits_external",
+                  "GetAttributesInput2"
+                ],
+                "type": 11
               }
             }
           ],
           "docs": [
-            " This function return the metadata location of an NFT. The format is baseURI/<token_id>.json"
+            " This function returns all available attributes of each NFT"
           ],
-          "label": "Psp34Traits::token_uri",
+          "label": "Psp34Traits::get_attributes",
           "mutates": false,
           "payable": false,
           "returnType": {
@@ -1734,9 +1186,26 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 56
+            "type": 44
           },
-          "selector": "0x249dfd4f"
+          "selector": "0x18209102"
+        },
+        {
+          "args": [],
+          "docs": [
+            " This function return how many unique attributes in the contract"
+          ],
+          "label": "Psp34Traits::get_attribute_count",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 34
+          },
+          "selector": "0x61c50d69"
         },
         {
           "args": [
@@ -1773,9 +1242,37 @@ const artzero_nft = {
               "type": {
                 "displayName": [
                   "psp34traits_external",
+                  "LockInput1"
+                ],
+                "type": 29
+              }
+            }
+          ],
+          "docs": [
+            " This function lets NFT owner to lock their NFT. Once locked, the NFT traits (attributes) can not be changed"
+          ],
+          "label": "Psp34Traits::lock",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 17
+          },
+          "selector": "0xa7245b9b"
+        },
+        {
+          "args": [
+            {
+              "label": "token_id",
+              "type": {
+                "displayName": [
+                  "psp34traits_external",
                   "SetMultipleAttributesInput1"
                 ],
-                "type": 43
+                "type": 29
               }
             },
             {
@@ -1785,7 +1282,7 @@ const artzero_nft = {
                   "psp34traits_external",
                   "SetMultipleAttributesInput2"
                 ],
-                "type": 57
+                "type": 45
               }
             }
           ],
@@ -1805,111 +1302,11 @@ const artzero_nft = {
           "selector": "0x5bf8416b"
         },
         {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "RevokeRoleInput1"
-                ],
-                "type": 5
-              }
-            },
-            {
-              "label": "account",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "RevokeRoleInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
+          "args": [],
           "docs": [
-            " Revokes `role` from `account`.",
-            "",
-            " On success a `RoleRevoked` event is emitted.",
-            "",
-            " # Errors",
-            "",
-            " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
+            " This function return the owner of the NFT Contract"
           ],
-          "label": "AccessControl::revoke_role",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 22
-          },
-          "selector": "0x6e4f0991"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "GrantRoleInput1"
-                ],
-                "type": 5
-              }
-            },
-            {
-              "label": "account",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "GrantRoleInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Grants `role` to `account`.",
-            "",
-            " On success a `RoleGranted` event is emitted.",
-            "",
-            " # Errors",
-            "",
-            " Returns with `MissingRole` error if caller can't grant the role.",
-            " Returns with `RoleRedundant` error `account` has `role`."
-          ],
-          "label": "AccessControl::grant_role",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 22
-          },
-          "selector": "0x4ac062fd"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "GetRoleAdminInput1"
-                ],
-                "type": 5
-              }
-            }
-          ],
-          "docs": [
-            " Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
-          ],
-          "label": "AccessControl::get_role_admin",
+          "label": "Psp34Traits::get_owner",
           "mutates": false,
           "payable": false,
           "returnType": {
@@ -1917,37 +1314,27 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 40
+            "type": 26
           },
-          "selector": "0x83da3bb2"
+          "selector": "0x8e1d8d71"
         },
         {
           "args": [
             {
-              "label": "role",
+              "label": "token_id",
               "type": {
                 "displayName": [
-                  "accesscontrol_external",
-                  "HasRoleInput1"
+                  "psp34traits_external",
+                  "IsLockedNftInput1"
                 ],
-                "type": 5
-              }
-            },
-            {
-              "label": "address",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "HasRoleInput2"
-                ],
-                "type": 0
+                "type": 29
               }
             }
           ],
           "docs": [
-            " Returns `true` if `account` has been granted `role`."
+            " This function check if an NFT is locked or not"
           ],
-          "label": "AccessControl::has_role",
+          "label": "Psp34Traits::is_locked_nft",
           "mutates": false,
           "payable": false,
           "returnType": {
@@ -1955,9 +1342,649 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 44
+            "type": 37
           },
-          "selector": "0xc1d9ac18"
+          "selector": "0x59271420"
+        },
+        {
+          "args": [],
+          "docs": [
+            " This function return the latest token ID, everytime new NFT is mint, last_token_id is increased by 1 in mint function. Note: This is not the same as the total supply return by the psp34 function as NFT can be burnt."
+          ],
+          "label": "Psp34Traits::get_last_token_id",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 25
+          },
+          "selector": "0x6f315836"
+        },
+        {
+          "args": [
+            {
+              "label": "token_id",
+              "type": {
+                "displayName": [
+                  "psp34traits_external",
+                  "TokenUriInput1"
+                ],
+                "type": 6
+              }
+            }
+          ],
+          "docs": [
+            " This function return the metadata location of an NFT. The format is baseURI/<token_id>.json"
+          ],
+          "label": "Psp34Traits::token_uri",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 43
+          },
+          "selector": "0x249dfd4f"
+        },
+        {
+          "args": [],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_project_info",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 47
+          },
+          "selector": "0x9b077d27"
+        },
+        {
+          "args": [],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_owner_claimed_amount",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 25
+          },
+          "selector": "0x35b3de88"
+        },
+        {
+          "args": [],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_whitelist_count",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 34
+          },
+          "selector": "0x8144fe44"
+        },
+        {
+          "args": [
+            {
+              "label": "account_id",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "GetPhaseAccountPublicClaimedAmountInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "phase_id",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "GetPhaseAccountPublicClaimedAmountInput2"
+                ],
+                "type": 2
+              }
+            }
+          ],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_phase_account_public_claimed_amount",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 48
+          },
+          "selector": "0x72aba0b8"
+        },
+        {
+          "args": [],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_active_phase_count",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 50
+          },
+          "selector": "0x7ba813a1"
+        },
+        {
+          "args": [
+            {
+              "label": "phase_id",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhaseInput1"
+                ],
+                "type": 2
+              }
+            },
+            {
+              "label": "phase_code",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhaseInput2"
+                ],
+                "type": 10
+              }
+            },
+            {
+              "label": "is_public",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhaseInput3"
+                ],
+                "type": 9
+              }
+            },
+            {
+              "label": "public_minting_fee",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhaseInput4"
+                ],
+                "type": 7
+              }
+            },
+            {
+              "label": "public_minting_amount",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhaseInput5"
+                ],
+                "type": 6
+              }
+            },
+            {
+              "label": "public_max_minting_amount",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhaseInput6"
+                ],
+                "type": 6
+              }
+            },
+            {
+              "label": "start_time",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhaseInput7"
+                ],
+                "type": 6
+              }
+            },
+            {
+              "label": "end_time",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhaseInput8"
+                ],
+                "type": 6
+              }
+            }
+          ],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::update_schedule_phase",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 17
+          },
+          "selector": "0x4feeb03c"
+        },
+        {
+          "args": [],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_current_phase",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 51
+          },
+          "selector": "0x5497a547"
+        },
+        {
+          "args": [
+            {
+              "label": "account",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "GetWhitelistByAccountIdInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "phase_id",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "GetWhitelistByAccountIdInput2"
+                ],
+                "type": 2
+              }
+            }
+          ],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_whitelist_by_account_id",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 53
+          },
+          "selector": "0x41190a72"
+        },
+        {
+          "args": [
+            {
+              "label": "phase_id",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "GetPhaseAccountLastIndexInput1"
+                ],
+                "type": 2
+              }
+            }
+          ],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_phase_account_last_index",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 25
+          },
+          "selector": "0xec17ad17"
+        },
+        {
+          "args": [],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_limit_phase_count",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 50
+          },
+          "selector": "0x2f91edb7"
+        },
+        {
+          "args": [
+            {
+              "label": "phase_id",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "GetPhaseAccountLinkInput1"
+                ],
+                "type": 2
+              }
+            },
+            {
+              "label": "account_index",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "GetPhaseAccountLinkInput2"
+                ],
+                "type": 6
+              }
+            }
+          ],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_phase_account_link",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 35
+          },
+          "selector": "0x3147ee1a"
+        },
+        {
+          "args": [],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_available_token_amount",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 25
+          },
+          "selector": "0x2daf169f"
+        },
+        {
+          "args": [
+            {
+              "label": "project_info",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "EditProjectInformationInput1"
+                ],
+                "type": 10
+              }
+            }
+          ],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::edit_project_information",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 56
+          },
+          "selector": "0x9e743f06"
+        },
+        {
+          "args": [
+            {
+              "label": "id_phases",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhasesInput1"
+                ],
+                "type": 8
+              }
+            },
+            {
+              "label": "code_phases",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhasesInput2"
+                ],
+                "type": 11
+              }
+            },
+            {
+              "label": "is_public_phases",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhasesInput3"
+                ],
+                "type": 12
+              }
+            },
+            {
+              "label": "public_minting_fee_phases",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhasesInput4"
+                ],
+                "type": 13
+              }
+            },
+            {
+              "label": "public_minting_amount_phases",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhasesInput5"
+                ],
+                "type": 14
+              }
+            },
+            {
+              "label": "public_max_minting_amount_phases",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhasesInput6"
+                ],
+                "type": 14
+              }
+            },
+            {
+              "label": "start_time_phases",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhasesInput7"
+                ],
+                "type": 14
+              }
+            },
+            {
+              "label": "end_time_phases",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "UpdateSchedulePhasesInput8"
+                ],
+                "type": 14
+              }
+            }
+          ],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::update_schedule_phases",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 17
+          },
+          "selector": "0xe693f302"
+        },
+        {
+          "args": [],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_total_supply",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 25
+          },
+          "selector": "0xee05257c"
+        },
+        {
+          "args": [
+            {
+              "label": "time",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "IsInSchedulePhaseInput1"
+                ],
+                "type": 6
+              }
+            }
+          ],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::is_in_schedule_phase",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 51
+          },
+          "selector": "0xb0d41a99"
+        },
+        {
+          "args": [
+            {
+              "label": "phase_id",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "DeactivePhaseInput1"
+                ],
+                "type": 2
+              }
+            }
+          ],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::deactive_phase",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 17
+          },
+          "selector": "0x52cdb2a5"
+        },
+        {
+          "args": [],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_public_minted_count",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 25
+          },
+          "selector": "0x1b456e7a"
+        },
+        {
+          "args": [],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_owner_available_amount",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 25
+          },
+          "selector": "0xdecd4c1f"
+        },
+        {
+          "args": [
+            {
+              "label": "phase_id",
+              "type": {
+                "displayName": [
+                  "psp34launchpadtraits_external",
+                  "GetPhaseScheduleByIdInput1"
+                ],
+                "type": 2
+              }
+            }
+          ],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_phase_schedule_by_id",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 58
+          },
+          "selector": "0x420f90d6"
+        },
+        {
+          "args": [],
+          "docs": [],
+          "label": "Psp34LaunchPadTraits::get_last_phase_id",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 50
+          },
+          "selector": "0x275c4b7d"
         },
         {
           "args": [
@@ -2003,47 +2030,82 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 22
+            "type": 56
           },
           "selector": "0xeaf1248a"
         },
         {
           "args": [
             {
-              "label": "nft_contract_address",
+              "label": "role",
               "type": {
                 "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput1"
+                  "accesscontrol_external",
+                  "HasRoleInput1"
                 ],
-                "type": 0
+                "type": 5
               }
             },
             {
-              "label": "token_id",
+              "label": "address",
               "type": {
                 "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput2"
-                ],
-                "type": 43
-              }
-            },
-            {
-              "label": "receiver",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput3"
+                  "accesscontrol_external",
+                  "HasRoleInput2"
                 ],
                 "type": 0
               }
             }
           ],
           "docs": [
-            " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
+            " Returns `true` if `account` has been granted `role`."
           ],
-          "label": "AdminTrait::tranfer_nft",
+          "label": "AccessControl::has_role",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 37
+          },
+          "selector": "0xc1d9ac18"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "GrantRoleInput1"
+                ],
+                "type": 5
+              }
+            },
+            {
+              "label": "account",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "GrantRoleInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Grants `role` to `account`.",
+            "",
+            " On success a `RoleGranted` event is emitted.",
+            "",
+            " # Errors",
+            "",
+            " Returns with `MissingRole` error if caller can't grant the role.",
+            " Returns with `RoleRedundant` error `account` has `role`."
+          ],
+          "label": "AccessControl::grant_role",
           "mutates": true,
           "payable": false,
           "returnType": {
@@ -2051,9 +2113,152 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 17
+            "type": 56
           },
-          "selector": "0xed1e1dfa"
+          "selector": "0x4ac062fd"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "GetRoleAdminInput1"
+                ],
+                "type": 5
+              }
+            }
+          ],
+          "docs": [
+            " Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
+          ],
+          "label": "AccessControl::get_role_admin",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 34
+          },
+          "selector": "0x83da3bb2"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "RevokeRoleInput1"
+                ],
+                "type": 5
+              }
+            },
+            {
+              "label": "account",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "RevokeRoleInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Revokes `role` from `account`.",
+            "",
+            " On success a `RoleRevoked` event is emitted.",
+            "",
+            " # Errors",
+            "",
+            " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
+          ],
+          "label": "AccessControl::revoke_role",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 56
+          },
+          "selector": "0x6e4f0991"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrolenumerable_external",
+                  "GetRoleMemberInput1"
+                ],
+                "type": 5
+              }
+            },
+            {
+              "label": "index",
+              "type": {
+                "displayName": [
+                  "accesscontrolenumerable_external",
+                  "GetRoleMemberInput2"
+                ],
+                "type": 5
+              }
+            }
+          ],
+          "docs": [
+            " Returns one of the accounts that have `role`.",
+            "",
+            " Role bearers are not sorted in any particular way, and their",
+            " ordering may change at any point."
+          ],
+          "label": "AccessControlEnumerable::get_role_member",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 35
+          },
+          "selector": "0x163469e0"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrolenumerable_external",
+                  "GetRoleMemberCountInput1"
+                ],
+                "type": 5
+              }
+            }
+          ],
+          "docs": [
+            " Returns the number of accounts that have `role`.",
+            " Can be used together with {get_role_member} to enumerate",
+            " all bearers of a role."
+          ],
+          "label": "AccessControlEnumerable::get_role_member_count",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 34
+          },
+          "selector": "0xf1b1a9d7"
         },
         {
           "args": [
@@ -2144,6 +2349,54 @@ const artzero_nft = {
         {
           "args": [
             {
+              "label": "nft_contract_address",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "token_id",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput2"
+                ],
+                "type": 29
+              }
+            },
+            {
+              "label": "receiver",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput3"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
+          ],
+          "label": "AdminTrait::tranfer_nft",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 17
+          },
+          "selector": "0xed1e1dfa"
+        },
+        {
+          "args": [
+            {
               "label": "account",
               "type": {
                 "displayName": [
@@ -2160,7 +2413,7 @@ const artzero_nft = {
                   "psp34burnable_external",
                   "BurnInput2"
                 ],
-                "type": 43
+                "type": 29
               }
             }
           ],
@@ -2173,7 +2426,7 @@ const artzero_nft = {
               "ink",
               "MessageResult"
             ],
-            "type": 45
+            "type": 30
           },
           "selector": "0x63c9877a"
         }
@@ -2518,14 +2771,14 @@ const artzero_nft = {
                                   "root": {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x5d5db175",
-                                        "ty": 3
+                                        "key": "0x6888e7ba",
+                                        "ty": 0
                                       }
                                     },
-                                    "root_key": "0x5d5db175"
+                                    "root_key": "0x6888e7ba"
                                   }
                                 },
-                                "name": "members"
+                                "name": "role_members"
                               },
                               {
                                 "layout": {
@@ -2595,7 +2848,7 @@ const artzero_nft = {
                     "name": "Data"
                   }
                 },
-                "name": "access"
+                "name": "access_control"
               },
               {
                 "layout": {
@@ -2623,7 +2876,7 @@ const artzero_nft = {
                         "layout": {
                           "leaf": {
                             "key": "0x00000000",
-                            "ty": 6
+                            "ty": 5
                           }
                         },
                         "name": "whitelist_count"
@@ -2633,11 +2886,11 @@ const artzero_nft = {
                           "root": {
                             "layout": {
                               "leaf": {
-                                "key": "0x75d042a0",
+                                "key": "0x273a1053",
                                 "ty": 6
                               }
                             },
-                            "root_key": "0x75d042a0"
+                            "root_key": "0x273a1053"
                           }
                         },
                         "name": "phase_account_public_claimed_amount"
@@ -2651,7 +2904,7 @@ const artzero_nft = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x2265c7f4",
+                                        "key": "0x110e0c36",
                                         "ty": 6
                                       }
                                     },
@@ -2660,7 +2913,7 @@ const artzero_nft = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x2265c7f4",
+                                        "key": "0x110e0c36",
                                         "ty": 6
                                       }
                                     },
@@ -2669,7 +2922,7 @@ const artzero_nft = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x2265c7f4",
+                                        "key": "0x110e0c36",
                                         "ty": 7
                                       }
                                     },
@@ -2679,7 +2932,7 @@ const artzero_nft = {
                                 "name": "Whitelist"
                               }
                             },
-                            "root_key": "0x2265c7f4"
+                            "root_key": "0x110e0c36"
                           }
                         },
                         "name": "phase_whitelists_link"
@@ -2693,7 +2946,7 @@ const artzero_nft = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x2666345d",
+                                        "key": "0x924ca706",
                                         "ty": 9
                                       }
                                     },
@@ -2702,7 +2955,7 @@ const artzero_nft = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x2666345d",
+                                        "key": "0x924ca706",
                                         "ty": 8
                                       }
                                     },
@@ -2711,7 +2964,7 @@ const artzero_nft = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x2666345d",
+                                        "key": "0x924ca706",
                                         "ty": 9
                                       }
                                     },
@@ -2720,7 +2973,7 @@ const artzero_nft = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x2666345d",
+                                        "key": "0x924ca706",
                                         "ty": 7
                                       }
                                     },
@@ -2729,7 +2982,7 @@ const artzero_nft = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x2666345d",
+                                        "key": "0x924ca706",
                                         "ty": 6
                                       }
                                     },
@@ -2738,7 +2991,7 @@ const artzero_nft = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x2666345d",
+                                        "key": "0x924ca706",
                                         "ty": 6
                                       }
                                     },
@@ -2747,7 +3000,7 @@ const artzero_nft = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x2666345d",
+                                        "key": "0x924ca706",
                                         "ty": 6
                                       }
                                     },
@@ -2756,7 +3009,7 @@ const artzero_nft = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x2666345d",
+                                        "key": "0x924ca706",
                                         "ty": 6
                                       }
                                     },
@@ -2765,7 +3018,7 @@ const artzero_nft = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x2666345d",
+                                        "key": "0x924ca706",
                                         "ty": 6
                                       }
                                     },
@@ -2774,7 +3027,7 @@ const artzero_nft = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x2666345d",
+                                        "key": "0x924ca706",
                                         "ty": 6
                                       }
                                     },
@@ -2783,7 +3036,7 @@ const artzero_nft = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x2666345d",
+                                        "key": "0x924ca706",
                                         "ty": 6
                                       }
                                     },
@@ -2792,7 +3045,7 @@ const artzero_nft = {
                                   {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x2666345d",
+                                        "key": "0x924ca706",
                                         "ty": 6
                                       }
                                     },
@@ -2802,7 +3055,7 @@ const artzero_nft = {
                                 "name": "Phase"
                               }
                             },
-                            "root_key": "0x2666345d"
+                            "root_key": "0x924ca706"
                           }
                         },
                         "name": "phases"
@@ -2812,11 +3065,11 @@ const artzero_nft = {
                           "root": {
                             "layout": {
                               "leaf": {
-                                "key": "0x8d9d9056",
+                                "key": "0x211ebad6",
                                 "ty": 0
                               }
                             },
-                            "root_key": "0x8d9d9056"
+                            "root_key": "0x211ebad6"
                           }
                         },
                         "name": "phase_account_link"
@@ -2954,6 +3207,20 @@ const artzero_nft = {
                           }
                         },
                         "name": "attribute_names"
+                      },
+                      {
+                        "layout": {
+                          "root": {
+                            "layout": {
+                              "leaf": {
+                                "key": "0x385e99c1",
+                                "ty": 9
+                              }
+                            },
+                            "root_key": "0x385e99c1"
+                          }
+                        },
+                        "name": "is_attribute"
                       },
                       {
                         "layout": {
@@ -3448,95 +3715,111 @@ const artzero_nft = {
                 },
                 {
                   "index": 21,
-                  "name": "InvalidInput"
+                  "name": "CollectionNotExist"
                 },
                 {
                   "index": 22,
-                  "name": "InvalidType"
+                  "name": "InvalidInput"
                 },
                 {
                   "index": 23,
-                  "name": "ClaimedAll"
+                  "name": "InvalidType"
                 },
                 {
                   "index": 24,
-                  "name": "TokenLimitReached"
+                  "name": "ClaimedAll"
                 },
                 {
                   "index": 25,
-                  "name": "UpdatePhase"
+                  "name": "TokenLimitReached"
                 },
                 {
                   "index": 26,
-                  "name": "PhaseNotExist"
+                  "name": "UpdatePhase"
                 },
                 {
                   "index": 27,
-                  "name": "PhaseExpired"
+                  "name": "PhaseNotExist"
                 },
                 {
                   "index": 28,
-                  "name": "WhitelistNotExist"
+                  "name": "PhaseExpired"
                 },
                 {
                   "index": 29,
-                  "name": "WithdrawFeeError"
+                  "name": "PhaseDeactivate"
                 },
                 {
                   "index": 30,
-                  "name": "WithdrawNFTError"
+                  "name": "WhitelistNotExist"
                 },
                 {
                   "index": 31,
-                  "name": "WithdrawPSP22Error"
+                  "name": "WithdrawFeeError"
                 },
                 {
                   "index": 32,
-                  "name": "NotListed"
+                  "name": "WithdrawNFTError"
                 },
                 {
                   "index": 33,
-                  "name": "BidAlreadyExist"
+                  "name": "WithdrawPSP22Error"
                 },
                 {
                   "index": 34,
-                  "name": "BidNotExist"
+                  "name": "NotListed"
                 },
                 {
                   "index": 35,
-                  "name": "NotInMarket"
+                  "name": "BidAlreadyExist"
                 },
                 {
                   "index": 36,
-                  "name": "NotForSale"
+                  "name": "BidNotExist"
                 },
                 {
                   "index": 37,
-                  "name": "NotInSaleList"
+                  "name": "NotInMarket"
                 },
                 {
                   "index": 38,
-                  "name": "InvalidBidLength"
+                  "name": "NotForSale"
                 },
                 {
                   "index": 39,
-                  "name": "InvalidCollectionOwner"
+                  "name": "NotInSaleList"
                 },
                 {
                   "index": 40,
-                  "name": "InvalidTime"
+                  "name": "InvalidBidLength"
                 },
                 {
                   "index": 41,
-                  "name": "RewardStarted"
+                  "name": "InvalidCollectionOwner"
                 },
                 {
                   "index": 42,
-                  "name": "RewardNotStarted"
+                  "name": "InvalidTime"
                 },
                 {
                   "index": 43,
+                  "name": "RewardStarted"
+                },
+                {
+                  "index": 44,
+                  "name": "RewardNotStarted"
+                },
+                {
+                  "index": 45,
+                  "name": "RewardNotAdded"
+                },
+                {
+                  "index": 46,
                   "name": "ClaimMustBeFalse"
+                },
+                {
+                  "index": 47,
+                  "name": "HoldAmountBidderNotExist"
                 },
                 {
                   "fields": [
@@ -3545,7 +3828,7 @@ const artzero_nft = {
                       "typeName": "OwnableError"
                     }
                   ],
-                  "index": 44,
+                  "index": 48,
                   "name": "OwnableError"
                 },
                 {
@@ -3555,8 +3838,32 @@ const artzero_nft = {
                       "typeName": "AccessControlError"
                     }
                   ],
-                  "index": 45,
+                  "index": 49,
                   "name": "AccessControlError"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 22,
+                      "typeName": "PSP22Error"
+                    }
+                  ],
+                  "index": 50,
+                  "name": "PSP22Error"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 23,
+                      "typeName": "PSP34Error"
+                    }
+                  ],
+                  "index": 51,
+                  "name": "PSP34Error"
+                },
+                {
+                  "index": 52,
+                  "name": "CheckedOperations"
                 }
               ]
             }
@@ -3634,36 +3941,48 @@ const artzero_nft = {
                 {
                   "fields": [
                     {
-                      "type": 23
+                      "type": 8,
+                      "typeName": "String"
                     }
                   ],
                   "index": 0,
-                  "name": "Ok"
+                  "name": "Custom"
+                },
+                {
+                  "index": 1,
+                  "name": "InsufficientBalance"
+                },
+                {
+                  "index": 2,
+                  "name": "InsufficientAllowance"
+                },
+                {
+                  "index": 3,
+                  "name": "ZeroRecipientAddress"
+                },
+                {
+                  "index": 4,
+                  "name": "ZeroSenderAddress"
                 },
                 {
                   "fields": [
                     {
-                      "type": 16
+                      "type": 8,
+                      "typeName": "String"
                     }
                   ],
-                  "index": 1,
-                  "name": "Err"
+                  "index": 5,
+                  "name": "SafeTransferCheckFailed"
                 }
               ]
             }
           },
-          "params": [
-            {
-              "name": "T",
-              "type": 23
-            },
-            {
-              "name": "E",
-              "type": 16
-            }
-          ],
           "path": [
-            "Result"
+            "openbrush_contracts",
+            "traits",
+            "errors",
+            "psp22",
+            "PSP22Error"
           ]
         }
       },
@@ -3676,41 +3995,63 @@ const artzero_nft = {
                 {
                   "fields": [
                     {
-                      "type": 3
+                      "type": 8,
+                      "typeName": "String"
                     }
                   ],
                   "index": 0,
-                  "name": "Ok"
+                  "name": "Custom"
+                },
+                {
+                  "index": 1,
+                  "name": "SelfApprove"
+                },
+                {
+                  "index": 2,
+                  "name": "NotApproved"
+                },
+                {
+                  "index": 3,
+                  "name": "TokenExists"
+                },
+                {
+                  "index": 4,
+                  "name": "TokenNotExists"
                 },
                 {
                   "fields": [
                     {
-                      "type": 21
+                      "type": 8,
+                      "typeName": "String"
                     }
                   ],
-                  "index": 1,
-                  "name": "Err"
+                  "index": 5,
+                  "name": "SafeTransferCheckFailed"
                 }
               ]
             }
           },
-          "params": [
-            {
-              "name": "T",
-              "type": 3
-            },
-            {
-              "name": "E",
-              "type": 21
-            }
-          ],
           "path": [
-            "Result"
+            "openbrush_contracts",
+            "traits",
+            "errors",
+            "psp34",
+            "PSP34Error"
           ]
         }
       },
       {
         "id": 24,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 0
+            }
+          }
+        }
+      },
+      {
+        "id": 25,
         "type": {
           "def": {
             "variant": {
@@ -3752,48 +4093,6 @@ const artzero_nft = {
         }
       },
       {
-        "id": 25,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 2
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 16
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 2
-            },
-            {
-              "name": "E",
-              "type": 16
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
         "id": 26,
         "type": {
           "def": {
@@ -3802,7 +4101,7 @@ const artzero_nft = {
                 {
                   "fields": [
                     {
-                      "type": 8
+                      "type": 0
                     }
                   ],
                   "index": 0,
@@ -3823,7 +4122,7 @@ const artzero_nft = {
           "params": [
             {
               "name": "T",
-              "type": 8
+              "type": 0
             },
             {
               "name": "E",
@@ -3884,455 +4183,6 @@ const artzero_nft = {
             "variant": {
               "variants": [
                 {
-                  "index": 0,
-                  "name": "None"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 29
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Some"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 29
-            }
-          ],
-          "path": [
-            "Option"
-          ]
-        }
-      },
-      {
-        "id": 29,
-        "type": {
-          "def": {
-            "composite": {
-              "fields": [
-                {
-                  "name": "is_active",
-                  "type": 9,
-                  "typeName": "bool"
-                },
-                {
-                  "name": "title",
-                  "type": 8,
-                  "typeName": "Vec<u8>"
-                },
-                {
-                  "name": "is_public",
-                  "type": 9,
-                  "typeName": "bool"
-                },
-                {
-                  "name": "public_minting_fee",
-                  "type": 7,
-                  "typeName": "Balance"
-                },
-                {
-                  "name": "public_minting_amount",
-                  "type": 6,
-                  "typeName": "u64"
-                },
-                {
-                  "name": "public_max_minting_amount",
-                  "type": 6,
-                  "typeName": "u64"
-                },
-                {
-                  "name": "public_claimed_amount",
-                  "type": 6,
-                  "typeName": "u64"
-                },
-                {
-                  "name": "whitelist_amount",
-                  "type": 6,
-                  "typeName": "u64"
-                },
-                {
-                  "name": "claimed_amount",
-                  "type": 6,
-                  "typeName": "u64"
-                },
-                {
-                  "name": "total_amount",
-                  "type": 6,
-                  "typeName": "u64"
-                },
-                {
-                  "name": "start_time",
-                  "type": 6,
-                  "typeName": "Timestamp"
-                },
-                {
-                  "name": "end_time",
-                  "type": 6,
-                  "typeName": "Timestamp"
-                }
-              ]
-            }
-          },
-          "path": [
-            "launchpad_psp34_nft_standard",
-            "launchpad_psp34_nft_standard",
-            "Phase"
-          ]
-        }
-      },
-      {
-        "id": 30,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 31
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 16
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 31
-            },
-            {
-              "name": "E",
-              "type": 16
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 31,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "index": 0,
-                  "name": "None"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 32
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Some"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 32
-            }
-          ],
-          "path": [
-            "Option"
-          ]
-        }
-      },
-      {
-        "id": 32,
-        "type": {
-          "def": {
-            "composite": {
-              "fields": [
-                {
-                  "name": "whitelist_amount",
-                  "type": 6,
-                  "typeName": "u64"
-                },
-                {
-                  "name": "claimed_amount",
-                  "type": 6,
-                  "typeName": "u64"
-                },
-                {
-                  "name": "minting_fee",
-                  "type": 7,
-                  "typeName": "Balance"
-                }
-              ]
-            }
-          },
-          "path": [
-            "launchpad_psp34_nft_standard",
-            "launchpad_psp34_nft_standard",
-            "Whitelist"
-          ]
-        }
-      },
-      {
-        "id": 33,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 0
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 16
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 0
-            },
-            {
-              "name": "E",
-              "type": 16
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 34,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 35
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 16
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 35
-            },
-            {
-              "name": "E",
-              "type": 16
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 35,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "index": 0,
-                  "name": "None"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 2
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Some"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 2
-            }
-          ],
-          "path": [
-            "Option"
-          ]
-        }
-      },
-      {
-        "id": 36,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 37
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 16
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 37
-            },
-            {
-              "name": "E",
-              "type": 16
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 37,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "index": 0,
-                  "name": "None"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 6
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Some"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 6
-            }
-          ],
-          "path": [
-            "Option"
-          ]
-        }
-      },
-      {
-        "id": 38,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 39
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 16
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 39
-            },
-            {
-              "name": "E",
-              "type": 16
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 39,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
                   "fields": [
                     {
                       "type": 3
@@ -4369,124 +4219,7 @@ const artzero_nft = {
         }
       },
       {
-        "id": 40,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 5
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 16
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 5
-            },
-            {
-              "name": "E",
-              "type": 16
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 41,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 7
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 16
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 7
-            },
-            {
-              "name": "E",
-              "type": 16
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 42,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "index": 0,
-                  "name": "None"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 43
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Some"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 43
-            }
-          ],
-          "path": [
-            "Option"
-          ]
-        }
-      },
-      {
-        "id": 43,
+        "id": 29,
         "type": {
           "def": {
             "variant": {
@@ -4563,7 +4296,283 @@ const artzero_nft = {
         }
       },
       {
-        "id": 44,
+        "id": 30,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 31
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 31
+            },
+            {
+              "name": "E",
+              "type": 16
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 31,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 3
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 23
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 3
+            },
+            {
+              "name": "E",
+              "type": 23
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 32,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 29
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 29
+            }
+          ],
+          "path": [
+            "Option"
+          ]
+        }
+      },
+      {
+        "id": 33,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 7
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 7
+            },
+            {
+              "name": "E",
+              "type": 16
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 34,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 5
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 5
+            },
+            {
+              "name": "E",
+              "type": 16
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 35,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 36
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 36
+            },
+            {
+              "name": "E",
+              "type": 16
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 36,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 0
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 0
+            }
+          ],
+          "path": [
+            "Option"
+          ]
+        }
+      },
+      {
+        "id": 37,
         "type": {
           "def": {
             "variant": {
@@ -4605,7 +4614,7 @@ const artzero_nft = {
         }
       },
       {
-        "id": 45,
+        "id": 38,
         "type": {
           "def": {
             "variant": {
@@ -4613,7 +4622,7 @@ const artzero_nft = {
                 {
                   "fields": [
                     {
-                      "type": 46
+                      "type": 29
                     }
                   ],
                   "index": 0,
@@ -4634,7 +4643,7 @@ const artzero_nft = {
           "params": [
             {
               "name": "T",
-              "type": 46
+              "type": 29
             },
             {
               "name": "E",
@@ -4647,7 +4656,7 @@ const artzero_nft = {
         }
       },
       {
-        "id": 46,
+        "id": 39,
         "type": {
           "def": {
             "variant": {
@@ -4655,103 +4664,7 @@ const artzero_nft = {
                 {
                   "fields": [
                     {
-                      "type": 3
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 47
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 3
-            },
-            {
-              "name": "E",
-              "type": 47
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 47,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 8,
-                      "typeName": "String"
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Custom"
-                },
-                {
-                  "index": 1,
-                  "name": "SelfApprove"
-                },
-                {
-                  "index": 2,
-                  "name": "NotApproved"
-                },
-                {
-                  "index": 3,
-                  "name": "TokenExists"
-                },
-                {
-                  "index": 4,
-                  "name": "TokenNotExists"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 8,
-                      "typeName": "String"
-                    }
-                  ],
-                  "index": 5,
-                  "name": "SafeTransferCheckFailed"
-                }
-              ]
-            }
-          },
-          "path": [
-            "openbrush_contracts",
-            "traits",
-            "errors",
-            "psp34",
-            "PSP34Error"
-          ]
-        }
-      },
-      {
-        "id": 48,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 43
+                      "type": 40
                     }
                   ],
                   "index": 0,
@@ -4772,7 +4685,313 @@ const artzero_nft = {
           "params": [
             {
               "name": "T",
-              "type": 43
+              "type": 40
+            },
+            {
+              "name": "E",
+              "type": 16
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 40,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 8
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 8
+            }
+          ],
+          "path": [
+            "Option"
+          ]
+        }
+      },
+      {
+        "id": 41,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 42
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 42
+            },
+            {
+              "name": "E",
+              "type": 16
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 42,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 29
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 23
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 29
+            },
+            {
+              "name": "E",
+              "type": 23
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 43,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 10
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 10
+            },
+            {
+              "name": "E",
+              "type": 16
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 44,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 11
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 11
+            },
+            {
+              "name": "E",
+              "type": 16
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 45,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 46
+            }
+          }
+        }
+      },
+      {
+        "id": 46,
+        "type": {
+          "def": {
+            "tuple": [
+              10,
+              10
+            ]
+          }
+        }
+      },
+      {
+        "id": 47,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 8
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 8
+            },
+            {
+              "name": "E",
+              "type": 16
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 48,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 49
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 49
             },
             {
               "name": "E",
@@ -4791,9 +5010,42 @@ const artzero_nft = {
             "variant": {
               "variants": [
                 {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
                   "fields": [
                     {
-                      "type": 50
+                      "type": 6
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 6
+            }
+          ],
+          "path": [
+            "Option"
+          ]
+        }
+      },
+      {
+        "id": 50,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 2
                     }
                   ],
                   "index": 0,
@@ -4814,7 +5066,7 @@ const artzero_nft = {
           "params": [
             {
               "name": "T",
-              "type": 50
+              "type": 2
             },
             {
               "name": "E",
@@ -4823,39 +5075,6 @@ const artzero_nft = {
           ],
           "path": [
             "Result"
-          ]
-        }
-      },
-      {
-        "id": 50,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "index": 0,
-                  "name": "None"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 0
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Some"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 0
-            }
-          ],
-          "path": [
-            "Option"
           ]
         }
       },
@@ -4914,7 +5133,7 @@ const artzero_nft = {
                 {
                   "fields": [
                     {
-                      "type": 8
+                      "type": 2
                     }
                   ],
                   "index": 1,
@@ -4926,7 +5145,7 @@ const artzero_nft = {
           "params": [
             {
               "name": "T",
-              "type": 8
+              "type": 2
             }
           ],
           "path": [
@@ -4983,22 +5202,17 @@ const artzero_nft = {
             "variant": {
               "variants": [
                 {
-                  "fields": [
-                    {
-                      "type": 43
-                    }
-                  ],
                   "index": 0,
-                  "name": "Ok"
+                  "name": "None"
                 },
                 {
                   "fields": [
                     {
-                      "type": 47
+                      "type": 55
                     }
                   ],
                   "index": 1,
-                  "name": "Err"
+                  "name": "Some"
                 }
               ]
             }
@@ -5006,15 +5220,11 @@ const artzero_nft = {
           "params": [
             {
               "name": "T",
-              "type": 43
-            },
-            {
-              "name": "E",
-              "type": 47
+              "type": 55
             }
           ],
           "path": [
-            "Result"
+            "Option"
           ]
         }
       },
@@ -5022,41 +5232,32 @@ const artzero_nft = {
         "id": 55,
         "type": {
           "def": {
-            "variant": {
-              "variants": [
+            "composite": {
+              "fields": [
                 {
-                  "fields": [
-                    {
-                      "type": 11
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
+                  "name": "whitelist_amount",
+                  "type": 6,
+                  "typeName": "u64"
                 },
                 {
-                  "fields": [
-                    {
-                      "type": 16
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
+                  "name": "claimed_amount",
+                  "type": 6,
+                  "typeName": "u64"
+                },
+                {
+                  "name": "minting_fee",
+                  "type": 7,
+                  "typeName": "Balance"
                 }
               ]
             }
           },
-          "params": [
-            {
-              "name": "T",
-              "type": 11
-            },
-            {
-              "name": "E",
-              "type": 16
-            }
-          ],
           "path": [
-            "Result"
+            "artzero_project",
+            "impls",
+            "psp34_launchpad_standard",
+            "data",
+            "Whitelist"
           ]
         }
       },
@@ -5069,7 +5270,7 @@ const artzero_nft = {
                 {
                   "fields": [
                     {
-                      "type": 10
+                      "type": 57
                     }
                   ],
                   "index": 0,
@@ -5090,7 +5291,7 @@ const artzero_nft = {
           "params": [
             {
               "name": "T",
-              "type": 10
+              "type": 57
             },
             {
               "name": "E",
@@ -5106,21 +5307,219 @@ const artzero_nft = {
         "id": 57,
         "type": {
           "def": {
-            "sequence": {
-              "type": 58
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 3
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 21
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
             }
-          }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 3
+            },
+            {
+              "name": "E",
+              "type": 21
+            }
+          ],
+          "path": [
+            "Result"
+          ]
         }
       },
       {
         "id": 58,
         "type": {
           "def": {
-            "tuple": [
-              10,
-              10
-            ]
-          }
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 59
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 59
+            },
+            {
+              "name": "E",
+              "type": 16
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 59,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 60
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 60
+            }
+          ],
+          "path": [
+            "Option"
+          ]
+        }
+      },
+      {
+        "id": 60,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "is_active",
+                  "type": 9,
+                  "typeName": "bool"
+                },
+                {
+                  "name": "title",
+                  "type": 8,
+                  "typeName": "Vec<u8>"
+                },
+                {
+                  "name": "is_public",
+                  "type": 9,
+                  "typeName": "bool"
+                },
+                {
+                  "name": "public_minting_fee",
+                  "type": 7,
+                  "typeName": "Balance"
+                },
+                {
+                  "name": "public_minting_amount",
+                  "type": 6,
+                  "typeName": "u64"
+                },
+                {
+                  "name": "public_max_minting_amount",
+                  "type": 6,
+                  "typeName": "u64"
+                },
+                {
+                  "name": "public_claimed_amount",
+                  "type": 6,
+                  "typeName": "u64"
+                },
+                {
+                  "name": "whitelist_amount",
+                  "type": 6,
+                  "typeName": "u64"
+                },
+                {
+                  "name": "claimed_amount",
+                  "type": 6,
+                  "typeName": "u64"
+                },
+                {
+                  "name": "total_amount",
+                  "type": 6,
+                  "typeName": "u64"
+                },
+                {
+                  "name": "start_time",
+                  "type": 6,
+                  "typeName": "Timestamp"
+                },
+                {
+                  "name": "end_time",
+                  "type": 6,
+                  "typeName": "Timestamp"
+                }
+              ]
+            }
+          },
+          "path": [
+            "artzero_project",
+            "impls",
+            "psp34_launchpad_standard",
+            "data",
+            "Phase"
+          ]
+        }
+      },
+      {
+        "id": 61,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "Public"
+                },
+                {
+                  "index": 1,
+                  "name": "Whitelist"
+                }
+              ]
+            }
+          },
+          "path": [
+            "launchpad_psp34_nft_standard",
+            "launchpad_psp34_nft_standard",
+            "MintingMode"
+          ]
         }
       }
     ],

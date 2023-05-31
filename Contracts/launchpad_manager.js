@@ -1,10 +1,10 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5D4rYbyX36woCv4ECwrp71rKRmixhy94xdR34YtwgmvaCpo3",
+  CONTRACT_ADDRESS: "5HcACWijXGpmzUVFzqy5V4XD8Tuju2gsuB6b8jSKusmM1obf",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x0837d0b95b94e620dc19103852bd83c4bd86eb34e9a5b00fd27210d969965007",
-      "language": "ink! 4.0.0-beta",
-      "compiler": "rustc 1.69.0-nightly",
+      "hash": "0x060da68e80d2a5b90a928f02f8cd48f00eaad7fc9628554937a90a220a6bf847",
+      "language": "ink! 4.0.1",
+      "compiler": "rustc 1.70.0-nightly",
       "build_info": {
         "build_mode": "Debug",
         "cargo_contract_version": "2.0.0-rc",
@@ -117,7 +117,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 28
+                "type": 41
               }
             }
           ],
@@ -247,7 +247,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 18
+                "type": 21
               }
             },
             {
@@ -256,7 +256,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 19
+                "type": 22
               }
             },
             {
@@ -265,7 +265,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 20
+                "type": 23
               }
             },
             {
@@ -274,7 +274,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 21
+                "type": 24
               }
             },
             {
@@ -283,7 +283,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 21
+                "type": 24
               }
             },
             {
@@ -292,7 +292,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 21
+                "type": 24
               }
             },
             {
@@ -301,7 +301,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 21
+                "type": 24
               }
             }
           ],
@@ -319,385 +319,6 @@ const launchpad_manager = {
             "type": 12
           },
           "selector": "0x4b0a448e"
-        },
-        {
-          "args": [
-            {
-              "label": "contract_address",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "start_time",
-              "type": {
-                "displayName": [
-                  "Timestamp"
-                ],
-                "type": 6
-              }
-            },
-            {
-              "label": "end_time",
-              "type": {
-                "displayName": [
-                  "Timestamp"
-                ],
-                "type": 6
-              }
-            }
-          ],
-          "docs": [
-            " Edit a project Start Time and End Time - Only Admin Role can change"
-          ],
-          "label": "edit_project",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 12
-          },
-          "selector": "0x2cafbf63"
-        },
-        {
-          "args": [
-            {
-              "label": "project_adding_fee",
-              "type": {
-                "displayName": [
-                  "Balance"
-                ],
-                "type": 9
-              }
-            }
-          ],
-          "docs": [
-            " Update project adding fee - Only Admin Role can change"
-          ],
-          "label": "update_project_adding_fee",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 12
-          },
-          "selector": "0x0c3b5043"
-        },
-        {
-          "args": [
-            {
-              "label": "public_max_minting_amount",
-              "type": {
-                "displayName": [
-                  "u64"
-                ],
-                "type": 6
-              }
-            }
-          ],
-          "docs": [
-            " Update public max minting amount - Only Admin Role can change"
-          ],
-          "label": "update_public_max_minting_amount",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 22
-          },
-          "selector": "0x15b7463b"
-        },
-        {
-          "args": [
-            {
-              "label": "project_mint_fee_rate",
-              "type": {
-                "displayName": [
-                  "u32"
-                ],
-                "type": 4
-              }
-            }
-          ],
-          "docs": [
-            " Update project mint fee rate - Only Admin Role can change"
-          ],
-          "label": "update_project_mint_fee_rate",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 22
-          },
-          "selector": "0xa81f0494"
-        },
-        {
-          "args": [
-            {
-              "label": "standard_nft_hash",
-              "type": {
-                "displayName": [
-                  "Hash"
-                ],
-                "type": 5
-              }
-            }
-          ],
-          "docs": [
-            " Update standard nft hash - Only Owner"
-          ],
-          "label": "update_standard_nft_hash",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 12
-          },
-          "selector": "0xad51a976"
-        },
-        {
-          "args": [
-            {
-              "label": "is_active",
-              "type": {
-                "displayName": [
-                  "bool"
-                ],
-                "type": 7
-              }
-            },
-            {
-              "label": "contract_address",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Update is active project - Only Admin Role can change"
-          ],
-          "label": "update_is_active_project",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 12
-          },
-          "selector": "0x88efeaf2"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get Project Adding Fee"
-          ],
-          "label": "get_project_adding_fee",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 24
-          },
-          "selector": "0x57fe17e8"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get active project count"
-          ],
-          "label": "get_active_project_count",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 25
-          },
-          "selector": "0xd86a7732"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get project count"
-          ],
-          "label": "get_project_count",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 25
-          },
-          "selector": "0x5e97f98d"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Get standard nft hash"
-          ],
-          "label": "get_standard_nft_hash",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 26
-          },
-          "selector": "0xbeb47f47"
-        },
-        {
-          "args": [
-            {
-              "label": "id",
-              "type": {
-                "displayName": [
-                  "u64"
-                ],
-                "type": 6
-              }
-            }
-          ],
-          "docs": [],
-          "label": "get_project_by_id",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 27
-          },
-          "selector": "0xbe4185f5"
-        },
-        {
-          "args": [
-            {
-              "label": "owner_address",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Get projects by owner address"
-          ],
-          "label": "get_projects_by_owner",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 29
-          },
-          "selector": "0xf25b0961"
-        },
-        {
-          "args": [
-            {
-              "label": "nft_contract_address",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Get project by NFT address"
-          ],
-          "label": "get_project_by_nft_address",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 30
-          },
-          "selector": "0x908e3150"
-        },
-        {
-          "args": [],
-          "docs": [],
-          "label": "get_max_phases_per_project",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 33
-          },
-          "selector": "0xc14ff7e1"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "GetRoleAdminInput1"
-                ],
-                "type": 4
-              }
-            }
-          ],
-          "docs": [
-            " Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
-          ],
-          "label": "AccessControl::get_role_admin",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 34
-          },
-          "selector": "0x83da3bb2"
         },
         {
           "args": [
@@ -740,9 +361,119 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 22
+            "type": 25
           },
           "selector": "0x4ac062fd"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "HasRoleInput1"
+                ],
+                "type": 4
+              }
+            },
+            {
+              "label": "address",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "HasRoleInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Returns `true` if `account` has been granted `role`."
+          ],
+          "label": "AccessControl::has_role",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 27
+          },
+          "selector": "0xc1d9ac18"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "RevokeRoleInput1"
+                ],
+                "type": 4
+              }
+            },
+            {
+              "label": "account",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "RevokeRoleInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Revokes `role` from `account`.",
+            "",
+            " On success a `RoleRevoked` event is emitted.",
+            "",
+            " # Errors",
+            "",
+            " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
+          ],
+          "label": "AccessControl::revoke_role",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 25
+          },
+          "selector": "0x6e4f0991"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "GetRoleAdminInput1"
+                ],
+                "type": 4
+              }
+            }
+          ],
+          "docs": [
+            " Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
+          ],
+          "label": "AccessControl::get_role_admin",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 28
+          },
+          "selector": "0x83da3bb2"
         },
         {
           "args": [
@@ -788,118 +519,9 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 22
+            "type": 25
           },
           "selector": "0xeaf1248a"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "RevokeRoleInput1"
-                ],
-                "type": 4
-              }
-            },
-            {
-              "label": "account",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "RevokeRoleInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Revokes `role` from `account`.",
-            "",
-            " On success a `RoleRevoked` event is emitted.",
-            "",
-            " # Errors",
-            "",
-            " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
-          ],
-          "label": "AccessControl::revoke_role",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 22
-          },
-          "selector": "0x6e4f0991"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "HasRoleInput1"
-                ],
-                "type": 4
-              }
-            },
-            {
-              "label": "address",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "HasRoleInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Returns `true` if `account` has been granted `role`."
-          ],
-          "label": "AccessControl::has_role",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 35
-          },
-          "selector": "0xc1d9ac18"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Leaves the contract without owner. It will not be possible to call",
-            " owner's functions anymore. Can only be called by the current owner.",
-            "",
-            " NOTE: Renouncing ownership will leave the contract without an owner,",
-            " thereby removing any functionality that is only available to the owner.",
-            "",
-            " On success a `OwnershipTransferred` event is emitted.",
-            "",
-            " # Errors",
-            "",
-            " Panics with `CallerIsNotOwner` error if caller is not owner"
-          ],
-          "label": "Ownable::renounce_ownership",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 36
-          },
-          "selector": "0x5e228753"
         },
         {
           "args": [
@@ -934,7 +556,7 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 36
+            "type": 29
           },
           "selector": "0x11f43efd"
         },
@@ -951,26 +573,72 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 38
+            "type": 31
           },
           "selector": "0x4fa43c8c"
         },
         {
           "args": [],
           "docs": [
-            " This function returns the rate in % that the launchpad will collect for each NFT minting"
+            " Leaves the contract without owner. It will not be possible to call",
+            " owner's functions anymore. Can only be called by the current owner.",
+            "",
+            " NOTE: Renouncing ownership will leave the contract without an owner,",
+            " thereby removing any functionality that is only available to the owner.",
+            "",
+            " On success a `OwnershipTransferred` event is emitted.",
+            "",
+            " # Errors",
+            "",
+            " Panics with `CallerIsNotOwner` error if caller is not owner"
           ],
-          "label": "ArtZeroLaunchPadTrait::get_project_mint_fee_rate",
-          "mutates": false,
+          "label": "Ownable::renounce_ownership",
+          "mutates": true,
           "payable": false,
           "returnType": {
             "displayName": [
               "ink",
               "MessageResult"
             ],
-            "type": 34
+            "type": 29
           },
-          "selector": "0x87b065fe"
+          "selector": "0x5e228753"
+        },
+        {
+          "args": [
+            {
+              "label": "is_active",
+              "type": {
+                "displayName": [
+                  "artzerolaunchpadtrait_external",
+                  "UpdateIsActiveProjectInput1"
+                ],
+                "type": 7
+              }
+            },
+            {
+              "label": "contract_address",
+              "type": {
+                "displayName": [
+                  "artzerolaunchpadtrait_external",
+                  "UpdateIsActiveProjectInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [],
+          "label": "ArtZeroLaunchPadTrait::update_is_active_project",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 12
+          },
+          "selector": "0xb395585e"
         },
         {
           "args": [],
@@ -985,47 +653,24 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 25
+            "type": 32
           },
           "selector": "0x5cae8061"
         },
         {
-          "args": [
-            {
-              "label": "value",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "WithdrawFeeInput1"
-                ],
-                "type": 9
-              }
-            },
-            {
-              "label": "receiver",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "WithdrawFeeInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " This function allows contract owner to withdraw contract balance to his account."
-          ],
-          "label": "AdminTrait::withdraw_fee",
-          "mutates": true,
+          "args": [],
+          "docs": [],
+          "label": "ArtZeroLaunchPadTrait::get_project_adding_fee",
+          "mutates": false,
           "payable": false,
           "returnType": {
             "displayName": [
               "ink",
               "MessageResult"
             ],
-            "type": 12
+            "type": 33
           },
-          "selector": "0x07573e99"
+          "selector": "0x287c9ab9"
         },
         {
           "args": [
@@ -1033,37 +678,158 @@ const launchpad_manager = {
               "label": "nft_contract_address",
               "type": {
                 "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput1"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "token_id",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput2"
-                ],
-                "type": 39
-              }
-            },
-            {
-              "label": "receiver",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput3"
+                  "artzerolaunchpadtrait_external",
+                  "GetProjectByNftAddressInput1"
                 ],
                 "type": 0
               }
             }
           ],
-          "docs": [
-            " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
+          "docs": [],
+          "label": "ArtZeroLaunchPadTrait::get_project_by_nft_address",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 34
+          },
+          "selector": "0xc5d7222e"
+        },
+        {
+          "args": [
+            {
+              "label": "owner_address",
+              "type": {
+                "displayName": [
+                  "artzerolaunchpadtrait_external",
+                  "GetProjectsByOwnerInput1"
+                ],
+                "type": 0
+              }
+            }
           ],
-          "label": "AdminTrait::tranfer_nft",
+          "docs": [],
+          "label": "ArtZeroLaunchPadTrait::get_projects_by_owner",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 37
+          },
+          "selector": "0x833c0ebf"
+        },
+        {
+          "args": [],
+          "docs": [],
+          "label": "ArtZeroLaunchPadTrait::get_active_project_count",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 32
+          },
+          "selector": "0x484e6fd3"
+        },
+        {
+          "args": [],
+          "docs": [],
+          "label": "ArtZeroLaunchPadTrait::get_standard_nft_hash",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 38
+          },
+          "selector": "0xdcca1337"
+        },
+        {
+          "args": [],
+          "docs": [],
+          "label": "ArtZeroLaunchPadTrait::get_max_phases_per_project",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 39
+          },
+          "selector": "0x9a44210a"
+        },
+        {
+          "args": [
+            {
+              "label": "public_max_minting_amount",
+              "type": {
+                "displayName": [
+                  "artzerolaunchpadtrait_external",
+                  "UpdatePublicMaxMintingAmountInput1"
+                ],
+                "type": 6
+              }
+            }
+          ],
+          "docs": [],
+          "label": "ArtZeroLaunchPadTrait::update_public_max_minting_amount",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 25
+          },
+          "selector": "0x18c1c337"
+        },
+        {
+          "args": [
+            {
+              "label": "contract_address",
+              "type": {
+                "displayName": [
+                  "artzerolaunchpadtrait_external",
+                  "EditProjectInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "start_time",
+              "type": {
+                "displayName": [
+                  "artzerolaunchpadtrait_external",
+                  "EditProjectInput2"
+                ],
+                "type": 6
+              }
+            },
+            {
+              "label": "end_time",
+              "type": {
+                "displayName": [
+                  "artzerolaunchpadtrait_external",
+                  "EditProjectInput3"
+                ],
+                "type": 6
+              }
+            }
+          ],
+          "docs": [],
+          "label": "ArtZeroLaunchPadTrait::edit_project",
           "mutates": true,
           "payable": false,
           "returnType": {
@@ -1073,7 +839,214 @@ const launchpad_manager = {
             ],
             "type": 12
           },
-          "selector": "0xed1e1dfa"
+          "selector": "0x2c4eb9af"
+        },
+        {
+          "args": [],
+          "docs": [
+            " This function returns the rate in % that the launchpad will collect for each NFT minting"
+          ],
+          "label": "ArtZeroLaunchPadTrait::get_project_mint_fee_rate",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 28
+          },
+          "selector": "0x87b065fe"
+        },
+        {
+          "args": [
+            {
+              "label": "standard_nft_hash",
+              "type": {
+                "displayName": [
+                  "artzerolaunchpadtrait_external",
+                  "UpdateStandardNftHashInput1"
+                ],
+                "type": 5
+              }
+            }
+          ],
+          "docs": [],
+          "label": "ArtZeroLaunchPadTrait::update_standard_nft_hash",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 12
+          },
+          "selector": "0xfb1a74f1"
+        },
+        {
+          "args": [
+            {
+              "label": "id",
+              "type": {
+                "displayName": [
+                  "artzerolaunchpadtrait_external",
+                  "GetProjectByIdInput1"
+                ],
+                "type": 6
+              }
+            }
+          ],
+          "docs": [],
+          "label": "ArtZeroLaunchPadTrait::get_project_by_id",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 40
+          },
+          "selector": "0xfd610fb5"
+        },
+        {
+          "args": [
+            {
+              "label": "project_mint_fee_rate",
+              "type": {
+                "displayName": [
+                  "artzerolaunchpadtrait_external",
+                  "UpdateProjectMintFeeRateInput1"
+                ],
+                "type": 4
+              }
+            }
+          ],
+          "docs": [],
+          "label": "ArtZeroLaunchPadTrait::update_project_mint_fee_rate",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 25
+          },
+          "selector": "0x0767a5d1"
+        },
+        {
+          "args": [],
+          "docs": [],
+          "label": "ArtZeroLaunchPadTrait::get_project_count",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 32
+          },
+          "selector": "0x2ae57a80"
+        },
+        {
+          "args": [
+            {
+              "label": "project_adding_fee",
+              "type": {
+                "displayName": [
+                  "artzerolaunchpadtrait_external",
+                  "UpdateProjectAddingFeeInput1"
+                ],
+                "type": 9
+              }
+            }
+          ],
+          "docs": [],
+          "label": "ArtZeroLaunchPadTrait::update_project_adding_fee",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 12
+          },
+          "selector": "0xc932d984"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrolenumerable_external",
+                  "GetRoleMemberInput1"
+                ],
+                "type": 4
+              }
+            },
+            {
+              "label": "index",
+              "type": {
+                "displayName": [
+                  "accesscontrolenumerable_external",
+                  "GetRoleMemberInput2"
+                ],
+                "type": 4
+              }
+            }
+          ],
+          "docs": [
+            " Returns one of the accounts that have `role`.",
+            "",
+            " Role bearers are not sorted in any particular way, and their",
+            " ordering may change at any point."
+          ],
+          "label": "AccessControlEnumerable::get_role_member",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 40
+          },
+          "selector": "0x163469e0"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrolenumerable_external",
+                  "GetRoleMemberCountInput1"
+                ],
+                "type": 4
+              }
+            }
+          ],
+          "docs": [
+            " Returns the number of accounts that have `role`.",
+            " Can be used together with {get_role_member} to enumerate",
+            " all bearers of a role."
+          ],
+          "label": "AccessControlEnumerable::get_role_member_count",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 28
+          },
+          "selector": "0xf1b1a9d7"
         },
         {
           "args": [
@@ -1122,6 +1095,92 @@ const launchpad_manager = {
             "type": 12
           },
           "selector": "0xd9aad284"
+        },
+        {
+          "args": [
+            {
+              "label": "nft_contract_address",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "token_id",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput2"
+                ],
+                "type": 42
+              }
+            },
+            {
+              "label": "receiver",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput3"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
+          ],
+          "label": "AdminTrait::tranfer_nft",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 12
+          },
+          "selector": "0xed1e1dfa"
+        },
+        {
+          "args": [
+            {
+              "label": "value",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "WithdrawFeeInput1"
+                ],
+                "type": 9
+              }
+            },
+            {
+              "label": "receiver",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "WithdrawFeeInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " This function allows contract owner to withdraw contract balance to his account."
+          ],
+          "label": "AdminTrait::withdraw_fee",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 12
+          },
+          "selector": "0x07573e99"
         },
         {
           "args": [
@@ -1233,14 +1292,14 @@ const launchpad_manager = {
                                   "root": {
                                     "layout": {
                                       "leaf": {
-                                        "key": "0x5d5db175",
-                                        "ty": 3
+                                        "key": "0x6888e7ba",
+                                        "ty": 0
                                       }
                                     },
-                                    "root_key": "0x5d5db175"
+                                    "root_key": "0x6888e7ba"
                                   }
                                 },
-                                "name": "members"
+                                "name": "role_members"
                               },
                               {
                                 "layout": {
@@ -1310,7 +1369,7 @@ const launchpad_manager = {
                     "name": "Data"
                   }
                 },
-                "name": "access"
+                "name": "access_control"
               },
               {
                 "layout": {
@@ -1940,95 +1999,111 @@ const launchpad_manager = {
                 },
                 {
                   "index": 21,
-                  "name": "InvalidInput"
+                  "name": "CollectionNotExist"
                 },
                 {
                   "index": 22,
-                  "name": "InvalidType"
+                  "name": "InvalidInput"
                 },
                 {
                   "index": 23,
-                  "name": "ClaimedAll"
+                  "name": "InvalidType"
                 },
                 {
                   "index": 24,
-                  "name": "TokenLimitReached"
+                  "name": "ClaimedAll"
                 },
                 {
                   "index": 25,
-                  "name": "UpdatePhase"
+                  "name": "TokenLimitReached"
                 },
                 {
                   "index": 26,
-                  "name": "PhaseNotExist"
+                  "name": "UpdatePhase"
                 },
                 {
                   "index": 27,
-                  "name": "PhaseExpired"
+                  "name": "PhaseNotExist"
                 },
                 {
                   "index": 28,
-                  "name": "WhitelistNotExist"
+                  "name": "PhaseExpired"
                 },
                 {
                   "index": 29,
-                  "name": "WithdrawFeeError"
+                  "name": "PhaseDeactivate"
                 },
                 {
                   "index": 30,
-                  "name": "WithdrawNFTError"
+                  "name": "WhitelistNotExist"
                 },
                 {
                   "index": 31,
-                  "name": "WithdrawPSP22Error"
+                  "name": "WithdrawFeeError"
                 },
                 {
                   "index": 32,
-                  "name": "NotListed"
+                  "name": "WithdrawNFTError"
                 },
                 {
                   "index": 33,
-                  "name": "BidAlreadyExist"
+                  "name": "WithdrawPSP22Error"
                 },
                 {
                   "index": 34,
-                  "name": "BidNotExist"
+                  "name": "NotListed"
                 },
                 {
                   "index": 35,
-                  "name": "NotInMarket"
+                  "name": "BidAlreadyExist"
                 },
                 {
                   "index": 36,
-                  "name": "NotForSale"
+                  "name": "BidNotExist"
                 },
                 {
                   "index": 37,
-                  "name": "NotInSaleList"
+                  "name": "NotInMarket"
                 },
                 {
                   "index": 38,
-                  "name": "InvalidBidLength"
+                  "name": "NotForSale"
                 },
                 {
                   "index": 39,
-                  "name": "InvalidCollectionOwner"
+                  "name": "NotInSaleList"
                 },
                 {
                   "index": 40,
-                  "name": "InvalidTime"
+                  "name": "InvalidBidLength"
                 },
                 {
                   "index": 41,
-                  "name": "RewardStarted"
+                  "name": "InvalidCollectionOwner"
                 },
                 {
                   "index": 42,
-                  "name": "RewardNotStarted"
+                  "name": "InvalidTime"
                 },
                 {
                   "index": 43,
+                  "name": "RewardStarted"
+                },
+                {
+                  "index": 44,
+                  "name": "RewardNotStarted"
+                },
+                {
+                  "index": 45,
+                  "name": "RewardNotAdded"
+                },
+                {
+                  "index": 46,
                   "name": "ClaimMustBeFalse"
+                },
+                {
+                  "index": 47,
+                  "name": "HoldAmountBidderNotExist"
                 },
                 {
                   "fields": [
@@ -2037,7 +2112,7 @@ const launchpad_manager = {
                       "typeName": "OwnableError"
                     }
                   ],
-                  "index": 44,
+                  "index": 48,
                   "name": "OwnableError"
                 },
                 {
@@ -2047,8 +2122,32 @@ const launchpad_manager = {
                       "typeName": "AccessControlError"
                     }
                   ],
-                  "index": 45,
+                  "index": 49,
                   "name": "AccessControlError"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 18,
+                      "typeName": "PSP22Error"
+                    }
+                  ],
+                  "index": 50,
+                  "name": "PSP22Error"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 20,
+                      "typeName": "PSP34Error"
+                    }
+                  ],
+                  "index": 51,
+                  "name": "PSP34Error"
+                },
+                {
+                  "index": 52,
+                  "name": "CheckedOperations"
                 }
               ]
             }
@@ -2129,6 +2228,124 @@ const launchpad_manager = {
         "id": 18,
         "type": {
           "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 19,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Custom"
+                },
+                {
+                  "index": 1,
+                  "name": "InsufficientBalance"
+                },
+                {
+                  "index": 2,
+                  "name": "InsufficientAllowance"
+                },
+                {
+                  "index": 3,
+                  "name": "ZeroRecipientAddress"
+                },
+                {
+                  "index": 4,
+                  "name": "ZeroSenderAddress"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 19,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 5,
+                  "name": "SafeTransferCheckFailed"
+                }
+              ]
+            }
+          },
+          "path": [
+            "openbrush_contracts",
+            "traits",
+            "errors",
+            "psp22",
+            "PSP22Error"
+          ]
+        }
+      },
+      {
+        "id": 19,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 2
+            }
+          }
+        }
+      },
+      {
+        "id": 20,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 19,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Custom"
+                },
+                {
+                  "index": 1,
+                  "name": "SelfApprove"
+                },
+                {
+                  "index": 2,
+                  "name": "NotApproved"
+                },
+                {
+                  "index": 3,
+                  "name": "TokenExists"
+                },
+                {
+                  "index": 4,
+                  "name": "TokenNotExists"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 19,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 5,
+                  "name": "SafeTransferCheckFailed"
+                }
+              ]
+            }
+          },
+          "path": [
+            "openbrush_contracts",
+            "traits",
+            "errors",
+            "psp34",
+            "PSP34Error"
+          ]
+        }
+      },
+      {
+        "id": 21,
+        "type": {
+          "def": {
             "sequence": {
               "type": 15
             }
@@ -2136,7 +2353,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 19,
+        "id": 22,
         "type": {
           "def": {
             "sequence": {
@@ -2146,7 +2363,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 20,
+        "id": 23,
         "type": {
           "def": {
             "sequence": {
@@ -2156,7 +2373,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 21,
+        "id": 24,
         "type": {
           "def": {
             "sequence": {
@@ -2166,7 +2383,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 22,
+        "id": 25,
         "type": {
           "def": {
             "variant": {
@@ -2174,7 +2391,7 @@ const launchpad_manager = {
                 {
                   "fields": [
                     {
-                      "type": 23
+                      "type": 26
                     }
                   ],
                   "index": 0,
@@ -2195,7 +2412,7 @@ const launchpad_manager = {
           "params": [
             {
               "name": "T",
-              "type": 23
+              "type": 26
             },
             {
               "name": "E",
@@ -2208,7 +2425,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 23,
+        "id": 26,
         "type": {
           "def": {
             "variant": {
@@ -2250,7 +2467,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 24,
+        "id": 27,
         "type": {
           "def": {
             "variant": {
@@ -2258,7 +2475,7 @@ const launchpad_manager = {
                 {
                   "fields": [
                     {
-                      "type": 9
+                      "type": 7
                     }
                   ],
                   "index": 0,
@@ -2279,7 +2496,7 @@ const launchpad_manager = {
           "params": [
             {
               "name": "T",
-              "type": 9
+              "type": 7
             },
             {
               "name": "E",
@@ -2292,7 +2509,175 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 25,
+        "id": 28,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 4
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 11
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 4
+            },
+            {
+              "name": "E",
+              "type": 11
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 29,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 30
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 11
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 30
+            },
+            {
+              "name": "E",
+              "type": 11
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 30,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 3
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 3
+            },
+            {
+              "name": "E",
+              "type": 16
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 31,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 0
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 11
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 0
+            },
+            {
+              "name": "E",
+              "type": 11
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 32,
         "type": {
           "def": {
             "variant": {
@@ -2334,7 +2719,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 26,
+        "id": 33,
         "type": {
           "def": {
             "variant": {
@@ -2342,7 +2727,7 @@ const launchpad_manager = {
                 {
                   "fields": [
                     {
-                      "type": 5
+                      "type": 9
                     }
                   ],
                   "index": 0,
@@ -2363,7 +2748,7 @@ const launchpad_manager = {
           "params": [
             {
               "name": "T",
-              "type": 5
+              "type": 9
             },
             {
               "name": "E",
@@ -2376,7 +2761,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 27,
+        "id": 34,
         "type": {
           "def": {
             "variant": {
@@ -2384,7 +2769,7 @@ const launchpad_manager = {
                 {
                   "fields": [
                     {
-                      "type": 28
+                      "type": 35
                     }
                   ],
                   "index": 0,
@@ -2405,7 +2790,7 @@ const launchpad_manager = {
           "params": [
             {
               "name": "T",
-              "type": 28
+              "type": 35
             },
             {
               "name": "E",
@@ -2418,7 +2803,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 28,
+        "id": 35,
         "type": {
           "def": {
             "variant": {
@@ -2430,7 +2815,7 @@ const launchpad_manager = {
                 {
                   "fields": [
                     {
-                      "type": 0
+                      "type": 36
                     }
                   ],
                   "index": 1,
@@ -2442,7 +2827,7 @@ const launchpad_manager = {
           "params": [
             {
               "name": "T",
-              "type": 0
+              "type": 36
             }
           ],
           "path": [
@@ -2451,124 +2836,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 29,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 8
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 11
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 8
-            },
-            {
-              "name": "E",
-              "type": 11
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 30,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 31
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 11
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 31
-            },
-            {
-              "name": "E",
-              "type": 11
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 31,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "index": 0,
-                  "name": "None"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 32
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Some"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 32
-            }
-          ],
-          "path": [
-            "Option"
-          ]
-        }
-      },
-      {
-        "id": 32,
+        "id": 36,
         "type": {
           "def": {
             "composite": {
@@ -2611,7 +2879,91 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 33,
+        "id": 37,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 8
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 11
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 8
+            },
+            {
+              "name": "E",
+              "type": 11
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 38,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 5
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 11
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 5
+            },
+            {
+              "name": "E",
+              "type": 11
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 39,
         "type": {
           "def": {
             "variant": {
@@ -2653,7 +3005,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 34,
+        "id": 40,
         "type": {
           "def": {
             "variant": {
@@ -2661,7 +3013,7 @@ const launchpad_manager = {
                 {
                   "fields": [
                     {
-                      "type": 4
+                      "type": 41
                     }
                   ],
                   "index": 0,
@@ -2682,7 +3034,7 @@ const launchpad_manager = {
           "params": [
             {
               "name": "T",
-              "type": 4
+              "type": 41
             },
             {
               "name": "E",
@@ -2695,154 +3047,23 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 35,
+        "id": 41,
         "type": {
           "def": {
             "variant": {
               "variants": [
                 {
-                  "fields": [
-                    {
-                      "type": 7
-                    }
-                  ],
                   "index": 0,
-                  "name": "Ok"
+                  "name": "None"
                 },
-                {
-                  "fields": [
-                    {
-                      "type": 11
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 7
-            },
-            {
-              "name": "E",
-              "type": 11
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 36,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 37
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 11
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 37
-            },
-            {
-              "name": "E",
-              "type": 11
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 37,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 3
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 16
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 3
-            },
-            {
-              "name": "E",
-              "type": 16
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 38,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
                 {
                   "fields": [
                     {
                       "type": 0
                     }
                   ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 11
-                    }
-                  ],
                   "index": 1,
-                  "name": "Err"
+                  "name": "Some"
                 }
               ]
             }
@@ -2851,19 +3072,15 @@ const launchpad_manager = {
             {
               "name": "T",
               "type": 0
-            },
-            {
-              "name": "E",
-              "type": 11
             }
           ],
           "path": [
-            "Result"
+            "Option"
           ]
         }
       },
       {
-        "id": 39,
+        "id": 42,
         "type": {
           "def": {
             "variant": {
@@ -2881,7 +3098,7 @@ const launchpad_manager = {
                 {
                   "fields": [
                     {
-                      "type": 40,
+                      "type": 43,
                       "typeName": "u16"
                     }
                   ],
@@ -2921,7 +3138,7 @@ const launchpad_manager = {
                 {
                   "fields": [
                     {
-                      "type": 41,
+                      "type": 19,
                       "typeName": "Vec<u8>"
                     }
                   ],
@@ -2940,20 +3157,10 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 40,
+        "id": 43,
         "type": {
           "def": {
             "primitive": "u16"
-          }
-        }
-      },
-      {
-        "id": 41,
-        "type": {
-          "def": {
-            "sequence": {
-              "type": 2
-            }
           }
         }
       }
