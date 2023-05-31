@@ -18,6 +18,7 @@ import * as collection_manager_calls from "../contracts/collection_manager_calls
 import {check_NFT_queue_all} from "./actions";
 import {repository} from "@loopback/repository";
 import {
+    AzeroDomainEventRepository,
     CollectionQueueSchemaRepository,
     CollectionsSchemaRepository, ConfigRepository, NftQueueScanAllSchemaRepository,
     NftQueueSchemaRepository,
@@ -37,6 +38,8 @@ export class CronJobAzProcessingAllQueueNft implements Provider<CronJob> {
         public collectionsSchemaRepository: CollectionsSchemaRepository,
         @repository(CollectionQueueSchemaRepository)
         public collectionQueueSchemaRepository: CollectionQueueSchemaRepository,
+        @repository(AzeroDomainEventRepository)
+        public azeroDomainEventRepository: AzeroDomainEventRepository,
         @repository(ConfigRepository)
         public configRepository: ConfigRepository,
     ) {
@@ -79,6 +82,7 @@ export class CronJobAzProcessingAllQueueNft implements Provider<CronJob> {
                         const nftQueueRepo = this.nftQueueSchemaRepository;
                         const nftQueueScanAllRepo = this.nftQueueScanAllSchemaRepository;
                         const collectionsRepo = this.collectionsSchemaRepository;
+                        const azeroDomainEventRepo = this.azeroDomainEventRepository;
                         try {
                             if (!(global_vars.socketStatusLocal == SOCKET_STATUS.CONNECTED && localApi)) {
                                 if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) {
@@ -94,6 +98,7 @@ export class CronJobAzProcessingAllQueueNft implements Provider<CronJob> {
                                             nftQueueRepo,
                                             nftQueueScanAllRepo,
                                             collectionsRepo,
+                                            azeroDomainEventRepo
                                         );
                                     } catch (e) {
                                         console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - ERROR: ${e.message}`);
@@ -110,6 +115,7 @@ export class CronJobAzProcessingAllQueueNft implements Provider<CronJob> {
                                         nftQueueRepo,
                                         nftQueueScanAllRepo,
                                         collectionsRepo,
+                                        azeroDomainEventRepo
                                     );
                                 } catch (e) {
                                     console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - ERROR: ${e.message}`);

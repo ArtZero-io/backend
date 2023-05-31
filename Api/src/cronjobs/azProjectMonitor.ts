@@ -13,7 +13,12 @@ import {global_vars, SOCKET_STATUS} from "./global";
 import * as launchpad_manager_calls from "../contracts/launchpad_manager_calls";
 import {check_new_projects, check_project_queue} from "./actions";
 import {repository} from "@loopback/repository";
-import {ConfigRepository, ProjectQueueSchemaRepository, ProjectsSchemaRepository} from "../repositories";
+import {
+    AzeroDomainEventRepository,
+    ConfigRepository,
+    ProjectQueueSchemaRepository,
+    ProjectsSchemaRepository
+} from "../repositories";
 import {globalApi} from "../index";
 @cronJob()
 export class CronJobAzProjectMonitor implements Provider<CronJob> {
@@ -22,6 +27,8 @@ export class CronJobAzProjectMonitor implements Provider<CronJob> {
         public projectsSchemaRepository: ProjectsSchemaRepository,
         @repository(ProjectQueueSchemaRepository)
         public projectQueueSchemaRepository: ProjectQueueSchemaRepository,
+        @repository(AzeroDomainEventRepository)
+        public azeroDomainEventRepository: AzeroDomainEventRepository,
         @repository(ConfigRepository)
         public configRepository: ConfigRepository,
     ) {

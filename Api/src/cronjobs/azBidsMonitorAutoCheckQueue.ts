@@ -5,7 +5,13 @@ import {convertToUTCTime} from "../utils/Tools";
 import {global_vars, SOCKET_STATUS} from "./global";
 import {auto_check_queue} from "./actions";
 import {repository} from "@loopback/repository";
-import {BidQueueSchemaRepository, BidsSchemaRepository, ConfigRepository, NftsSchemaRepository} from "../repositories";
+import {
+    AzeroDomainEventRepository,
+    BidQueueSchemaRepository,
+    BidsSchemaRepository,
+    ConfigRepository,
+    NftsSchemaRepository
+} from "../repositories";
 import {globalApi} from "../index";
 
 @cronJob()
@@ -17,6 +23,8 @@ export class CronJobAzBidsMonitorAutoCheckQueue implements Provider<CronJob> {
         public bidQueueSchemaRepository: BidQueueSchemaRepository,
         @repository(NftsSchemaRepository)
         public nfTsSchemaRepository: NftsSchemaRepository,
+        @repository(AzeroDomainEventRepository)
+        public azeroDomainEventRepository: AzeroDomainEventRepository,
         @repository(ConfigRepository)
         public configRepository: ConfigRepository,
     ) {

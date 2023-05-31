@@ -25,11 +25,16 @@ import {
     PurchaseEventSchemaRepository,
     ScannedBlocksSchemaRepository,
     StakingEventSchemaRepository,
-    UnListEventSchemaRepository, ConfigRepository, ProjectsSchemaRepository
+    UnListEventSchemaRepository,
+    ConfigRepository,
+    ProjectsSchemaRepository,
+    AzeroDomainEventRepository,
+    NftQueueScanAllSchemaRepository, NftQueueSchemaRepository
 } from "../repositories";
 import {launchpad_psp34_nft_standard} from "../contracts/launchpad_psp34_nft_standard";
 import {ApiPromise, WsProvider} from "@polkadot/api";
 import jsonrpc from "@polkadot/types/interfaces/jsonrpc";
+import {azero_domain} from "../contracts/azns_registry";
 @cronJob()
 export class CronJobAzEventsCollector implements Provider<CronJob> {
     constructor(
@@ -57,6 +62,12 @@ export class CronJobAzEventsCollector implements Provider<CronJob> {
         public collectionEventSchemaRepository: CollectionEventSchemaRepository,
         @repository(ProjectsSchemaRepository)
         public projectsSchemaRepository: ProjectsSchemaRepository,
+        @repository(AzeroDomainEventRepository)
+        public azeroDomainEventRepository: AzeroDomainEventRepository,
+        @repository(NftQueueScanAllSchemaRepository)
+        public nftQueueScanAllSchemaRepository: NftQueueScanAllSchemaRepository,
+        @repository(NftQueueSchemaRepository)
+        public nftQueueSchemaRepository: NftQueueSchemaRepository,
         @repository(ConfigRepository)
         public configRepository: ConfigRepository,
     ) {
@@ -108,6 +119,9 @@ export class CronJobAzEventsCollector implements Provider<CronJob> {
                             const addRewardEventRepo = this.addRewardEventSchemaRepository;
                             const collectionEventRepo = this.collectionEventSchemaRepository;
                             const projectsRepo = this.projectsSchemaRepository;
+                            const azeroDomainEventRepo = this.azeroDomainEventRepository;
+                            const nftQueueScanAllRepo = this.nftQueueScanAllSchemaRepository;
+                            const nftQueueSchemaRepo = this.nftQueueSchemaRepository;
 
                             const rpc = process.env.WSSPROVIDER;
                             if (!rpc) {
@@ -151,12 +165,16 @@ export class CronJobAzEventsCollector implements Provider<CronJob> {
                                     const api_launchpad_psp34_nft_standard = new Abi(launchpad_psp34_nft_standard.CONTRACT_ABI);
                                     console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Launchpad Contract ABI is ready`);
 
+                                    const api_azero_doman = new Abi(azero_domain.CONTRACT_ABI);
+                                    console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - AzeroDomain Contract ABI is ready`);
+
                                     // @ts-ignore
                                     await eventApi.rpc.chain.subscribeNewHeads((header: any) => {
                                         try {
                                             scanBlocks(
                                                 parseInt(header.number.toString()),
                                                 eventApi,
+                                                api_azero_doman,
                                                 api_launchpad_psp34_nft_standard,
                                                 abi_marketplace_contract,
                                                 abi_staking_contract,
@@ -172,7 +190,10 @@ export class CronJobAzEventsCollector implements Provider<CronJob> {
                                                 withdrawEventRepo,
                                                 addRewardEventRepo,
                                                 collectionEventRepo,
-                                                projectsRepo
+                                                projectsRepo,
+                                                azeroDomainEventRepo,
+                                                nftQueueScanAllRepo,
+                                                nftQueueSchemaRepo
                                             );
                                         } catch (e) {
                                             console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - ERROR: ${e.message}`);

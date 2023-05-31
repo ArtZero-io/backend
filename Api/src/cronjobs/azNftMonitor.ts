@@ -18,6 +18,7 @@ import * as collection_manager_calls from "../contracts/collection_manager_calls
 import {check_new_AZ_NFTs, check_NFT_queue} from "./actions";
 import {repository} from "@loopback/repository";
 import {
+    AzeroDomainEventRepository,
     BlackListRepository,
     CollectionQueueSchemaRepository,
     CollectionsSchemaRepository, ConfigRepository, NftQueueScanAllSchemaRepository,
@@ -40,6 +41,8 @@ export class CronJobAzNftMonitor implements Provider<CronJob> {
         public collectionQueueSchemaRepository: CollectionQueueSchemaRepository,
         @repository(BlackListRepository)
         public blackListRepository: BlackListRepository,
+        @repository(AzeroDomainEventRepository)
+        public azeroDomainEventRepository: AzeroDomainEventRepository,
         @repository(ConfigRepository)
         public configRepository: ConfigRepository,
     ) {
@@ -82,6 +85,7 @@ export class CronJobAzNftMonitor implements Provider<CronJob> {
                         const nftQueueRepo = this.nftQueueSchemaRepository;
                         const collectionsRepo = this.collectionsSchemaRepository;
                         const blackListRepo = this.blackListRepository;
+                        const azeroDomainEventRepo = this.azeroDomainEventRepository;
                         if (!(global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) return;
                         try {
                             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Smartnet AZERO Ready`);
@@ -117,6 +121,7 @@ export class CronJobAzNftMonitor implements Provider<CronJob> {
                                     nftQueueRepo,
                                     collectionsRepo,
                                     blackListRepo,
+                                    azeroDomainEventRepo,
                                     undefined
                                 );
                             } catch (e) {

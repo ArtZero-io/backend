@@ -13,6 +13,7 @@ import {
 } from "./actions";
 import {repository} from "@loopback/repository";
 import {
+    AzeroDomainEventRepository,
     ConfigRepository,
     ProjectsSchemaRepository,
     ProjectWhitelistQueuesRepository
@@ -25,6 +26,8 @@ export class CronJobAzProjectWhitelist implements Provider<CronJob> {
         public projectsSchemaRepository: ProjectsSchemaRepository,
         @repository(ProjectWhitelistQueuesRepository)
         public projectWhitelistQueuesRepository: ProjectWhitelistQueuesRepository,
+        @repository(AzeroDomainEventRepository)
+        public azeroDomainEventRepository: AzeroDomainEventRepository,
         @repository(ConfigRepository)
         public configRepository: ConfigRepository,
     ) {

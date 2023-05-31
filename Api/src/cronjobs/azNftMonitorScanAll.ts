@@ -11,6 +11,7 @@ import {global_vars, SOCKET_STATUS} from "./global";
 import {scanAllNFTs} from "./actions";
 import {repository} from "@loopback/repository";
 import {
+    AzeroDomainEventRepository,
     CollectionQueueSchemaRepository,
     CollectionsSchemaRepository, ConfigRepository, NftQueueScanAllSchemaRepository,
     NftQueueSchemaRepository,
@@ -30,6 +31,8 @@ export class CronJobAzNftMonitorScanAll implements Provider<CronJob> {
         public collectionsSchemaRepository: CollectionsSchemaRepository,
         @repository(CollectionQueueSchemaRepository)
         public collectionQueueSchemaRepository: CollectionQueueSchemaRepository,
+        @repository(AzeroDomainEventRepository)
+        public azeroDomainEventRepository: AzeroDomainEventRepository,
         @repository(ConfigRepository)
         public configRepository: ConfigRepository,
     ) {
@@ -73,6 +76,7 @@ export class CronJobAzNftMonitorScanAll implements Provider<CronJob> {
                         const nftQueueScanAllRepo = this.nftQueueScanAllSchemaRepository;
                         const collectionsRepo = this.collectionsSchemaRepository;
                         const collectionQueueRepo = this.collectionQueueSchemaRepository;
+                        const azeroDomainEventRepo = this.azeroDomainEventRepository;
                         if (!(global_vars.socketStatusLocal == SOCKET_STATUS.CONNECTED && localApi)) return;
                         try {
                             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR_SCAN_ALL} - Smartnet AZERO Ready`);
@@ -85,7 +89,8 @@ export class CronJobAzNftMonitorScanAll implements Provider<CronJob> {
                                     nftQueueRepo,
                                     nftQueueScanAllRepo,
                                     collectionsRepo,
-                                    collectionQueueRepo
+                                    collectionQueueRepo,
+                                    azeroDomainEventRepo
                                 );
                             } catch (e) {
                                 console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR_SCAN_ALL} - ERROR: ${e.message}`);

@@ -9,6 +9,7 @@ import {CronJob, cronJob} from '@loopback/cron';
 import {convertToUTCTime} from "../utils/Tools";
 import {repository} from "@loopback/repository";
 import {
+    AzeroDomainEventRepository,
     CollectionEventSchemaRepository,
     CollectionQueueSchemaRepository,
     CollectionsSchemaRepository, ConfigRepository, ImageRemoveQueueSchemaRepository, NftsSchemaRepository,
@@ -31,6 +32,8 @@ export class CronJobAzCollectionMonitor implements Provider<CronJob> {
         public nfTsSchemaRepository: NftsSchemaRepository,
         @repository(ImageRemoveQueueSchemaRepository)
         public imageRemoveQueueSchemaRepository: ImageRemoveQueueSchemaRepository,
+        @repository(AzeroDomainEventRepository)
+        public azeroDomainEventRepository: AzeroDomainEventRepository,
         @repository(ConfigRepository)
         public configRepository: ConfigRepository,
     ) {

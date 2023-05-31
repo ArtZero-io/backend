@@ -40,7 +40,7 @@ export async function getVolumeByCollection(caller_account: string, nft_contract
     return 0;
 }
 
-export async function getNftSaleInfo(caller_account: string, nft_contract_address: string, token_id: {u64: number}) {
+export async function getNftSaleInfo(caller_account: string, nft_contract_address: string, token_id: {u64: number} | {bytes: string}) {
     if (!marketplace_contract || !caller_account ||
         !isValidAddressPolkadotAddress(nft_contract_address)
     ) {
@@ -63,8 +63,7 @@ export async function getNftSaleInfo(caller_account: string, nft_contract_addres
     }
     return null;
 }
-
-export async function getAllBids(caller_account: any, nft_contract_address: string, seller: string, token_id: {u64: number}) {
+export async function getAllBids(caller_account: any, nft_contract_address: string, seller: string, token_id: {u64: number} | {bytes: string}) {
     if (
         !marketplace_contract ||
         !caller_account ||

@@ -10,7 +10,12 @@ import {convertToUTCTime} from "../utils/Tools";
 import {global_vars} from "./global";
 import {check_Image_queue} from "./actions";
 import {repository} from "@loopback/repository";
-import {ConfigRepository, ImageQueueSchemaRepository, ImagesSchemaRepository} from "../repositories";
+import {
+    AzeroDomainEventRepository,
+    ConfigRepository,
+    ImageQueueSchemaRepository,
+    ImagesSchemaRepository
+} from "../repositories";
 @cronJob()
 export class CronJobAzCacheImage implements Provider<CronJob> {
     constructor(
@@ -18,6 +23,8 @@ export class CronJobAzCacheImage implements Provider<CronJob> {
         public imageQueueSchemaRepository: ImageQueueSchemaRepository,
         @repository(ImagesSchemaRepository)
         public imagesSchemaRepository: ImagesSchemaRepository,
+        @repository(AzeroDomainEventRepository)
+        public azeroDomainEventRepository: AzeroDomainEventRepository,
         @repository(ConfigRepository)
         public configRepository: ConfigRepository,
     ) {
