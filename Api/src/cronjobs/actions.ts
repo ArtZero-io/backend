@@ -80,7 +80,7 @@ import {collection_manager} from "../contracts/collection_manager";
 import BN from "bn.js";
 import FormData from "form-data";
 import {Keyring} from "@polkadot/keyring";
-import {convertToUTCTime, isBlackListCollection} from "../utils/Tools";
+import {convertToUTCTime, isBlackListCollection, logger, sleep} from "../utils/Tools";
 import {globalApi, localApi} from "../index";
 import {launchpad_manager} from "../contracts/launchpad_manager";
 import dotenv from "dotenv";
@@ -88,6 +88,7 @@ import {totalSupply} from "../contracts/nft721_psp34_standard_calls";
 import * as crypto from "crypto";
 import {azero_domains_nft} from "../contracts/azero_domains_nft";
 import {getRegistrationPeriod} from "../contracts/azero_domains_nft_calls";
+import { KeyringPair$Json } from "@polkadot/keyring/types";
 
 dotenv.config();
 
