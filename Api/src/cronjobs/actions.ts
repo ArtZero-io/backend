@@ -1091,6 +1091,7 @@ export async function check_NFT_queue(
     if (global_vars.is_check_NFT_queue) return;
     global_vars.is_check_NFT_queue = true;
     try {
+
         const marketplace_contract = new ContractPromise(
             globalApi,
             marketplace.CONTRACT_ABI,
@@ -1109,13 +1110,6 @@ export async function check_NFT_queue(
             collection_manager.CONTRACT_ADDRESS
         );
         collection_manager_calls.setContract(collection_contract);
-
-        const azero_domains_nft_contract = new ContractPromise(
-            globalApi,
-            azero_domains_nft.CONTRACT_ABI,
-            azero_domains_nft.CONTRACT_ADDRESS
-        );
-        azero_domains_nft_calls.setContract(azero_domains_nft_contract);
 
         console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Checking for NFT Queue ...`);
         let queue_data: nftqueues[] = [];
@@ -1136,6 +1130,12 @@ export async function check_NFT_queue(
                 if (!azChecking.isEnabled) {
                     continue;
                 }
+                const azero_domains_nft_contract = new ContractPromise(
+                    globalApi,
+                    azero_domains_nft.CONTRACT_ABI,
+                    azero_domains_nft.CONTRACT_ADDRESS
+                );
+                azero_domains_nft_calls.setContract(azero_domains_nft_contract);
                 let azEventName = queue_data[j].azEventName;
                 let azDomainName = queue_data[j].azDomainName;
                 let isAzDomain = queue_data[j].isAzDomain;
@@ -1603,7 +1603,7 @@ export async function check_NFT_queue(
         }
     } catch (e) {
         console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - xx>> e.message: `, e.message);
-        send_telegram_message("check_NFT_queue - " + e.message);
+        send_telegram_message("check_NFT_queue 11111 - " + e.message);
         global_vars.is_check_NFT_queue = false;
     }
     global_vars.is_check_NFT_queue = false;
