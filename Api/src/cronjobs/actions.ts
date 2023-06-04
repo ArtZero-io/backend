@@ -399,12 +399,6 @@ export async function check_NFT_queue_all(
             collection_manager.CONTRACT_ADDRESS
         );
         collection_manager_calls.setContract(collection_contract);
-        const azero_domains_nft_contract = new ContractPromise(
-            globalApi,
-            azero_domains_nft.CONTRACT_ABI,
-            azero_domains_nft.CONTRACT_ADDRESS
-        );
-        azero_domains_nft_calls.setContract(azero_domains_nft_contract);
 
         console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - Start find and update status of ${MAX_NFT_QUEUE_ALL_IN_PROCESSING} NFTs in check_NFT_queue_all at ${convertToUTCTime(new Date())}`);
         let queue_data = await nftQueueScanAllRepo.find({
@@ -437,6 +431,12 @@ export async function check_NFT_queue_all(
                 if (!azChecking.isEnabled) {
                     continue;
                 }
+                const azero_domains_nft_contract = new ContractPromise(
+                    globalApi,
+                    azero_domains_nft.CONTRACT_ABI,
+                    azero_domains_nft.CONTRACT_ADDRESS
+                );
+                azero_domains_nft_calls.setContract(azero_domains_nft_contract);
                 let azDomainName = queueData.azDomainName;
                 let azEventName = queueData.azEventName;
                 if (!azDomainName) continue;
@@ -900,13 +900,6 @@ export async function scanAllNFTs(
         );
         collection_manager_calls.setContract(collection_contract);
 
-        const azero_domains_nft_contract = new ContractPromise(
-            globalApi,
-            azero_domains_nft.CONTRACT_ABI,
-            azero_domains_nft.CONTRACT_ADDRESS
-        );
-        azero_domains_nft_calls.setContract(azero_domains_nft_contract);
-
         try {
             await nftQueueScanAllRepo.updateAll({
                 isProcessing: false
@@ -933,6 +926,12 @@ export async function scanAllNFTs(
                 if (!azChecking.isEnabled) {
                     continue;
                 }
+                const azero_domains_nft_contract = new ContractPromise(
+                    globalApi,
+                    azero_domains_nft.CONTRACT_ABI,
+                    azero_domains_nft.CONTRACT_ADDRESS
+                );
+                azero_domains_nft_calls.setContract(azero_domains_nft_contract);
                 try {
                     const currentData = await collectionQueueRepo.findOne({
                         where: {
