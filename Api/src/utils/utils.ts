@@ -16,6 +16,7 @@ dotenv.config();
 
 // @ts-ignore
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
+const MAX_CALL_WEIGHT_5IRE = new BN(5_000_000_000).isub(BN_ONE);
 
 export async function send_message(message: string) {
     try {
@@ -200,8 +201,8 @@ export const APICall = {
 export function readOnlyGasLimit(api: ApiPromise):WeightV2 {
     // @ts-ignore
     return api.registry.createType('WeightV2', {
-        refTime: new BN(1_000_000_000_000),
-        proofSize: MAX_CALL_WEIGHT,
+        refTime: new BN(1_000_000_000),
+        proofSize: MAX_CALL_WEIGHT_5IRE,
     });
 }
 
