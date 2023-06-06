@@ -9,6 +9,8 @@ export function setContract(c: ContractPromise) {
 }
 
 export async function getCollectionCount(caller_account: string): Promise<number> {
+    console.log(collection_manager_contract.address.toString());
+    console.log(caller_account);
     if (!collection_manager_contract || !caller_account) {
         return 0;
     }
@@ -23,7 +25,17 @@ export async function getCollectionCount(caller_account: string): Promise<number
             value: azero_value,
             gasLimit,
         });
+    try {
+        console.log(result.toHuman());
+        if (output) {
+            console.log(output.toHuman());
+        }
+    } catch (e) {
+        console.log(e.message);
+    }
     if (result.isOk && output) {
+        // @ts-ignore
+        console.log({output: output.toHuman()});
         // @ts-ignore
         return output.toHuman()?.Ok?.replaceAll(",", "");
     }
