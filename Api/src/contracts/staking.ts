@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 export const staking = (process.env.IS_TESTNET == "true") ? {
-    CONTRACT_ADDRESS: "5D9wPyetDqaUCsfLURuYwtT2JgP1Pqs8o1tFkw5VMqHbn9P7",
+    CONTRACT_ADDRESS: "5CRCTjeLENnJnnTnVdePiZA6jcBHB9cR39y4UGfGXnPVj7nP",
     CONTRACT_ABI: {
         "source": {
             "hash": "0x38ce87a8a2bc330b42a3bac4cfb22647c2c265a0408cae442f7a8f6e4a6ebc01",

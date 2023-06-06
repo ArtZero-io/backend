@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 export const profile = (process.env.IS_TESTNET == "true") ? {
-    CONTRACT_ADDRESS: "5DxuvUB5p4F4fB1GN3oFsaoUFuU2y1agcQ2PBY3NfiAFkXjR",
+    CONTRACT_ADDRESS: "5HpRHk4FUHAWB3Y2jXdDNx6vrjYHwkhsZ2PSycny6cDCss2R",
     CONTRACT_ABI: {
         "source": {
             "hash": "0x0fae9732950d2e127019b1a433095d40f1b07dee55c1c5c69fd3a38b649c6d8a",

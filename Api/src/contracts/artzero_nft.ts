@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 export const artzero_nft =  (process.env.IS_TESTNET == "true") ? {
-	CONTRACT_ADDRESS: "5H7v8XSTG3nshsNeo7AeriotMcGqwLM6kf9rcNHsrQqwAeYW",
+	CONTRACT_ADDRESS: "5Gzj17idc9U8xA5sErPHnKxMsfrNq6w8wD6z2FDyBpnvv7y1",
 	CONTRACT_ABI: {
 		"source": {
 			"hash": "0x87de62029c759dae7f49e29f37b9e6c2ac8dfb7744fb663c5ba52d805e691e36",

@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 export const marketplace = (process.env.IS_TESTNET == "true") ? {
-    CONTRACT_ADDRESS: "5Cbufyf2Qnh9dbchqMb25eL5cySWinvQqCwpkKYZRD43Pw35",
+    CONTRACT_ADDRESS: "5DszE8CTQWyPQPA74jU8owTUcwJBffsHZTuFW3i8R6DV399B",
     CONTRACT_ABI: {
         "source": {
             "hash": "0x68cee649bc6e6b655fdf917d63a16fc43fe8ae3a41e0284101df63d23d18c264",

@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 export const launchpad_manager = (process.env.IS_TESTNET == "true") ? {
-    CONTRACT_ADDRESS: "5FJwP3rWoHMnPqYaSPQa8AA4ssLgj9ciW3CauUVbeSchZaDe",
+    CONTRACT_ADDRESS: "5FT4bHq9rqS7CcRPTnBmsdpwSWZ2WMrDhhPhG3TLrtNktHvy",
     CONTRACT_ABI: {
         "source": {
             "hash": "0x060da68e80d2a5b90a928f02f8cd48f00eaad7fc9628554937a90a220a6bf847",

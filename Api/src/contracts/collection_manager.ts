@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 export const collection_manager = (process.env.IS_TESTNET == "true") ? {
-    CONTRACT_ADDRESS: "5FFqxQBrtnVMjSyXXqyoHzmUHHthTqX3rY9Kr7nx9bzE9cD5",
+    CONTRACT_ADDRESS: "5FsWibWWJMgGNyDxeMo2yHXiRq37ZX4GxVsi1aqHMctiMjH6",
     CONTRACT_ABI: {
         "source": {
             "hash": "0x3cc56938bd78552e9b720786ace3cf63bd59fffad6154d6708ace9cd9d48572b",
