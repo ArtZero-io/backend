@@ -200,8 +200,8 @@ export const APICall = {
 export function readOnlyGasLimit(api: ApiPromise):WeightV2 {
     // @ts-ignore
     return api.registry.createType('WeightV2', {
-        refTime: new BN(1_000_000_000),
-        proofSize: MAX_CALL_WEIGHT,
+        refTime: new BN(1_000_000_000).mul(new BN(1_000_000)),
+        proofSize: MAX_CALL_WEIGHT.mul(new BN(1_000_000)),
     });
 }
 
