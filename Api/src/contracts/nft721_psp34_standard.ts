@@ -1,4 +1,4 @@
-cimport dotenv from "dotenv";
+import dotenv from "dotenv";
 
 dotenv.config();
 export const nft721_psp34_standard = (process.env.IS_TESTNET == "true") ? {
