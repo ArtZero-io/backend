@@ -265,7 +265,7 @@ export async function getGasLimit(
 export function convertStringToPrice(stringPrice: string) {
     try {
         const a = stringPrice.replace(/\,/g, "");
-        return parseInt(a) / 10 ** 12;
+        return parseInt(a) / 10 ** 18;
     } catch (error) {
         console.log(error);
         return 0;

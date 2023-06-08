@@ -31,7 +31,7 @@ export async function getVolumeByCollection(caller_account: string, nft_contract
     if (result.isOk && output) {
         try {
             // @ts-ignore
-            return output.toHuman()?.Ok.replace(/\,/g, "") / 10 ** 12;
+            return output.toHuman()?.Ok.replace(/\,/g, "") / 10 ** 18;
         } catch (e) {
             send_telegram_message('getVolumeByCollection - ' + e.message);
             return 0;

@@ -2643,7 +2643,7 @@ export async function processEventRecords(
                                         trader: eventValues[0],
                                         nftContractAddress: eventValues[1],
                                         azDomainName: eventValues[2] ? JSON.parse(eventValues[2]).bytes : undefined,
-                                        price: eventValues[3] ? parseFloat(eventValues[3]) / 10 ** 12 : 0,
+                                        price: eventValues[3] ? parseFloat(eventValues[3]) / 10 ** 18 : 0,
                                     }
                                 }
                             } else {
@@ -2652,7 +2652,7 @@ export async function processEventRecords(
                                     trader: eventValues[0],
                                     nftContractAddress: eventValues[1],
                                     tokenID: eventValues[2] ? JSON.parse(eventValues[2]).u64 : 0,
-                                    price: eventValues[3] ? parseFloat(eventValues[3]) / 10 ** 12 : 0,
+                                    price: eventValues[3] ? parseFloat(eventValues[3]) / 10 ** 18 : 0,
                                 }
                             }
                             let found = await newListEventRepo.findOne({
@@ -2722,9 +2722,9 @@ export async function processEventRecords(
                                         seller: eventValues[1],
                                         nftContractAddress: eventValues[2],
                                         azDomainName: eventValues[3] ? JSON.parse(eventValues[3]).bytes : undefined,
-                                        price: eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0,
-                                        platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 12 : 0,
-                                        royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 12 : 0,
+                                        price: eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 18 : 0,
+                                        platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 18 : 0,
+                                        royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 18 : 0,
                                     }
                                 }
                             } else {
@@ -2734,9 +2734,9 @@ export async function processEventRecords(
                                     seller: eventValues[1],
                                     nftContractAddress: eventValues[2],
                                     tokenID: eventValues[3] ? JSON.parse(eventValues[3]).u64 : 0,
-                                    price: eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0,
-                                    platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 12 : 0,
-                                    royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 12 : 0,
+                                    price: eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 18 : 0,
+                                    platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 18 : 0,
+                                    royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 18 : 0,
                                 }
                             }
                             console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - eventValues: `, eventValues);
@@ -2769,9 +2769,9 @@ export async function processEventRecords(
                                         seller: eventValues[1],
                                         nftContractAddress: eventValues[2],
                                         azDomainName: eventValues[3] ? JSON.parse(eventValues[3]).bytes : undefined,
-                                        price: eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0,
-                                        platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 12 : 0,
-                                        royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 12 : 0,
+                                        price: eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 18 : 0,
+                                        platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 18 : 0,
+                                        royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 18 : 0,
                                     };
                                 }
                             } else {
@@ -2781,9 +2781,9 @@ export async function processEventRecords(
                                     seller: eventValues[1],
                                     nftContractAddress: eventValues[2],
                                     tokenID: eventValues[3] ? JSON.parse(eventValues[3]).u64 : 0,
-                                    price: eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0,
-                                    platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 12 : 0,
-                                    royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 12 : 0,
+                                    price: eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 18 : 0,
+                                    platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 18 : 0,
+                                    royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 18 : 0,
                                 };
                             }
                             let found = await bidWinEventRepo.findOne({
@@ -2909,7 +2909,7 @@ export async function processEventRecords(
                             let obj = {
                                 blockNumber: to_scan,
                                 staker: eventValues[0],
-                                rewardAmount: eventValues[1] ? parseFloat(eventValues[1]) / 10 ** 12 : 0,
+                                rewardAmount: eventValues[1] ? parseFloat(eventValues[1]) / 10 ** 18 : 0,
                                 stakedAmount: eventValues[2] ? parseFloat(eventValues[2]) : 0
                             };
                             let found = await claimRewardEventRepo.findOne({
@@ -2931,7 +2931,7 @@ export async function processEventRecords(
                             let obj = {
                                 blockNumber: to_scan,
                                 receiver: eventValues[1],
-                                withdrawAmount: eventValues[0] ? parseFloat(eventValues[0]) / 10 ** 12 : 0
+                                withdrawAmount: eventValues[0] ? parseFloat(eventValues[0]) / 10 ** 18 : 0
                             };
                             let found = await withdrawEventRepo.findOne({
                                 where: obj
@@ -2954,9 +2954,9 @@ export async function processEventRecords(
                                 mode: eventValues[0],
                                 minter: eventValues[1],
                                 phaseId: parseInt(eventValues[2]),
-                                mintAmount: eventValues[3] ? parseFloat(eventValues[3]) / 10 ** 12 : 0,
-                                mintingFee: eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0,
-                                projectMintFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 12 : 0
+                                mintAmount: eventValues[3] ? parseFloat(eventValues[3]) / 10 ** 18 : 0,
+                                mintingFee: eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 18 : 0,
+                                projectMintFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 18 : 0
                             };
                             let found = await launchpadMintingEventRepo.findOne({
                                 where: obj
@@ -2976,8 +2976,8 @@ export async function processEventRecords(
                         } else if (event_name == 'AddReward') {
                             let obj = {
                                 blockNumber: to_scan,
-                                rewardAmount: eventValues[0] ? parseFloat(eventValues[0]) / 10 ** 12 : 0,
-                                totalStakedAmount: eventValues[1] ? parseFloat(eventValues[1]) / 10 ** 12 : 0,
+                                rewardAmount: eventValues[0] ? parseFloat(eventValues[0]) / 10 ** 18 : 0,
+                                totalStakedAmount: eventValues[1] ? parseFloat(eventValues[1]) / 10 ** 18 : 0,
                             }
                             let found = await addRewardEventRepo.findOne({
                                 where: obj
@@ -3254,7 +3254,7 @@ export async function processEventRecords(
                                 nftContractAddress: contract_address,
                                 blockNumber: to_scan,
                                 receiver: eventValues[1],
-                                withdrawAmount: eventValues[0] ? parseFloat(eventValues[0]) / 10 ** 12 : 0
+                                withdrawAmount: eventValues[0] ? parseFloat(eventValues[0]) / 10 ** 18 : 0
                             };
                             let found = await withdrawEventRepo.findOne({
                                 where: obj
@@ -3279,8 +3279,8 @@ export async function processEventRecords(
                                 minter: eventValues[1],
                                 phaseId: parseInt(eventValues[2]),
                                 mintAmount: eventValues[3] ? parseInt(eventValues[3]) : 0,
-                                mintingFee: eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0,
-                                projectMintFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 12 : 0
+                                mintingFee: eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 18 : 0,
+                                projectMintFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 18 : 0
                             };
                             let found = await launchpadMintingEventRepo.findOne({
                                 where: obj
