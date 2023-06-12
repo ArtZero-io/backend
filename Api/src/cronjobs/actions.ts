@@ -622,6 +622,11 @@ export async function check_NFT_queue_all(
                         console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - ERROR: ${e.message}`);
                     }
                 }
+                try {
+                    await nftQueueScanAllRepo.deleteById(queueData._id);
+                } catch (e) {
+                    console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - WARNING: ${e.message}`);
+                }
             } else {
                 let tokenID = queueData.tokenID;
                 if (!tokenID) continue;
