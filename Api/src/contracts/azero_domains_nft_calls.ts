@@ -74,6 +74,12 @@ export async function ownerOf(
     caller_account: string,
     domainName: string,
 ):Promise<string | null> {
+    console.log({
+        caller_account: caller_account,
+        domainName:domainName,
+        azero_domain_nft_contract: azero_domain_nft_contract
+    });
+
     if (!azero_domain_nft_contract || !caller_account) {
         return null;
     }
@@ -88,6 +94,8 @@ export async function ownerOf(
         {bytes: domainName}
     );
     if (result.isOk && output) {
+        // @ts-ignore
+        console.log(output.toHuman());
         // @ts-ignore
         return output.toHuman()?.Ok;
     }

@@ -1156,10 +1156,11 @@ export async function check_NFT_queue(
                         azEventName: azEventName,
                         azDomainName: azDomainName,
                         isAzDomain: true,
-                        nftContractAddress: process.env.AZERO_DOMAIN
+                        nftContractAddress: nftContractAddress
                     }
                 });
                 let owner;
+                console.log('nftAzDomain');
                 console.log(nftAzDomain);
                 if (nftAzDomain && nftAzDomain?.azDomainName) {
                     owner = await azero_domains_nft_calls.ownerOf(
@@ -1199,20 +1200,6 @@ export async function check_NFT_queue(
                     }
                     continue;
                 }
-                // let nft_owner;
-                // console.log(nftAzDomain);
-                // if (nftAzDomain && nftAzDomain?.azDomainName) {
-                //     try {
-                //         nft_owner = await azero_domains_nft_calls.getNftOwner(
-                //             global_vars.caller,
-                //             nftAzDomain.azDomainName
-                //         );
-                //     } catch (e) {
-                //         console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: `, e.message);
-                //     }
-                // }
-                // // Check and update attributes
-                // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - nft_owner: `, nft_owner);
 
                 // Get NFT's Attributes
                 const metaData = {
@@ -1284,6 +1271,8 @@ export async function check_NFT_queue(
                     );
                     try {
                         obj.updatedTime = new Date();
+                        console.log(`===============`);
+                        console.log(obj);
                         await nftRepo.updateById(found._id, obj);
                     } catch (e) {
                         console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
