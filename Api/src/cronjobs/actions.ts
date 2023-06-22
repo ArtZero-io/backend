@@ -467,7 +467,7 @@ export async function check_NFT_queue_all(
                         azDomainName: azDomainName,
                         azEventName: azEventName,
                         isAzDomain: true,
-                        nftContractAddress: process.env.AZERO_DOMAIN
+                        nftContractAddress: nftContractAddress
                     }
                 });
                 let owner;
