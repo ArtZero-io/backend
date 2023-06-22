@@ -63,6 +63,7 @@ export async function getNftSaleInfo(caller_account: string, nft_contract_addres
     }
     return null;
 }
+
 export async function getAllBids(caller_account: any, nft_contract_address: string, seller: string, token_id: {u64: number} | {bytes: string}) {
     if (
         !marketplace_contract ||

@@ -32,9 +32,9 @@ export async function balanceOf(
         const gasLimit = readOnlyGasLimit(api);
         const azero_value = 0;
 
-        const {result, output} = await azero_domain_nft_contract.query["psp34::balanceOf"](
+        const { result, output } = await azero_domain_nft_contract.query["psp34::balanceOf"](
             address,
-            {value: azero_value, gasLimit},
+            { value: azero_value, gasLimit },
             account
         );
         if (result.isOk && output) {
@@ -73,7 +73,7 @@ export async function totalSupply(
 export async function ownerOf(
     caller_account: string,
     domainName: string,
-): Promise<string | null> {
+):Promise<string | null> {
     if (!azero_domain_nft_contract || !caller_account) {
         return null;
     }
@@ -97,7 +97,7 @@ export async function ownerOf(
 export async function getNftOwner(
     caller_account: string,
     domainName: string,
-): Promise<string | null> {
+):Promise<string | null> {
     if (!azero_domain_nft_contract || !caller_account) {
         return null;
     }
@@ -121,7 +121,7 @@ export async function getNftOwner(
 export async function getRegistrationPeriod(
     callerCccount: string,
     domainName: string,
-): Promise<any[]> {
+):Promise<any[]> {
     if (!azero_domain_nft_contract || !callerCccount) {
         return [];
     }

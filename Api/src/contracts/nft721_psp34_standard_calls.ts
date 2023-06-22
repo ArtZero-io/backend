@@ -152,6 +152,11 @@ export async function ownerOf(
     caller_account: string,
     tokenId: number
 ) {
+    console.log({
+        nft721_psp34_standard_contract: nft721_psp34_standard_contract,
+        caller_account: caller_account,
+        tokenId: tokenId
+    });
     if (!nft721_psp34_standard_contract || !caller_account) {
         return null;
     }
