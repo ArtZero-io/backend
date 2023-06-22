@@ -19,6 +19,7 @@ import {CRONJOB_ENABLE} from "./utils/constant";
 import {CronJobAzProcessingAllQueueNft} from "./cronjobs/azProcessingAllQueueNft";
 import {CronJobThreads} from "./cronjobs/checkThread";
 import {CronJobAzBidsMonitorAutoCheckQueue} from "./cronjobs/azBidsMonitorAutoCheckQueue";
+import {CronJobAzeroDomainCollector} from "./cronjobs/azeroDomainCollector";
 export * from './application';
 
 dotenv.config();
@@ -27,6 +28,13 @@ export let localApi: ApiPromise;
 
 export async function main(options: ApplicationConfig = {}) {
   const app = new ApiApplication(options);
+
+  console.log('main file: CRONJOB_ENABLE.AZ_AZERO_DOMAINS_COLLECTOR', CRONJOB_ENABLE.AZ_AZERO_DOMAINS_COLLECTOR);
+  if (CRONJOB_ENABLE.AZ_AZERO_DOMAINS_COLLECTOR) {
+    const cronJobAzeroDomainCollector = createBindingFromClass(CronJobAzeroDomainCollector);
+    app.add(cronJobAzeroDomainCollector);
+    app.configure(cronJobAzeroDomainCollector.key);
+  }
 
   if (CRONJOB_ENABLE.AZ_BIDS_MONITOR) {
     const cronJobAzBidsMonitor = createBindingFromClass(CronJobAzBidsMonitor);

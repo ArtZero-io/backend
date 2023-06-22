@@ -27,5 +27,6 @@ export let global_vars = {
     is_check_Bid: false,
     is_auto_check_Bid: false,
     is_push_to_cloudflare_status: false,
-    theadCounter: 0
+    theadCounter: 0,
+    is_check_new_az_domain_nft: false
 };
