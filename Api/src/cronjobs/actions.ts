@@ -527,8 +527,6 @@ export async function check_NFT_queue_all(
                 const metaData = {
                     traits: undefined,
                     nftName: azDomainName,
-                    description: "NFT of Azero Domain",
-                    avatar: `ipfs://bafybeicm3yzfj6gmfrwq6elfiswzr2iv7cglgdpx6hf5u35ki43m4dcuda/2.png`,
                 };
 
                 //Get all On-chain MetaData if exists
@@ -557,7 +555,7 @@ export async function check_NFT_queue_all(
                 // console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - forSaleInformation: `, forSaleInformation);
                 let obj: nfts = new nfts(
                     {
-                        owner: owner,
+                        owner: forSaleInformation ? marketplace.CONTRACT_ADDRESS : owner,
                         attributes: attributes,
                         attributesValue: attributeValues,
                         listed_date: forSaleInformation
@@ -1215,9 +1213,7 @@ export async function check_NFT_queue(
                 // Get NFT's Attributes
                 const metaData = {
                     traits: undefined,
-                    nftName: azDomainName,
-                    description: "NFT of Azero Domain",
-                    avatar: `ipfs://bafybeicm3yzfj6gmfrwq6elfiswzr2iv7cglgdpx6hf5u35ki43m4dcuda/2.png`
+                    nftName: azDomainName
                 };
 
                 //Get all On-chain MetaData if exists
