@@ -1168,6 +1168,17 @@ export async function check_NFT_queue(
                         nftAzDomain.azDomainName
                     );
                 }
+                //Get For Sale Information
+                let forSaleInformation = await marketplace_calls.getNftSaleInfo(
+                    global_vars.caller,
+                    nftContractAddress,
+                    {bytes: azDomainName}
+                );
+
+                if (forSaleInformation?.isForSale) {
+                    owner = marketplace.CONTRACT_ADDRESS;
+                }
+
                 // Check and update attributes
                 console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - owner: `, owner);
                 if (!owner) {
@@ -1226,12 +1237,7 @@ export async function check_NFT_queue(
                 console.log("attributes", attributes);
                 console.log("attributeValues", attributeValues);
 
-                //Get For Sale Information
-                let forSaleInformation = await marketplace_calls.getNftSaleInfo(
-                    global_vars.caller,
-                    nftContractAddress,
-                    {bytes: azDomainName}
-                );
+
                 // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - forSaleInformation: `, forSaleInformation);
                 let obj: nfts = new nfts(
                     {
