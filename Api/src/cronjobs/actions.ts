@@ -45,7 +45,7 @@ import {
     RewardQueueSchemaRepository,
     ScannedBlocksSchemaRepository,
     StakingEventSchemaRepository,
-    UnListEventSchemaRepository, BlackListRepository, AzeroDomainEventRepository
+    UnListEventSchemaRepository, BlackListRepository, AzeroDomainEventRepository, ReScannedBlocksSchemaRepository
 } from "../repositories";
 import {
     AzeroDomainEvent,
@@ -2581,6 +2581,131 @@ export async function scanBlocks(
         }
     }
     global_vars.isScanning = false;
+}
+
+export async function reScanBlocks(
+    startBlocknumber: number,
+    endBlocknumber: number,
+    api: ApiPromise,
+    api_azero_doman: Abi,
+    api_launchpad_psp34_nft_standard: Abi,
+    abi_marketplace_contract: Abi,
+    abi_staking_contract: Abi,
+    abi_collection_contract: Abi,
+    reScannedBlocksRepo: ReScannedBlocksSchemaRepository,
+    newListEventRepo: NewListEventSchemaRepository,
+    unListEventRepo: UnListEventSchemaRepository,
+    purchaseEventRepo: PurchaseEventSchemaRepository,
+    bidWinEventRepo: BidWinEventSchemaRepository,
+    stakingEventRepo: StakingEventSchemaRepository,
+    claimRewardEventRepo: ClaimRewardEventSchemaRepository,
+    launchpadMintingEventRepo: LaunchpadMintingEventSchemaRepository,
+    withdrawEventRepo: WithdrawEventSchemaRepository,
+    addRewardEventRepo: AddRewardEventSchemaRepository,
+    collectionEventRepo: CollectionEventSchemaRepository,
+    projectsRepo: ProjectsSchemaRepository,
+    azeroDomainEventRepo: AzeroDomainEventRepository,
+    nftQueueScanAllRepo: NftQueueScanAllSchemaRepository,
+    nftQueueSchemaRepo: NftQueueSchemaRepository,
+) {
+    if (startBlocknumber > endBlocknumber) return;
+    if (global_vars.isReScanning) {
+        const blockHash = await api.rpc.chain.getBlockHash(endBlocknumber);
+        // @ts-ignore
+        const eventRecords = await api.query.system.events.at(blockHash);
+        console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR_RESCAN} - Start processEventRecords at ${endBlocknumber} now: ${convertToUTCTime(new Date())}`);
+        await processEventRecords(
+            eventRecords,
+            endBlocknumber,
+            api_azero_doman,
+            api_launchpad_psp34_nft_standard,
+            abi_marketplace_contract,
+            abi_staking_contract,
+            abi_collection_contract,
+            newListEventRepo,
+            unListEventRepo,
+            purchaseEventRepo,
+            bidWinEventRepo,
+            stakingEventRepo,
+            claimRewardEventRepo,
+            launchpadMintingEventRepo,
+            withdrawEventRepo,
+            addRewardEventRepo,
+            collectionEventRepo,
+            projectsRepo,
+            azeroDomainEventRepo,
+            nftQueueScanAllRepo,
+            nftQueueSchemaRepo
+        );
+        console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR_RESCAN} - Stop processEventRecords at ${endBlocknumber} now: ${convertToUTCTime(new Date())}`);
+        return;
+    }
+    global_vars.isReScanning = true;
+    const isDebug = false;
+    if (!isDebug) {
+        try {
+            console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR_RESCAN} - Start processEventRecords history from ${startBlocknumber} to ${endBlocknumber} now: ${convertToUTCTime(new Date())}`);
+
+            let lastBlock_db = await reScannedBlocksRepo.findOne({
+                where: {
+                    lastScanned: true
+                }
+            });
+            try {
+                await reScannedBlocksRepo.create({
+                    lastScanned: true,
+                    blockNumber: startBlocknumber,
+                    createdTime: new Date(),
+                    updatedTime: new Date()
+                });
+            } catch (e) {
+                console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - ERROR: ${e.message}`);
+            }
+
+            for (let to_scan = startBlocknumber; to_scan <= endBlocknumber; to_scan++) {
+                const blockHash = await api.rpc.chain.getBlockHash(to_scan);
+                // @ts-ignore
+                const eventRecords = await api.query.system.events.at(blockHash);
+                console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR_RESCAN} - Start processEventRecords at ${to_scan} now: ${convertToUTCTime(new Date())}`);
+                await processEventRecords(
+                    eventRecords,
+                    to_scan,
+                    api_azero_doman,
+                    api_launchpad_psp34_nft_standard,
+                    abi_marketplace_contract,
+                    abi_staking_contract,
+                    abi_collection_contract,
+                    newListEventRepo,
+                    unListEventRepo,
+                    purchaseEventRepo,
+                    bidWinEventRepo,
+                    stakingEventRepo,
+                    claimRewardEventRepo,
+                    launchpadMintingEventRepo,
+                    withdrawEventRepo,
+                    addRewardEventRepo,
+                    collectionEventRepo,
+                    projectsRepo,
+                    azeroDomainEventRepo,
+                    nftQueueScanAllRepo,
+                    nftQueueSchemaRepo
+                );
+                console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR_RESCAN} - Stop processEventRecords at ${to_scan} now: ${convertToUTCTime(new Date())}`);
+                try {
+                    await reScannedBlocksRepo.updateAll({
+                        lastScanned: true,
+                        blockNumber: to_scan,
+                        updatedTime: new Date()
+                    });
+                } catch (e) {
+                    console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR_RESCAN} - ERROR: ${e.message}`);
+                }
+            }
+        } catch (e) {
+            send_telegram_message("reScanBlocks - " + e.message);
+        }
+    }
+    global_vars.isReScanning = false;
 }
 
 export async function processEventRecords(

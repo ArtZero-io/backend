@@ -20,6 +20,7 @@ import {CronJobAzProcessingAllQueueNft} from "./cronjobs/azProcessingAllQueueNft
 import {CronJobThreads} from "./cronjobs/checkThread";
 import {CronJobAzBidsMonitorAutoCheckQueue} from "./cronjobs/azBidsMonitorAutoCheckQueue";
 import {CronJobAzeroDomainCollector} from "./cronjobs/azeroDomainCollector";
+import {CronJobAzEventsCollectorReScan} from "./cronjobs/azEventsCollectorReScan";
 export * from './application';
 
 dotenv.config();
@@ -100,6 +101,11 @@ export async function main(options: ApplicationConfig = {}) {
     const cronJobAzProcessingAllQueueNft = createBindingFromClass(CronJobAzProcessingAllQueueNft);
     app.add(cronJobAzProcessingAllQueueNft);
     app.configure(cronJobAzProcessingAllQueueNft.key);
+  }
+  if (CRONJOB_ENABLE.AZ_EVENTS_COLLECTOR_RESCAN) {
+    const cronJobAzEventsCollectorReScan = createBindingFromClass(CronJobAzEventsCollectorReScan);
+    app.add(cronJobAzEventsCollectorReScan);
+    app.configure(cronJobAzEventsCollectorReScan.key);
   }
 
 

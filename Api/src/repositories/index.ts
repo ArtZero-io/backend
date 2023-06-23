@@ -21,6 +21,7 @@ export * from './projects-schema.repository';
 export * from './purchase-event-schema.repository';
 export * from './reward-queue-schema.repository';
 export * from './scanned-blocks-schema.repository';
+export * from './rescanned-blocks-schema.repository';
 export * from './staking-event-schema.repository';
 export * from './trait-schema.repository';
 export * from './un-list-event-schema.repository';

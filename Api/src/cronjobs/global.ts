@@ -24,6 +24,7 @@ export let global_vars = {
     project_count_db: 0,
     is_check_Image_queue: false,
     isScanning: false,
+    isReScanning: false,
     is_check_Bid: false,
     is_auto_check_Bid: false,
     is_push_to_cloudflare_status: false,

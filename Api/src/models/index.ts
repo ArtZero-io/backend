@@ -21,6 +21,7 @@ export * from './staking-event-schema.model';
 export * from './collection-event-schema.model';
 export * from './minting-event-schema.model';
 export * from './scanned-blocks-schema.model';
+export * from './rescanned-blocks-schema.model';
 export * from './reward-queue-schema.model';
 export * from './claim-reward-event-schema.model';
 export * from './add-reward-event-schema.model';
