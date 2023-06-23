@@ -3,7 +3,7 @@ import {
     APICall, checkProjectSchema,
     convertNumberWithoutCommas,
     convertStringToPrice,
-    delay, isAzEnabled,
+    delay, hexToAscii, isAzEnabled,
     randomString,
     readOnlyGasLimit,
     send_message,
@@ -2507,74 +2507,78 @@ export async function scanBlocks(
         return;
     }
     global_vars.isScanning = true;
-    try {
-        //Check database to see the last checked blockNumber
-        let lastBlock_db = await scannedBlocksRepo.findOne({
-            where: {
-                lastScanned: true
+    const isDebug = false;
+    if (!isDebug) {
+        try {
+            console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Start processEventRecords history at ${blocknumber} now: ${convertToUTCTime(new Date())}`);
+            //Check database to see the last checked blockNumber
+            let lastBlock_db = await scannedBlocksRepo.findOne({
+                where: {
+                    lastScanned: true
+                }
+            });
+            let last_scanned_blocknumber = 0;
+            if (lastBlock_db && lastBlock_db?.blockNumber) {
+                last_scanned_blocknumber = lastBlock_db.blockNumber;
+            } else {
+                try {
+                    await scannedBlocksRepo.create({
+                        lastScanned: true,
+                        blockNumber: 0,
+                        createdTime: new Date(),
+                        updatedTime: new Date()
+                    });
+                } catch (e) {
+                    console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - ERROR: ${e.message}`);
+                }
             }
-        });
-        let last_scanned_blocknumber = 0;
-        if (lastBlock_db && lastBlock_db?.blockNumber) {
-            last_scanned_blocknumber = lastBlock_db.blockNumber;
-        } else {
-            try {
-                await scannedBlocksRepo.create({
-                    lastScanned: true,
-                    blockNumber: 0,
-                    createdTime: new Date(),
-                    updatedTime: new Date()
-                });
-            } catch (e) {
-                console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - ERROR: ${e.message}`);
+            if (last_scanned_blocknumber == 0) last_scanned_blocknumber = blocknumber;
+            for (let to_scan = last_scanned_blocknumber; to_scan <= blocknumber; to_scan++) {
+                // console.log('Scanning block', to_scan);
+                if (last_scanned_blocknumber > 0 && last_scanned_blocknumber % 43200 == 0) {
+                    send_telegram_message("scanBlocks - syncing " + last_scanned_blocknumber + "/" + blocknumber);
+                }
+                const blockHash = await api.rpc.chain.getBlockHash(to_scan);
+                // @ts-ignore
+                const eventRecords = await api.query.system.events.at(blockHash);
+                console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Start processEventRecords at ${to_scan} now: ${convertToUTCTime(new Date())}`);
+                await processEventRecords(
+                    eventRecords,
+                    to_scan,
+                    api_azero_doman,
+                    api_launchpad_psp34_nft_standard,
+                    abi_marketplace_contract,
+                    abi_staking_contract,
+                    abi_collection_contract,
+                    newListEventRepo,
+                    unListEventRepo,
+                    purchaseEventRepo,
+                    bidWinEventRepo,
+                    stakingEventRepo,
+                    claimRewardEventRepo,
+                    launchpadMintingEventRepo,
+                    withdrawEventRepo,
+                    addRewardEventRepo,
+                    collectionEventRepo,
+                    projectsRepo,
+                    azeroDomainEventRepo,
+                    nftQueueScanAllRepo,
+                    nftQueueSchemaRepo
+                );
+                console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Stop processEventRecords at ${to_scan} now: ${convertToUTCTime(new Date())}`);
+                try {
+                    await scannedBlocksRepo.updateAll({
+                        lastScanned: true,
+                        blockNumber: to_scan,
+                        updatedTime: new Date()
+                    });
+                } catch (e) {
+                    console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - ERROR: ${e.message}`);
+                }
             }
+        } catch (e) {
+            send_telegram_message("scanBlocks - " + e.message);
         }
-        if (last_scanned_blocknumber == 0) last_scanned_blocknumber = blocknumber;
-        for (let to_scan = last_scanned_blocknumber; to_scan <= blocknumber; to_scan++) {
-            // console.log('Scanning block', to_scan);
-            if (last_scanned_blocknumber > 0 && last_scanned_blocknumber % 43200 == 0) {
-                send_telegram_message("scanBlocks - syncing " + last_scanned_blocknumber + "/" + blocknumber);
-            }
-            const blockHash = await api.rpc.chain.getBlockHash(to_scan);
-            // @ts-ignore
-            const eventRecords = await api.query.system.events.at(blockHash);
-            console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Start processEventRecords at ${to_scan} now: ${convertToUTCTime(new Date())}`);
-            await processEventRecords(
-                eventRecords,
-                to_scan,
-                api_azero_doman,
-                api_launchpad_psp34_nft_standard,
-                abi_marketplace_contract,
-                abi_staking_contract,
-                abi_collection_contract,
-                newListEventRepo,
-                unListEventRepo,
-                purchaseEventRepo,
-                bidWinEventRepo,
-                stakingEventRepo,
-                claimRewardEventRepo,
-                launchpadMintingEventRepo,
-                withdrawEventRepo,
-                addRewardEventRepo,
-                collectionEventRepo,
-                projectsRepo,
-                azeroDomainEventRepo,
-                nftQueueScanAllRepo,
-                nftQueueSchemaRepo
-            );
-            console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Stop processEventRecords at ${to_scan} now: ${convertToUTCTime(new Date())}`);
-            try {
-                await scannedBlocksRepo.updateAll({
-                    lastScanned: true,
-                    blockNumber: to_scan,
-                    updatedTime: new Date()
-                });
-            } catch (e) {
-                console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - ERROR: ${e.message}`);
-            }
-        }
-    } catch (e) {
-        send_telegram_message("scanBlocks - " + e.message);
     }
     global_vars.isScanning = false;
 }
@@ -2710,12 +2714,13 @@ export async function processEventRecords(
                                 if (!azChecking.isEnabled) {
                                     isValidated = false;
                                 } else {
+                                    let azDomainNameDecoded = eventValues[3] ? hexToAscii(JSON.parse(eventValues[3]).bytes) : undefined;
                                     obj = {
                                         blockNumber: to_scan,
                                         buyer: eventValues[0],
                                         seller: eventValues[1],
                                         nftContractAddress: eventValues[2],
-                                        azDomainName: eventValues[3] ? JSON.parse(eventValues[3]).bytes : undefined,
+                                        azDomainName: azDomainNameDecoded ? azDomainNameDecoded : undefined,
                                         price: eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0,
                                         platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 12 : 0,
                                         royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 12 : 0,
@@ -2734,6 +2739,7 @@ export async function processEventRecords(
                                 }
                             }
                             console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - eventValues: `, eventValues);
+                            console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - objValues: `, obj);
                             let found = await purchaseEventRepo.findOne({
                                 where: obj
                             });
@@ -2757,12 +2763,13 @@ export async function processEventRecords(
                                 if (!azChecking.isEnabled) {
                                     isValidated = false;
                                 } else {
+                                    let azDomainNameDecoded = eventValues[3] ? hexToAscii(JSON.parse(eventValues[3]).bytes) : undefined;
                                     obj = {
                                         blockNumber: to_scan,
                                         buyer: eventValues[0],
                                         seller: eventValues[1],
                                         nftContractAddress: eventValues[2],
-                                        azDomainName: eventValues[3] ? JSON.parse(eventValues[3]).bytes : undefined,
+                                        azDomainName: azDomainNameDecoded ? azDomainNameDecoded : undefined,
                                         price: eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0,
                                         platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 12 : 0,
                                         royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 12 : 0,

@@ -363,3 +363,12 @@ export function isAzEnabled(azDomainAddress?: string): {
         isEnabled: false
     };
 }
+
+export function hexToAscii(str1: string): string {
+    let hex = str1?.toString().replace(`0x`,'');
+    let str = "";
+    for (let n = 0; n < hex.length; n += 2) {
+        str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+    }
+    return str;
+}
