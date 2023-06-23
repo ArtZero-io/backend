@@ -100,6 +100,7 @@ export const MESSAGE = {
     NO_INPUT: "No Input",
     NO_ADDRESS: "No address",
     NO_TOKEN_ID: "No Token ID",
+    NO_DOMAIN_NAME: "No Domain name",
     NO_IMAGES: "No Images",
     NO_IMAGE_TYPE: "No Image Type",
     NO_METADATA: "No Metadata",
