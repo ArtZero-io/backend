@@ -2645,12 +2645,11 @@ export async function reScanBlocks(
     if (!isDebug) {
         try {
             console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR_RESCAN} - Start processEventRecords history from ${startBlocknumber} to ${endBlocknumber} now: ${convertToUTCTime(new Date())}`);
-
-            let lastBlock_db = await reScannedBlocksRepo.findOne({
-                where: {
-                    lastScanned: true
-                }
-            });
+            // let lastBlock_db = await reScannedBlocksRepo.findOne({
+            //     where: {
+            //         lastScanned: true
+            //     }
+            // });
             try {
                 await reScannedBlocksRepo.create({
                     lastScanned: true,
