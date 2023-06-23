@@ -791,13 +791,16 @@ export type ReqGetNFTByIDType = {
 };
 const ReqGetNFTByIDSchema: SchemaObject = {
     type: 'object',
-    required: ['token_id'],
+    required: ['collection_address'],
     properties: {
         collection_address: {
             type: 'string',
         },
         token_id: {
             type: 'number',
+        },
+        azDomainName: {
+            type: 'string',
         },
     },
 };
