@@ -522,7 +522,7 @@ export async function check_NFT_queue_all(
                 }
                 // Check and update attributes
                 console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - nft_owner: `, nft_owner);
-
+                
                 // Get NFT's Attributes
                 const metaData = {
                     traits: undefined,
@@ -552,6 +552,24 @@ export async function check_NFT_queue_all(
                     nftContractAddress,
                     {bytes: azDomainName}
                 );
+
+                const {data: domainMetadata} = await axios({
+                    url: `https://tzero.id/api/v1/metadata/${azDomainName}.tzero.json`,
+                    method: "get",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "cache-control": "no-cache",
+                        "Access-Control-Allow-Origin": "*",
+                    },
+                });
+                if (domainMetadata) {
+                    if (domainMetadata.metadata) {
+                        metaData.nftName = domainMetadata.metadata.name;
+                        metaData.traits = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
+                            return {...p, [c.trait_type]: c.value};
+                        }, {});
+                    }
+                }
                 // console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - forSaleInformation: `, forSaleInformation);
                 let obj: nfts = new nfts(
                     {
