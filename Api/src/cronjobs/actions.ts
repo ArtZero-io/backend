@@ -1250,12 +1250,28 @@ export async function check_NFT_queue(
                 }
                 console.log("attributes", attributes);
                 console.log("attributeValues", attributeValues);
-
+                const {data: domainMetadata} = await axios({
+                    url: `https://tzero.id/api/v1/metadata/${azDomainName}.tzero.json`,
+                    method: "get",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "cache-control": "no-cache",
+                        "Access-Control-Allow-Origin": "*",
+                    },
+                });
+                if (domainMetadata) {
+                    if (domainMetadata.metadata) {
+                        metaData.nftName = domainMetadata.metadata.name;
+                        metaData.traits = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
+                            return {...p, [c.trait_type]: c.value};
+                        }, {});
+                    }
+                }
 
                 // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - forSaleInformation: `, forSaleInformation);
                 let obj: nfts = new nfts(
                     {
-                        owner: owner,
+                        owner: forSaleInformation ? marketplace.CONTRACT_ADDRESS : owner,
                         attributes: attributes,
                         attributesValue: attributeValues,
                         listed_date: forSaleInformation
