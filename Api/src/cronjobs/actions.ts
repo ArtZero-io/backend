@@ -3557,12 +3557,6 @@ export async function check_new_azero_domains_nft_queue(
                 registeredAt
                 owner {
                   id
-                  domains {
-                    name
-                    registeredAt
-                    tld
-                    id
-                  }
                 }
                 tld
               }
@@ -3631,7 +3625,7 @@ export async function check_new_azero_domains_nft_queue(
                 );
                 let obj: nfts = new nfts(
                     {
-                        owner: domain.owner.id,
+                        owner: forSaleInformation ? marketplace.CONTRACT_ADDRESS : domain.owner.id,
                         attributes: attributes,
                         attributesValue: attributeValues,
                         listed_date: forSaleInformation
