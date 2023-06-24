@@ -573,7 +573,7 @@ export async function check_NFT_queue_all(
                 // console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - forSaleInformation: `, forSaleInformation);
                 let obj: nfts = new nfts(
                     {
-                        owner: forSaleInformation ? marketplace.CONTRACT_ADDRESS : owner,
+                        owner: (forSaleInformation && forSaleInformation.isForSale) ? marketplace.CONTRACT_ADDRESS : owner,
                         attributes: attributes,
                         attributesValue: attributeValues,
                         listed_date: forSaleInformation
@@ -1271,7 +1271,7 @@ export async function check_NFT_queue(
                 // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - forSaleInformation: `, forSaleInformation);
                 let obj: nfts = new nfts(
                     {
-                        owner: forSaleInformation ? marketplace.CONTRACT_ADDRESS : owner,
+                        owner: (forSaleInformation && forSaleInformation.isForSale) ? marketplace.CONTRACT_ADDRESS : owner,
                         attributes: attributes,
                         attributesValue: attributeValues,
                         listed_date: forSaleInformation
@@ -3641,7 +3641,7 @@ export async function check_new_azero_domains_nft_queue(
                 );
                 let obj: nfts = new nfts(
                     {
-                        owner: forSaleInformation ? marketplace.CONTRACT_ADDRESS : domain.owner.id,
+                        owner: (forSaleInformation && forSaleInformation.isForSale) ? marketplace.CONTRACT_ADDRESS : domain.owner.id,
                         attributes: attributes,
                         attributesValue: attributeValues,
                         listed_date: forSaleInformation
