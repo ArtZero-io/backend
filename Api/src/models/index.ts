@@ -39,3 +39,4 @@ export * from './azero-domain-event.model';
 export * from './obj-register.model';
 export * from './obj-release.model';
 export * from './obj-transfer.model';
+export * from './event-transfer.model';
