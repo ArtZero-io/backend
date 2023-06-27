@@ -32,4 +32,3 @@ export * from './black-list.repository';
 export * from './config.repository';
 export * from './tmp-data.repository';
 export * from './azero-domain-event.repository';
-export * from './event-transfer.repository';
