@@ -611,12 +611,16 @@ export async function check_NFT_queue_all(
                     // TODO: Check data before updating
                     found.owner = obj.owner ? obj.owner : found.owner;
                     found.attributes = (obj.attributes !== undefined || obj.attributes) ? obj.attributes : found.attributes;
-                    found.attributesValue = (obj.attributesValue !==  undefined || obj.attributesValue) ? obj.attributesValue : found.attributesValue;
+                    found.attributesValue = (obj.attributesValue !== undefined || obj.attributesValue) ? obj.attributesValue : found.attributesValue;
                     found.listed_date = (obj.listed_date !== undefined || obj.listed_date) ? obj.listed_date : found.listed_date;
                     found.is_for_sale = (obj.is_for_sale !== undefined || obj.is_for_sale) ? obj.is_for_sale : found.is_for_sale;
+                    found.price = (obj.price !== undefined || obj.price) ? obj.price : found.price;
                     found.nft_owner = (obj.nft_owner !== undefined || obj.nft_owner) ? obj.nft_owner : found.nft_owner;
                     found.is_locked = (obj.is_locked !== undefined || obj.is_locked) ? obj.is_locked : found.is_locked;
-                    found.updatedTime = (obj.updatedTime !== undefined || obj.updatedTime) ? obj.updatedTime : found.updatedTime;
+                    found.isAzDomain = (obj.isAzDomain !== undefined || obj.isAzDomain) ? obj.isAzDomain : found.isAzDomain;
+                    found.azDomainName = (obj.azDomainName !== undefined || obj.azDomainName) ? obj.azDomainName : found.azDomainName;
+                    found.azEventName = (obj.azEventName !== undefined || obj.azEventName) ? obj.azEventName : found.azEventName;
+                    found.updatedTime = new Date();
                     found.traits = (obj.traits !== undefined || obj.traits) ? obj.traits : found.traits;
                     found.nftName = (obj.nftName !== undefined || obj.nftName) ? obj.nftName : found.nftName;
                     found.description = (obj.description !== undefined || obj.description) ? obj.description : found.description;
@@ -868,6 +872,7 @@ export async function check_NFT_queue_all(
                     found.attributesValue = (obj.attributesValue !==  undefined || obj.attributesValue) ? obj.attributesValue : found.attributesValue;
                     found.listed_date = (obj.listed_date !== undefined || obj.listed_date) ? obj.listed_date : found.listed_date;
                     found.is_for_sale = (obj.is_for_sale !== undefined || obj.is_for_sale) ? obj.is_for_sale : found.is_for_sale;
+                    found.price = (obj.price !== undefined || obj.price) ? obj.price : found.price;
                     found.nft_owner = (obj.nft_owner !== undefined || obj.nft_owner) ? obj.nft_owner : found.nft_owner;
                     found.is_locked = (obj.is_locked !== undefined || obj.is_locked) ? obj.is_locked : found.is_locked;
                     found.updatedTime = (obj.updatedTime !== undefined || obj.updatedTime) ? obj.updatedTime : found.updatedTime;
@@ -1335,11 +1340,26 @@ export async function check_NFT_queue(
                         nftContractAddress,
                         azDomainName
                     );
+                    // TODO: Check data before updating
+                    found.owner = obj.owner ? obj.owner : found.owner;
+                    found.attributes = (obj.attributes !== undefined || obj.attributes) ? obj.attributes : found.attributes;
+                    found.attributesValue = (obj.attributesValue !== undefined || obj.attributesValue) ? obj.attributesValue : found.attributesValue;
+                    found.listed_date = (obj.listed_date !== undefined || obj.listed_date) ? obj.listed_date : found.listed_date;
+                    found.is_for_sale = (obj.is_for_sale !== undefined || obj.is_for_sale) ? obj.is_for_sale : found.is_for_sale;
+                    found.price = (obj.price !== undefined || obj.price) ? obj.price : found.price;
+                    found.nft_owner = (obj.nft_owner !== undefined || obj.nft_owner) ? obj.nft_owner : found.nft_owner;
+                    found.is_locked = (obj.is_locked !== undefined || obj.is_locked) ? obj.is_locked : found.is_locked;
+                    found.isAzDomain = (obj.isAzDomain !== undefined || obj.isAzDomain) ? obj.isAzDomain : found.isAzDomain;
+                    found.azDomainName = (obj.azDomainName !== undefined || obj.azDomainName) ? obj.azDomainName : found.azDomainName;
+                    found.azEventName = (obj.azEventName !== undefined || obj.azEventName) ? obj.azEventName : found.azEventName;
+                    found.updatedTime = new Date();
+                    found.traits = (obj.traits !== undefined || obj.traits) ? obj.traits : found.traits;
+                    found.nftName = (obj.nftName !== undefined || obj.nftName) ? obj.nftName : found.nftName;
+                    found.description = (obj.description !== undefined || obj.description) ? obj.description : found.description;
+                    found.avatar = (obj.avatar !== undefined || obj.avatar) ? obj.avatar : found.avatar;
                     try {
-                        obj.updatedTime = new Date();
-                        console.log(`===============`);
-                        console.log(obj);
-                        await nftRepo.updateById(found._id, obj);
+                        console.log(found);
+                        await nftRepo.updateById(found._id, found);
                     } catch (e) {
                         console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
                     }
@@ -1581,11 +1601,26 @@ export async function check_NFT_queue(
                         nftContractAddress,
                         tokenID
                     );
+                    // TODO: Check data before updating
+                    found.owner = obj.owner ? obj.owner : found.owner;
+                    found.attributes = (obj.attributes !== undefined || obj.attributes) ? obj.attributes : found.attributes;
+                    found.attributesValue = (obj.attributesValue !== undefined || obj.attributesValue) ? obj.attributesValue : found.attributesValue;
+                    found.listed_date = (obj.listed_date !== undefined || obj.listed_date) ? obj.listed_date : found.listed_date;
+                    found.is_for_sale = (obj.is_for_sale !== undefined || obj.is_for_sale) ? obj.is_for_sale : found.is_for_sale;
+                    found.price = (obj.price !== undefined || obj.price) ? obj.price : found.price;
+                    found.nft_owner = (obj.nft_owner !== undefined || obj.nft_owner) ? obj.nft_owner : found.nft_owner;
+                    found.is_locked = (obj.is_locked !== undefined || obj.is_locked) ? obj.is_locked : found.is_locked;
+                    found.updatedTime = new Date();
+                    found.traits = (obj.traits !== undefined || obj.traits) ? obj.traits : found.traits;
+                    found.nftName = (obj.nftName !== undefined || obj.nftName) ? obj.nftName : found.nftName;
+                    found.description = (obj.description !== undefined || obj.description) ? obj.description : found.description;
+                    found.avatar = (obj.avatar !== undefined || obj.avatar) ? obj.avatar : found.avatar;
                     try {
-                        await nftRepo.updateAll(
-                            obj,
-                            {nftContractAddress: nftContractAddress, tokenID: tokenID},
-                        );
+                        // await nftRepo.updateAll(
+                        //     obj,
+                        //     {nftContractAddress: nftContractAddress, tokenID: tokenID},
+                        // );
+                        await nftRepo.updateById(found._id, found);
                     } catch (e) {
                         console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
                     }
