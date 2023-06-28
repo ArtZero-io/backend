@@ -585,6 +585,7 @@ export async function check_NFT_queue_all(
                         is_for_sale: forSaleInformation ? forSaleInformation.isForSale : false,
                         nft_owner: (nft_owner) ? nft_owner : undefined,
                         is_locked: false,
+                        updatedTime: new Date(),
                         isAzDomain: true,
                         azDomainName: azDomainName,
                         azEventName: azEventName,
@@ -606,9 +607,23 @@ export async function check_NFT_queue_all(
                         nftContractAddress,
                         azDomainName
                     );
+
+                    // TODO: Check data before updating
+                    found.owner = obj.owner ? obj.owner : found.owner;
+                    found.attributes = (obj.attributes !== undefined || obj.attributes) ? obj.attributes : found.attributes;
+                    found.attributesValue = (obj.attributesValue !==  undefined || obj.attributesValue) ? obj.attributesValue : found.attributesValue;
+                    found.listed_date = (obj.listed_date !== undefined || obj.listed_date) ? obj.listed_date : found.listed_date;
+                    found.is_for_sale = (obj.is_for_sale !== undefined || obj.is_for_sale) ? obj.is_for_sale : found.is_for_sale;
+                    found.nft_owner = (obj.nft_owner !== undefined || obj.nft_owner) ? obj.nft_owner : found.nft_owner;
+                    found.is_locked = (obj.is_locked !== undefined || obj.is_locked) ? obj.is_locked : found.is_locked;
+                    found.updatedTime = (obj.updatedTime !== undefined || obj.updatedTime) ? obj.updatedTime : found.updatedTime;
+                    found.traits = (obj.traits !== undefined || obj.traits) ? obj.traits : found.traits;
+                    found.nftName = (obj.nftName !== undefined || obj.nftName) ? obj.nftName : found.nftName;
+                    found.description = (obj.description !== undefined || obj.description) ? obj.description : found.description;
+                    found.avatar = (obj.avatar !== undefined || obj.avatar) ? obj.avatar : found.avatar;
+
                     try {
-                        obj.updatedTime = new Date();
-                        await nftRepo.updateById(found._id, obj);
+                        await nftRepo.updateById(found._id, found);
                     } catch (e) {
                         console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - ERROR: ${e.message}`);
                     }
@@ -846,8 +861,23 @@ export async function check_NFT_queue_all(
                         nftContractAddress,
                         tokenID
                     );
+
+                    // TODO: Check data before updating
+                    found.owner = obj.owner ? obj.owner : found.owner;
+                    found.attributes = (obj.attributes !== undefined || obj.attributes) ? obj.attributes : found.attributes;
+                    found.attributesValue = (obj.attributesValue !==  undefined || obj.attributesValue) ? obj.attributesValue : found.attributesValue;
+                    found.listed_date = (obj.listed_date !== undefined || obj.listed_date) ? obj.listed_date : found.listed_date;
+                    found.is_for_sale = (obj.is_for_sale !== undefined || obj.is_for_sale) ? obj.is_for_sale : found.is_for_sale;
+                    found.nft_owner = (obj.nft_owner !== undefined || obj.nft_owner) ? obj.nft_owner : found.nft_owner;
+                    found.is_locked = (obj.is_locked !== undefined || obj.is_locked) ? obj.is_locked : found.is_locked;
+                    found.updatedTime = (obj.updatedTime !== undefined || obj.updatedTime) ? obj.updatedTime : found.updatedTime;
+                    found.traits = (obj.traits !== undefined || obj.traits) ? obj.traits : found.traits;
+                    found.nftName = (obj.nftName !== undefined || obj.nftName) ? obj.nftName : found.nftName;
+                    found.description = (obj.description !== undefined || obj.description) ? obj.description : found.description;
+                    found.avatar = (obj.avatar !== undefined || obj.avatar) ? obj.avatar : found.avatar;
+
                     try {
-                        await nftRepo.updateById(found._id, obj);
+                        await nftRepo.updateById(found._id, found);
                     } catch (e) {
                         console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - ERROR: ${e.message}`);
                     }
