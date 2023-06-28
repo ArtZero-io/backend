@@ -639,6 +639,7 @@ export async function check_NFT_queue_all(
                 found.attributesValue = (obj.attributesValue !==  undefined || obj.attributesValue) ? obj.attributesValue : found.attributesValue;
                 found.listed_date = (obj.listed_date !== undefined || obj.listed_date) ? obj.listed_date : found.listed_date;
                 found.is_for_sale = (obj.is_for_sale !== undefined || obj.is_for_sale) ? obj.is_for_sale : found.is_for_sale;
+                found.price = (obj.price !== undefined || obj.price) ? obj.price : found.price;
                 found.nft_owner = (obj.nft_owner !== undefined || obj.nft_owner) ? obj.nft_owner : found.nft_owner;
                 found.is_locked = (obj.is_locked !== undefined || obj.is_locked) ? obj.is_locked : found.is_locked;
                 found.updatedTime = (obj.updatedTime !== undefined || obj.updatedTime) ? obj.updatedTime : found.updatedTime;
@@ -1116,6 +1117,7 @@ export async function check_NFT_queue(
                 found.attributesValue = (obj.attributesValue !== undefined || obj.attributesValue) ? obj.attributesValue : found.attributesValue;
                 found.listed_date = (obj.listed_date !== undefined || obj.listed_date) ? obj.listed_date : found.listed_date;
                 found.is_for_sale = (obj.is_for_sale !== undefined || obj.is_for_sale) ? obj.is_for_sale : found.is_for_sale;
+                found.price = (obj.price !== undefined || obj.price) ? obj.price : found.price;
                 found.nft_owner = (obj.nft_owner !== undefined || obj.nft_owner) ? obj.nft_owner : found.nft_owner;
                 found.is_locked = (obj.is_locked !== undefined || obj.is_locked) ? obj.is_locked : found.is_locked;
                 found.updatedTime = new Date();
