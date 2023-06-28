@@ -1110,11 +1110,25 @@ export async function check_NFT_queue(
                     nftContractAddress,
                     tokenID
                 );
+                // TODO: Check data before updating
+                found.owner = (obj.owner) ? obj.owner : found.owner;
+                found.attributes = (obj.attributes) ? obj.attributes : found.attributes;
+                found.attributesValue = (obj.attributesValue) ? obj.attributesValue : found.attributesValue;
+                found.listed_date = (obj.listed_date) ? obj.listed_date : found.listed_date;
+                found.is_for_sale = (obj.is_for_sale) ? obj.is_for_sale : found.is_for_sale;
+                found.nft_owner = (obj.nft_owner) ? obj.nft_owner : found.nft_owner;
+                found.is_locked = (obj.is_locked) ? obj.is_locked : found.is_locked;
+                found.updatedTime = new Date();
+                found.traits = (obj.traits) ? obj.traits : found.traits;
+                found.nftName = (obj.nftName) ? obj.nftName : found.nftName;
+                found.description = (obj.description) ? obj.description : found.description;
+                found.avatar = (obj.avatar) ? obj.avatar : found.avatar;
                 try {
-                    await nftRepo.updateAll(
-                        obj,
-                        {nftContractAddress: nftContractAddress, tokenID: tokenID},
-                    );
+                    // await nftRepo.updateAll(
+                    //     obj,
+                    //     {nftContractAddress: nftContractAddress, tokenID: tokenID},
+                    // );
+                    await nftRepo.updateById(found._id, found);
                 } catch (e) {
                     console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
                 }
