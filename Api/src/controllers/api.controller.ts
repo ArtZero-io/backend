@@ -2748,28 +2748,28 @@ export class ApiController {
                     where: {
                         nftContractAddress: collection_address,
                         azDomainName: azDomainName,
-                        isAzDomain: true
+                        // isAzDomain: true
                     }
                 });
                 let purchase = await this.purchaseEventSchemaRepository.find({
                     where: {
                         nftContractAddress: collection_address,
                         azDomainName: azDomainName,
-                        isAzDomain: true
+                        // isAzDomain: true
                     }
                 });
                 let list = await this.newListEventSchemaRepository.find({
                     where: {
                         nftContractAddress: collection_address,
                         azDomainName: azDomainName,
-                        isAzDomain: true
+                        // isAzDomain: true
                     }
                 });
                 let unList = await this.unListEventSchemaRepository.find({
                     where: {
                         nftContractAddress: collection_address,
                         azDomainName: azDomainName,
-                        isAzDomain: true
+                        // isAzDomain: true
                     }
                 });
                 let result = bid_win.concat(purchase).concat(list).concat(unList);
