@@ -2748,28 +2748,28 @@ export class ApiController {
                     where: {
                         nftContractAddress: collection_address,
                         azDomainName: azDomainName,
-                        isAzDomain: true
+                        // isAzDomain: true
                     }
                 });
                 let purchase = await this.purchaseEventSchemaRepository.find({
                     where: {
                         nftContractAddress: collection_address,
                         azDomainName: azDomainName,
-                        isAzDomain: true
+                        // isAzDomain: true
                     }
                 });
                 let list = await this.newListEventSchemaRepository.find({
                     where: {
                         nftContractAddress: collection_address,
                         azDomainName: azDomainName,
-                        isAzDomain: true
+                        // isAzDomain: true
                     }
                 });
                 let unList = await this.unListEventSchemaRepository.find({
                     where: {
                         nftContractAddress: collection_address,
                         azDomainName: azDomainName,
-                        isAzDomain: true
+                        // isAzDomain: true
                     }
                 });
                 let result = bid_win.concat(purchase).concat(list).concat(unList);
@@ -4570,37 +4570,54 @@ export class ApiController {
         .then(events => {
           return Promise.all(
             events.map(async event => {
-              const {nftContractAddress, tokenID} = event;
+              const {nftContractAddress, tokenID, azDomainName} = event;
 
-              const nftInfo = await this.nfTsSchemaRepository.findOne({
-                where: {
-                  tokenID,
-                  nftContractAddress,
-                },
-                fields: {
-                  avatar: true,
-                  nftName: true,
-                },
-              });
+              const azChecking = isAzEnabled(nftContractAddress);
 
-              let collectionInfo = await this.collectionsSchemaRepository.findOne(
-                {
+              let nftInfo;
+
+              if (azChecking?.isAzDomain) {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
                   where: {
+                    azDomainName,
                     nftContractAddress,
                   },
                   fields: {
-                    name: true,
-                    avatarImage: true,
+                    avatar: true,
+                    nftName: true,
                   },
-                },
-              );
+                });
+              } else {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
+                  where: {
+                    tokenID,
+                    nftContractAddress,
+                  },
+                  fields: {
+                    avatar: true,
+                    nftName: true,
+                  },
+                });
+              }
+
+              // Temp disable due to no use collectio info
+              //   let collectionInfo =
+              //     await this.collectionsSchemaRepository.findOne({
+              //       where: {
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         name: true,
+              //         avatarImage: true,
+              //       },
+              //     });
 
               return {
                 ...event,
                 avatar: nftInfo?.avatar,
                 nftName: nftInfo?.nftName,
-                collectionName: collectionInfo?.name,
-                collectionAvatar: collectionInfo?.avatarImage,
+                // collectionName: collectionInfo?.name,
+                // collectionAvatar: collectionInfo?.avatarImage,
               };
             }),
           );
@@ -4635,44 +4652,59 @@ export class ApiController {
       const eventData = await this.bidWinEventSchemaRepository
         .find(filter)
         .then(events => {
-          const eventsWithNftInfo = Promise.all(
+          return Promise.all(
             events.map(async event => {
-              const {nftContractAddress, tokenID} = event;
+              const {nftContractAddress, tokenID, azDomainName} = event;
 
-              const nftInfo = await this.nfTsSchemaRepository.findOne({
-                where: {
-                  nftContractAddress,
-                  tokenID,
-                },
-                fields: {
-                  avatar: true,
-                  nftName: true,
-                },
-              });
+              const azChecking = isAzEnabled(nftContractAddress);
 
-              let collectionInfo = await this.collectionsSchemaRepository.findOne(
-                {
+              let nftInfo;
+
+              if (azChecking?.isAzDomain) {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
                   where: {
+                    azDomainName,
                     nftContractAddress,
                   },
                   fields: {
-                    name: true,
-                    avatarImage: true,
+                    avatar: true,
+                    nftName: true,
                   },
-                },
-              );
+                });
+              } else {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
+                  where: {
+                    tokenID,
+                    nftContractAddress,
+                  },
+                  fields: {
+                    avatar: true,
+                    nftName: true,
+                  },
+                });
+              }
+
+              // Temp disable due to no use collectio info
+              //   let collectionInfo =
+              //     await this.collectionsSchemaRepository.findOne({
+              //       where: {
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         name: true,
+              //         avatarImage: true,
+              //       },
+              //     });
 
               return {
                 ...event,
                 avatar: nftInfo?.avatar,
                 nftName: nftInfo?.nftName,
-                collectionName: collectionInfo?.name,
-                collectionAvatar: collectionInfo?.avatarImage,
+                // collectionName: collectionInfo?.name,
+                // collectionAvatar: collectionInfo?.avatarImage,
               };
             }),
           );
-
-          return eventsWithNftInfo;
         });
 
       const eventCount = await this.bidWinEventSchemaRepository.count(
@@ -4704,47 +4736,59 @@ export class ApiController {
       const eventData = await this.newListEventSchemaRepository
         .find(filter)
         .then(events => {
-          const eventsWithNftInfo = Promise.all(
+          return Promise.all(
             events.map(async event => {
-              console.log('getUserNewListEvents event', event);
-              const {nftContractAddress, tokenID} = event;
+              const {nftContractAddress, tokenID, azDomainName} = event;
 
-              const nftInfo = await this.nfTsSchemaRepository.findOne({
-                where: {
-                  nftContractAddress,
-                  tokenID,
-                },
-                fields: {
-                  avatar: true,
-                  nftName: true,
-                },
-              });
+              const azChecking = isAzEnabled(nftContractAddress);
 
-              let collectionInfo = await this.collectionsSchemaRepository.findOne(
-                {
+              let nftInfo;
+
+              if (azChecking?.isAzDomain) {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
                   where: {
+                    azDomainName,
                     nftContractAddress,
                   },
                   fields: {
-                    name: true,
-                    avatarImage: true,
+                    avatar: true,
+                    nftName: true,
                   },
-                },
-              );
+                });
+              } else {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
+                  where: {
+                    tokenID,
+                    nftContractAddress,
+                  },
+                  fields: {
+                    avatar: true,
+                    nftName: true,
+                  },
+                });
+              }
 
-              const ret = {
+              // Temp disable due to no use collectio info
+              //   let collectionInfo =
+              //     await this.collectionsSchemaRepository.findOne({
+              //       where: {
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         name: true,
+              //         avatarImage: true,
+              //       },
+              //     });
+
+              return {
                 ...event,
                 avatar: nftInfo?.avatar,
                 nftName: nftInfo?.nftName,
-                collectionName: collectionInfo?.name,
-                collectionAvatar: collectionInfo?.avatarImage,
+                // collectionName: collectionInfo?.name,
+                // collectionAvatar: collectionInfo?.avatarImage,
               };
-
-              return ret;
             }),
           );
-
-          return eventsWithNftInfo;
         });
 
       const eventCount = await this.newListEventSchemaRepository.count(
@@ -4778,37 +4822,54 @@ export class ApiController {
         .then(events => {
           const eventsWithNftInfo = Promise.all(
             events.map(async event => {
-              const {nftContractAddress, tokenID} = event;
+              const {nftContractAddress, tokenID, azDomainName} = event;
 
-              const nftInfo = await this.nfTsSchemaRepository.findOne({
-                where: {
-                  nftContractAddress,
-                  tokenID,
-                },
-                fields: {
-                  avatar: true,
-                  nftName: true,
-                },
-              });
+              const azChecking = isAzEnabled(nftContractAddress);
 
-              let collectionInfo = await this.collectionsSchemaRepository.findOne(
-                {
+              let nftInfo;
+
+              if (azChecking?.isAzDomain) {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
                   where: {
+                    azDomainName,
                     nftContractAddress,
                   },
                   fields: {
-                    name: true,
-                    avatarImage: true,
+                    avatar: true,
+                    nftName: true,
                   },
-                },
-              );
+                });
+              } else {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
+                  where: {
+                    tokenID,
+                    nftContractAddress,
+                  },
+                  fields: {
+                    avatar: true,
+                    nftName: true,
+                  },
+                });
+              }
+
+              // Temp disable due to no use collectio info
+              //   let collectionInfo =
+              //     await this.collectionsSchemaRepository.findOne({
+              //       where: {
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         name: true,
+              //         avatarImage: true,
+              //       },
+              //     });
 
               return {
                 ...event,
                 avatar: nftInfo?.avatar,
                 nftName: nftInfo?.nftName,
-                collectionName: collectionInfo?.name,
-                collectionAvatar: collectionInfo?.avatarImage,
+                // collectionName: collectionInfo?.name,
+                // collectionAvatar: collectionInfo?.avatarImage,
               };
             }),
           );
