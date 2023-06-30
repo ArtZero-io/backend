@@ -565,9 +565,16 @@ export async function check_NFT_queue_all(
                 if (domainMetadata) {
                     if (domainMetadata.metadata) {
                         metaData.nftName = domainMetadata.metadata.name;
-                        metaData.traits = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
+                        const traitsData = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
                             return {...p, [c.trait_type]: c.value};
                         }, {});
+                        if (traitsData) {
+                            metaData.traits = {
+                                ...traitsData,
+                                registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
+                                expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
+                            };
+                        }
                     }
                 }
                 // console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - forSaleInformation: `, forSaleInformation);
@@ -1297,9 +1304,16 @@ export async function check_NFT_queue(
                 if (domainMetadata) {
                     if (domainMetadata.metadata) {
                         metaData.nftName = domainMetadata.metadata.name;
-                        metaData.traits = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
+                        const traitsData = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
                             return {...p, [c.trait_type]: c.value};
                         }, {});
+                        if (traitsData) {
+                            metaData.traits = {
+                                ...traitsData,
+                                registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
+                                expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
+                            };
+                        }
                     }
                 }
 
