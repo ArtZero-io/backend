@@ -4335,4 +4335,358 @@ export class ApiController {
             });
         }
     }
+
+    @get('/api/purchase-event-schema')
+    @response(200, {
+      description: 'Array of purchaseEventSchema model instances',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'array',
+            items: getModelSchemaRef(purchaseevents, {includeRelations: true}),
+          },
+        },
+      },
+    })
+    async getUserPurchaseEvents(
+      @param.filter(purchaseevents) filter?: Filter<purchaseevents>,
+    ): Promise<Response> {
+      const eventData = await this.purchaseEventSchemaRepository
+        .find(filter)
+        .then(events => {
+          return Promise.all(
+            events.map(async event => {
+              const {
+                nftContractAddress,
+                tokenID,
+                //  azDomainName
+              } = event;
+
+              //   const azChecking = isAzEnabled(nftContractAddress);
+
+              let nftInfo;
+
+              //   if (azChecking?.isAzDomain) {
+              //     nftInfo = await this.nfTsSchemaRepository.findOne({
+              //       where: {
+              //         azDomainName,
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         avatar: true,
+              //         nftName: true,
+              //       },
+              //     });
+              //   } else {
+              nftInfo = await this.nfTsSchemaRepository.findOne({
+                where: {
+                  tokenID,
+                  nftContractAddress,
+                },
+                fields: {
+                  avatar: true,
+                  nftName: true,
+                },
+              });
+              //   }
+
+              // Temp disable due to no use collectio info
+              //   let collectionInfo =
+              //     await this.collectionsSchemaRepository.findOne({
+              //       where: {
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         name: true,
+              //         avatarImage: true,
+              //       },
+              //     });
+
+              return {
+                ...event,
+                avatar: nftInfo?.avatar,
+                nftName: nftInfo?.nftName,
+                // collectionName: collectionInfo?.name,
+                // collectionAvatar: collectionInfo?.avatarImage,
+              };
+            }),
+          );
+        });
+
+      const eventCount = await this.purchaseEventSchemaRepository.count(
+        filter?.where,
+      );
+
+      return this.response.send({
+        status: STATUS.OK,
+        totalCount: eventCount,
+        ret: eventData,
+      });
+    }
+
+    @get('/api/bid-win-event-schema')
+    @response(200, {
+      description: 'Array of bidwinevents model instances',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'array',
+            items: getModelSchemaRef(bidwinevents, {includeRelations: true}),
+          },
+        },
+      },
+    })
+    async getUserBidWinEvents(
+      @param.filter(bidwinevents) filter?: Filter<bidwinevents>,
+    ): Promise<Response> {
+      const eventData = await this.bidWinEventSchemaRepository
+        .find(filter)
+        .then(events => {
+          return Promise.all(
+            events.map(async event => {
+              const {
+                nftContractAddress,
+                tokenID,
+                //  azDomainName
+              } = event;
+
+              //   const azChecking = isAzEnabled(nftContractAddress);
+
+              let nftInfo;
+
+              //   if (azChecking?.isAzDomain) {
+              //     nftInfo = await this.nfTsSchemaRepository.findOne({
+              //       where: {
+              //         azDomainName,
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         avatar: true,
+              //         nftName: true,
+              //       },
+              //     });
+              //   } else {
+              nftInfo = await this.nfTsSchemaRepository.findOne({
+                where: {
+                  tokenID,
+                  nftContractAddress,
+                },
+                fields: {
+                  avatar: true,
+                  nftName: true,
+                },
+              });
+              //   }
+
+              // Temp disable due to no use collectio info
+              //   let collectionInfo =
+              //     await this.collectionsSchemaRepository.findOne({
+              //       where: {
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         name: true,
+              //         avatarImage: true,
+              //       },
+              //     });
+
+              return {
+                ...event,
+                avatar: nftInfo?.avatar,
+                nftName: nftInfo?.nftName,
+                // collectionName: collectionInfo?.name,
+                // collectionAvatar: collectionInfo?.avatarImage,
+              };
+            }),
+          );
+        });
+
+      const eventCount = await this.bidWinEventSchemaRepository.count(
+        filter?.where,
+      );
+
+      return this.response.send({
+        status: STATUS.OK,
+        totalCount: eventCount,
+        ret: eventData,
+      });
+    }
+
+    @get('/api/new-list-event-schema')
+    @response(200, {
+      description: 'Array of newlistevents model instances',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'array',
+            items: getModelSchemaRef(newlistevents, {includeRelations: true}),
+          },
+        },
+      },
+    })
+    async getUserNewListEvents(
+      @param.filter(newlistevents) filter?: Filter<newlistevents>,
+    ): Promise<Response> {
+      const eventData = await this.newListEventSchemaRepository
+        .find(filter)
+        .then(events => {
+          return Promise.all(
+            events.map(async event => {
+              const {
+                nftContractAddress,
+                tokenID,
+                //  azDomainName
+              } = event;
+
+              //   const azChecking = isAzEnabled(nftContractAddress);
+
+              let nftInfo;
+
+              //   if (azChecking?.isAzDomain) {
+              //     nftInfo = await this.nfTsSchemaRepository.findOne({
+              //       where: {
+              //         azDomainName,
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         avatar: true,
+              //         nftName: true,
+              //       },
+              //     });
+              //   } else {
+              nftInfo = await this.nfTsSchemaRepository.findOne({
+                where: {
+                  tokenID,
+                  nftContractAddress,
+                },
+                fields: {
+                  avatar: true,
+                  nftName: true,
+                },
+              });
+              //   }
+
+              // Temp disable due to no use collectio info
+              //   let collectionInfo =
+              //     await this.collectionsSchemaRepository.findOne({
+              //       where: {
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         name: true,
+              //         avatarImage: true,
+              //       },
+              //     });
+
+              return {
+                ...event,
+                avatar: nftInfo?.avatar,
+                nftName: nftInfo?.nftName,
+                // collectionName: collectionInfo?.name,
+                // collectionAvatar: collectionInfo?.avatarImage,
+              };
+            }),
+          );
+        });
+
+      const eventCount = await this.newListEventSchemaRepository.count(
+        filter?.where,
+      );
+
+      return this.response.send({
+        status: STATUS.OK,
+        totalCount: eventCount,
+        ret: eventData,
+      });
+    }
+
+    @get('/api/un-list-event-schema')
+    @response(200, {
+      description: 'Array of unlistevents model instances',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'array',
+            items: getModelSchemaRef(unlistevents, {includeRelations: true}),
+          },
+        },
+      },
+    })
+    async getUserUnlistEvents(
+      @param.filter(unlistevents) filter?: Filter<unlistevents>,
+    ): Promise<Response> {
+      const eventData = await this.unListEventSchemaRepository
+        .find(filter)
+        .then(events => {
+          const eventsWithNftInfo = Promise.all(
+            events.map(async event => {
+              const {
+                nftContractAddress,
+                tokenID,
+                //  azDomainName
+              } = event;
+
+              //   const azChecking = isAzEnabled(nftContractAddress);
+
+              let nftInfo;
+
+              //   if (azChecking?.isAzDomain) {
+              //     nftInfo = await this.nfTsSchemaRepository.findOne({
+              //       where: {
+              //         azDomainName,
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         avatar: true,
+              //         nftName: true,
+              //       },
+              //     });
+              //   } else {
+              nftInfo = await this.nfTsSchemaRepository.findOne({
+                where: {
+                  tokenID,
+                  nftContractAddress,
+                },
+                fields: {
+                  avatar: true,
+                  nftName: true,
+                },
+              });
+              //   }
+
+              // Temp disable due to no use collectio info
+              //   let collectionInfo =
+              //     await this.collectionsSchemaRepository.findOne({
+              //       where: {
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         name: true,
+              //         avatarImage: true,
+              //       },
+              //     });
+
+              return {
+                ...event,
+                avatar: nftInfo?.avatar,
+                nftName: nftInfo?.nftName,
+                // collectionName: collectionInfo?.name,
+                // collectionAvatar: collectionInfo?.avatarImage,
+              };
+            }),
+          );
+
+          return eventsWithNftInfo;
+        });
+
+      const eventCount = await this.unListEventSchemaRepository.count(
+        filter?.where,
+      );
+
+      return this.response.send({
+        status: STATUS.OK,
+        totalCount: eventCount,
+        ret: eventData,
+      });
+    }
 }
