@@ -1274,8 +1274,7 @@ export async function check_NFT_queue(
                 const metaData = {
                     traits: undefined,
                     nftName: azDomainName,
-                    avatar: `https://tzero.id/api/v1/image/${azDomainName}.tzero.png`,
-                    azDomainName: azDomainName
+                    avatar: `https://tzero.id/api/v1/image/${azDomainName}.tzero.png`
                 };
 
                 //Get all On-chain MetaData if exists
@@ -1307,7 +1306,6 @@ export async function check_NFT_queue(
                 if (domainMetadata) {
                     if (domainMetadata.metadata) {
                         metaData.nftName = domainMetadata.metadata.name;
-                        metaData.description = domainMetadata.metadata.description;
                         const traitsData = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
                             return {...p, [c.trait_type]: c.value};
                         }, {});
