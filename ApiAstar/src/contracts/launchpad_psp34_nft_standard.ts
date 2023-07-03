@@ -1,7 +1,7 @@
 export const launchpad_psp34_nft_standard = {
 	CONTRACT_ABI: {
 	  "source": {
-		"hash": "0xdfd3c64116b72cb3d3fa3120e37b59d49a9dc72eaf4b7913b7de389ddc5e12a7",
+		"hash": "0x34a8a19142dfc443a3be1291b5730d59bae45ad7d70134a5e0b371b6977c40db",
 		"language": "ink! 4.0.1",
 		"compiler": "rustc 1.70.0-nightly",
 		"build_info": {

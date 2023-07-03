@@ -1,8 +1,8 @@
 export const launchpad_manager = {
-	CONTRACT_ADDRESS: "X1ytB7NjFdspgRHSaGD9jhU3rE2Sm1CRyzsGdTxxTYKihrR",
+	CONTRACT_ADDRESS: "XqFobnMdD2TSke7q5pEh3qHo3WUN5WpmUPrgu1zVyGzThhJ",
 	CONTRACT_ABI: {
 		"source": {
-		  "hash": "0xe9e8ab9c3f32989ebf17474186207c796616e7971fe2c11481aab50c19acbdc9",
+		  "hash": "0x0837d0b95b94e620dc19103852bd83c4bd86eb34e9a5b00fd27210d969965007",
 		  "language": "ink! 4.0.1",
 		  "compiler": "rustc 1.70.0-nightly",
 		  "build_info": {

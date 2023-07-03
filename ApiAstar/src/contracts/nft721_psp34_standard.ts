@@ -1,7 +1,7 @@
 export const nft721_psp34_standard = {
 	CONTRACT_ABI: {
 	  "source": {
-		"hash": "0x50bdecd99513974cd70cbe3969059992ed155ae05c6f7c2a5db007cad7aea032",
+		"hash": "0x24d21481b424ff012033c304de701f4016c5328788fbb62706d3477dea9b88a2",
 		"language": "ink! 4.0.1",
 		"compiler": "rustc 1.70.0-nightly",
 		"build_info": {
