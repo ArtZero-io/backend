@@ -522,7 +522,7 @@ export async function check_NFT_queue_all(
                 }
                 // Check and update attributes
                 console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - nft_owner: `, nft_owner);
-                
+
                 // Get NFT's Attributes
                 const metaData = {
                     traits: undefined,
@@ -2875,11 +2875,12 @@ export async function processEventRecords(
                                 if (!azChecking.isEnabled) {
                                     isValidated = false;
                                 } else {
+                                    let azDomainNameDecoded = eventValues[2] ? hexToAscii(JSON.parse(eventValues[2]).bytes) : undefined;
                                     obj = {
                                         blockNumber: to_scan,
                                         trader: eventValues[0],
                                         nftContractAddress: eventValues[1],
-                                        azDomainName: eventValues[2] ? JSON.parse(eventValues[2]).bytes : undefined,
+                                        azDomainName: azDomainNameDecoded ?? undefined,
                                         price: eventValues[3] ? parseFloat(eventValues[3]) / 10 ** 12 : 0,
                                     }
                                 }
@@ -2915,11 +2916,12 @@ export async function processEventRecords(
                                 if (!azChecking.isEnabled) {
                                     isValidated = false;
                                 } else {
+                                    let azDomainNameDecoded = eventValues[2] ? hexToAscii(JSON.parse(eventValues[2]).bytes) : undefined;
                                     obj = {
                                         blockNumber: to_scan,
                                         trader: eventValues[0],
                                         nftContractAddress: eventValues[1],
-                                        azDomainName: eventValues[2] ? JSON.parse(eventValues[2]).bytes : undefined,
+                                        azDomainName:  azDomainNameDecoded ?? undefined,
                                     };
                                 }
                             } else {
@@ -3665,7 +3667,7 @@ export async function check_new_azero_domains_nft_queue(
         const { data } = await axios({
             method: 'post',
             url: 'https://squid.subsquid.io/azns-testnet/graphql',
-            headers: { 
+            headers: {
                 "Content-Type": "application/json",
                 "cache-control": "no-cache",
                 "Access-Control-Allow-Origin": "*",
@@ -3806,7 +3808,7 @@ export async function check_new_azero_domains_nft_queue(
             console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - Have not any domains need to add or update`);
         }
         console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - End for Azero Domains NFT Collector Queue ...`);
-        
+
     } catch (e) {
         console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - ERROR: - ${e.message}`);
         send_telegram_message("is_check_new_az_domain_nft - " + e.message);
