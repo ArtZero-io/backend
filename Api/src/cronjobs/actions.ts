@@ -1274,7 +1274,8 @@ export async function check_NFT_queue(
                 const metaData = {
                     traits: undefined,
                     nftName: azDomainName,
-                    avatar: `https://tzero.id/api/v1/image/${azDomainName}.tzero.png`
+                    avatar: `https://tzero.id/api/v1/image/${azDomainName}.tzero.png`,
+                    description: `${azDomainName}.tzero, a domain on Aleph Zero's testnet issued by AZERO.ID.`
                 };
 
                 //Get all On-chain MetaData if exists
@@ -1294,29 +1295,33 @@ export async function check_NFT_queue(
                 console.log("attributes", attributes);
                 console.log("attributeValues", attributeValues);
                 console.log(`https://tzero.id/api/v1/metadata/${azDomainName}.tzero.json`);
-                const {data: domainMetadata} = await axios({
-                    url: `https://tzero.id/api/v1/metadata/${azDomainName}.tzero.json`,
-                    method: "get",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "cache-control": "no-cache",
-                        "Access-Control-Allow-Origin": "*",
-                    },
-                });
-                if (domainMetadata) {
-                    if (domainMetadata.metadata) {
-                        metaData.nftName = domainMetadata.metadata.name;
-                        const traitsData = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
-                            return {...p, [c.trait_type]: c.value};
-                        }, {});
-                        if (traitsData) {
-                            metaData.traits = {
-                                ...traitsData,
-                                registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
-                                expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
-                            };
+                try {
+                    const {data: domainMetadata} = await axios({
+                        url: `https://tzero.id/api/v1/metadata/${azDomainName}.tzero.json`,
+                        method: "get",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "cache-control": "no-cache",
+                            "Access-Control-Allow-Origin": "*",
+                        },
+                    });
+                    if (domainMetadata) {
+                        if (domainMetadata.metadata) {
+                            metaData.nftName = domainMetadata.metadata.name;
+                            const traitsData = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
+                                return {...p, [c.trait_type]: c.value};
+                            }, {});
+                            if (traitsData) {
+                                metaData.traits = {
+                                    ...traitsData,
+                                    registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
+                                    expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
+                                };
+                            }
                         }
                     }
+                } catch (e) {
+                    send_telegram_message(`Cron azero_domain_nft_queue has error when fetching metadata of ${azDomainName}- ${e.message}`);
                 }
 
                 // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - forSaleInformation: `, forSaleInformation);
@@ -1376,8 +1381,15 @@ export async function check_NFT_queue(
                     try {
                         console.log(found);
                         await nftRepo.updateById(found._id, found);
+                        await delay(1000);
+                        await nftQueueRepo.deleteAll({
+                            nftContractAddress: nftContractAddress,
+                            azDomainName: azDomainName,
+                            isAzDomain: true
+                        });
                     } catch (e) {
                         console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
+                        send_telegram_message(`Cron azero_domain_nft_queue has error when updating nft of ${azDomainName}- ${e.message}`);
                     }
                 } else {
                     console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Adding new NFT to DB`);
@@ -1389,8 +1401,15 @@ export async function check_NFT_queue(
                     obj.updatedTime = new Date();
                     try {
                         await nftRepo.create(obj);
+                        await delay(1000);
+                        await nftQueueRepo.deleteAll({
+                            nftContractAddress: nftContractAddress,
+                            azDomainName: azDomainName,
+                            isAzDomain: true
+                        });
                     } catch (e) {
                         console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
+                        send_telegram_message(`Cron azero_domain_nft_queue has error when adding nft of ${azDomainName}- ${e.message}`);
                     }
                     //update Collection nft_count
                     let nft_count = (await nftRepo.count({
@@ -1403,13 +1422,10 @@ export async function check_NFT_queue(
                         );
                     } catch (e) {
                         console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
+                        send_telegram_message(`Cron azero_domain_nft_queue has error when updating collection 's nft count of ${azDomainName}- ${e.message}`);
                     }
                 }
-                await nftQueueRepo.deleteAll({
-                    nftContractAddress: nftContractAddress,
-                    azDomainName: azDomainName,
-                    isAzDomain: true
-                });
+                
             } else {
                 let tokenID = queue_data[j].tokenID;
                 if (!tokenID) continue;
