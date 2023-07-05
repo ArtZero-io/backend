@@ -547,6 +547,12 @@ export async function check_NFT_queue_all(
                 console.log("attributes", attributes);
                 console.log("attributeValues", attributeValues);
 
+                metaData.traits = {
+                    ...metaData.traits,
+                    registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
+                    expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
+                };
+
                 //Get For Sale Information
                 let forSaleInformation = await marketplace_calls.getNftSaleInfo(
                     global_vars.caller,
@@ -554,35 +560,33 @@ export async function check_NFT_queue_all(
                     {bytes: azDomainName}
                 );
 
-                const {data: domainMetadata} = await axios({
-                    url: `https://tzero.id/api/v1/metadata/${azDomainName}.tzero.json`,
-                    method: "get",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "cache-control": "no-cache",
-                        "Access-Control-Allow-Origin": "*",
-                    },
-                });
-                if (domainMetadata) {
-                    if (domainMetadata.metadata) {
-                        metaData.nftName = domainMetadata.metadata.name;
-                        metaData.expiration_timestamp = attributeValues[1] ? attributeValues[1] : '';
-                        const traitsData = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
-                            return {...p, [c.trait_type]: c.value};
-                        }, {});
-                        if (traitsData) {
-                            metaData.traits = {
-                                ...traitsData,
-                                registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
-                                expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
-                            };
-                        } else {
-                            metaData.traits = {
-                                registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
-                                expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
-                            };
+                try {
+                    const {data: domainMetadata} = await axios({
+                        url: `https://tzero.id/api/v1/metadata/${azDomainName}.tzero.json`,
+                        method: "get",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "cache-control": "no-cache",
+                            "Access-Control-Allow-Origin": "*",
+                        },
+                    });
+                    if (domainMetadata) {
+                        if (domainMetadata.metadata) {
+                            metaData.nftName = domainMetadata.metadata.name;
+                            metaData.expiration_timestamp = attributeValues[1] ? attributeValues[1] : '';
+                            const traitsData = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
+                                return {...p, [c.trait_type]: c.value};
+                            }, {});
+                            if (traitsData) {
+                                metaData.traits = {
+                                    ...metaData.traits,
+                                    traitsData
+                                };
+                            }
                         }
                     }
+                } catch (e) {
+                    console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - ERROR: ${e.message}`);
                 }
                 // console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - forSaleInformation: `, forSaleInformation);
                 let obj: nfts = new nfts(
@@ -1302,6 +1306,11 @@ export async function check_NFT_queue(
                 }
                 console.log("attributes", attributes);
                 console.log("attributeValues", attributeValues);
+                metaData.traits = {
+                    ...metaData.traits,
+                    registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
+                    expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
+                };
                 try {
                     const {data: domainMetadata} = await axios({
                         url: `https://tzero.id/api/v1/metadata/${azDomainName}.tzero.json`,
@@ -1320,14 +1329,8 @@ export async function check_NFT_queue(
                             }, {});
                             if (traitsData) {
                                 metaData.traits = {
-                                    ...traitsData,
-                                    registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
-                                    expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
-                                };
-                            } else {
-                                metaData.traits = {
-                                    registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
-                                    expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
+                                    ...metaData.traits,
+                                    traitsData
                                 };
                             }
                         }
