@@ -3678,6 +3678,12 @@ export async function check_new_azero_domains_nft_queue(
             marketplace.CONTRACT_ADDRESS
         );
         marketplace_calls.setContract(marketplace_contract);
+        const azero_domains_nft_contract = new ContractPromise(
+            globalApi,
+            azero_domains_nft.CONTRACT_ABI,
+            azero_domains_nft.CONTRACT_ADDRESS
+        );
+        azero_domains_nft_calls.setContract(azero_domains_nft_contract);
         console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - Start for Azero Domains NFT Collector Queue ...`);
         var requestData = JSON.stringify({
           query: `query MyQuery {
@@ -3712,8 +3718,35 @@ export async function check_new_azero_domains_nft_queue(
                     `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - Start Build Domain Data`,
                     domain
                 );
-                let attributes: string[] = [];
+                let metaData = {
+                    traits: {},
+                    nftName: domain.id,
+                    description: "NFT of Azero Domain",
+                    avatar: `https://tzero.id/api/v1/image/${domain.name}.tzero.png`,
+                    azDomainName: domain.name,
+                };
+            
+                //Get all On-chain MetaData if exists
+                let attributes: string[] = [
+                    'registration_timestamp',
+                    'expiration_timestamp'
+                ];
                 let attributeValues: string[] = [];
+                const attributesTmp: string[] = await azero_domains_nft_calls.getRegistrationPeriod(
+                    global_vars.caller,
+                    domain.name
+                );
+                console.log({attributesTmp: attributesTmp});
+                for (const attr of attributesTmp) {
+                    attributeValues.push(attr.replace(/,/g, ""));
+                }
+                console.log("attributes", attributes);
+                console.log("attributeValues", attributeValues);
+                metaData.traits = {
+                    ...metaData.traits,
+                    'Registration Time': attributeValues[0] ? attributeValues[0]  : '',
+                    'Expiration Time': attributeValues[1] ? attributeValues[1] : '',
+                };
                 const {data: domainMetadata} = await axios({
                     url: `https://tzero.id/api/v1/metadata/${domain.name}.tzero.json`,
                     method: "get",
@@ -3727,20 +3760,21 @@ export async function check_new_azero_domains_nft_queue(
                     `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - DomainMetadata`,
                     domainMetadata
                 );
-                let metaData = {
-                    traits: undefined,
-                    nftName: domain.id,
-                    description: "NFT of Azero Domain",
-                    avatar: `https://tzero.id/api/v1/image/${domain.name}.tzero.png`,
-                    azDomainName: domain.name,
-                };
+                
+
                 if (domainMetadata) {
                     if (domainMetadata.metadata) {
                         metaData.nftName = domainMetadata.metadata.name;
                         metaData.description = domainMetadata.metadata.description;
-                        metaData.traits = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
+                        const traitsData = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
                             return {...p, [c.trait_type]: c.value};
                         }, {});
+                        if (traitsData) {
+                            metaData.traits = {
+                                ...metaData.traits,
+                                ...traitsData
+                            };
+                        }
                     }
                 }
 
