@@ -4887,4 +4887,151 @@ export class ApiController {
         ret: eventData,
       });
     }
+
+    @get('/api/top-nft-trades')
+    @response(200, {
+      description: 'Array of purchaseEventSchema model instances',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'array',
+            items: getModelSchemaRef(purchaseevents, {includeRelations: true}),
+          },
+        },
+      },
+    })
+    async getTopNftTrades(
+      @param.filter(purchaseevents) filter?: Filter<purchaseevents>,
+    ): Promise<Response> {
+
+        const purchaseEventData = await this.purchaseEventSchemaRepository
+        .find(filter)
+        .then(events => {
+          return Promise.all(
+            events.map(async event => {
+              const {nftContractAddress, tokenID, azDomainName} = event;
+
+              const azChecking = isAzEnabled(nftContractAddress);
+
+              let nftInfo;
+
+              if (azChecking?.isAzDomain) {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
+                  where: {
+                    azDomainName,
+                    nftContractAddress,
+                  },
+                  fields: {
+                    avatar: true,
+                    nftName: true,
+                  },
+                });
+              } else {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
+                  where: {
+                    tokenID,
+                    nftContractAddress,
+                  },
+                  fields: {
+                    avatar: true,
+                    nftName: true,
+                  },
+                });
+              }
+
+              // Temp disable due to no use collectio info
+              //   let collectionInfo =
+              //     await this.collectionsSchemaRepository.findOne({
+              //       where: {
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         name: true,
+              //         avatarImage: true,
+              //       },
+              //     });
+
+              return {
+                ...event,
+                avatar: nftInfo?.avatar,
+                nftName: nftInfo?.nftName,
+                eventDataType: 'purchase',
+
+                // collectionName: collectionInfo?.name,
+                // collectionAvatar: collectionInfo?.avatarImage,
+              };
+            }),
+          );
+        });
+
+        const bidWinEventData = await this.bidWinEventSchemaRepository
+        .find(filter)
+        .then(events => {
+          return Promise.all(
+            events.map(async event => {
+              const {nftContractAddress, tokenID, azDomainName} = event;
+
+              const azChecking = isAzEnabled(nftContractAddress);
+
+              let nftInfo;
+
+              if (azChecking?.isAzDomain) {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
+                  where: {
+                    azDomainName,
+                    nftContractAddress,
+                  },
+                  fields: {
+                    avatar: true,
+                    nftName: true,
+                  },
+                });
+              } else {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
+                  where: {
+                    tokenID,
+                    nftContractAddress,
+                  },
+                  fields: {
+                    avatar: true,
+                    nftName: true,
+                  },
+                });
+              }
+
+              // Temp disable due to no use collectio info
+              //   let collectionInfo =
+              //     await this.collectionsSchemaRepository.findOne({
+              //       where: {
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         name: true,
+              //         avatarImage: true,
+              //       },
+              //     });
+
+              return {
+                ...event,
+                avatar: nftInfo?.avatar,
+                nftName: nftInfo?.nftName,
+                eventDataType:'bid win'
+                // collectionName: collectionInfo?.name,
+                // collectionAvatar: collectionInfo?.avatarImage,
+              };
+            }),
+          );
+        });
+
+        let ret = [...purchaseEventData, ...bidWinEventData]
+
+        ret = ret
+           .sort((a, b) => (b?.price || 0) - (a?.price || 0))
+           .slice(0, filter?.limit);
+
+        return this.response.send({
+        status: STATUS.OK,
+        ret,
+      });
+    }
 }
