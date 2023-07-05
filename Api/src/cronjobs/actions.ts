@@ -525,8 +525,9 @@ export async function check_NFT_queue_all(
 
                 // Get NFT's Attributes
                 const metaData = {
-                    traits: undefined,
+                    traits: {},
                     nftName: azDomainName,
+                    expiration_timestamp: '',
                 };
 
                 //Get all On-chain MetaData if exists
@@ -565,12 +566,18 @@ export async function check_NFT_queue_all(
                 if (domainMetadata) {
                     if (domainMetadata.metadata) {
                         metaData.nftName = domainMetadata.metadata.name;
+                        metaData.expiration_timestamp = attributeValues[1] ? attributeValues[1] : '';
                         const traitsData = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
                             return {...p, [c.trait_type]: c.value};
                         }, {});
                         if (traitsData) {
                             metaData.traits = {
                                 ...traitsData,
+                                registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
+                                expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
+                            };
+                        } else {
+                            metaData.traits = {
                                 registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
                                 expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
                             };
@@ -1273,7 +1280,7 @@ export async function check_NFT_queue(
 
                 // Get NFT's Attributes
                 const metaData = {
-                    traits: undefined,
+                    traits: {},
                     nftName: azDomainName,
                     avatar: `https://tzero.id/api/v1/image/${azDomainName}.tzero.png`,
                     description: `${azDomainName}.tzero, a domain on Aleph Zero's testnet issued by AZERO.ID.`
@@ -1295,7 +1302,6 @@ export async function check_NFT_queue(
                 }
                 console.log("attributes", attributes);
                 console.log("attributeValues", attributeValues);
-                console.log(`https://tzero.id/api/v1/metadata/${azDomainName}.tzero.json`);
                 try {
                     const {data: domainMetadata} = await axios({
                         url: `https://tzero.id/api/v1/metadata/${azDomainName}.tzero.json`,
@@ -1315,6 +1321,11 @@ export async function check_NFT_queue(
                             if (traitsData) {
                                 metaData.traits = {
                                     ...traitsData,
+                                    registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
+                                    expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
+                                };
+                            } else {
+                                metaData.traits = {
                                     registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
                                     expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
                                 };
