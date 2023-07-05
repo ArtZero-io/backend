@@ -882,6 +882,43 @@ export const RequestGetNFTsByOwnerAndCollectionBody = {
     },
 };
 
+// GET NFTs BY ATTRIBUTE VALUE
+export type ReqGetNFTsByAttributeValueType = {
+    collection_address: string,
+    expiration_timestamp: string,
+    limit?: number,
+    offset?: number,
+    sort?: number,
+};
+const ReqGetNFTsByAttributeValueSchema: SchemaObject = {
+    type: 'object',
+    required: ['collection_address', 'expiration_timestamp'],
+    properties: {
+        collection_address: {
+            type: 'string',
+        },
+        expiration_timestamp: {
+            type: 'string',
+        },
+        limit: {
+            type: 'number',
+        },
+        offset: {
+            type: 'number',
+        },
+        sort: {
+            type: 'number',
+        },
+    },
+};
+export const RequestGetNFTsByAttributeValueBody = {
+    description: 'The input of getNFTsByAttributeValue function',
+    required: true,
+    content: {
+        'application/x-www-form-urlencoded': {schema: ReqGetNFTsByAttributeValueSchema},
+    },
+};
+
 // GET NFTs BY COLLECTION ADDRESS
 export type ReqGetNFTsByCollectionAddressType = {
     collection_address: string,

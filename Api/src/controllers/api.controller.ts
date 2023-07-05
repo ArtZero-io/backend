@@ -1,7 +1,7 @@
 import {
     Count,
     CountSchema,
-    Filter, FilterExcludingWhere,
+    Filter, FilterExcludingWhere, PredicateComparison,
     repository, Where
 } from '@loopback/repository';
 import {
@@ -147,7 +147,7 @@ import {
     ReqGetLaunchpadMintingEventType,
     RequestGetLaunchpadMintingEventBody,
     ReqGetListOwnerNftType,
-    RequestGetListOwnerNftBody,
+    RequestGetListOwnerNftBody, ReqGetNFTsByAttributeValueType, RequestGetNFTsByAttributeValueBody,
 } from "../utils/Message";
 import { MESSAGE, STATUS} from "../utils/constant";
 import {
@@ -2421,6 +2421,69 @@ export class ApiController {
             }
             // @ts-ignore
             return this.response.send({status: STATUS.OK, ret: result});
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    // Get NFTs by  Owner and Collection
+    @post('/getNFTsByAttributeValue')
+    async getNFTsByAttributeValue(
+        @requestBody(RequestGetNFTsByAttributeValueBody) req:ReqGetNFTsByAttributeValueType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            let expiration_timestamp = req?.expiration_timestamp;
+            let collection_address = req?.collection_address;
+            let limit = req?.limit;
+            let offset = req?.offset;
+            let sort = req?.sort;
+            if (!limit) limit = 15;
+            if (!offset) offset = 0;
+            if (!sort) sort = -1;
+            if (!expiration_timestamp || !collection_address) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
+            }
+            // const order = (req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC";
+            // let data = await this.nfTsSchemaRepository.find({
+            //     where: {
+            //         attributesValue: expiration_timestamp as PredicateComparison<string[]>,
+            //         nftContractAddress: collection_address,
+            //     },
+            //     order: [order],
+            //     skip: offset,
+            //     limit: limit
+            // });
+            let data = await this.nfTsSchemaRepository.find({
+                where: {
+                    nftContractAddress: collection_address,
+                },
+            });
+            const checkTimestamp = parseInt(expiration_timestamp);
+            let ret = [];
+            for (const item of data) {
+                if (
+                    checkTimestamp
+                    && item.attributesValue
+                    && item.attributesValue.length == 2
+                ) {
+                    const timeEnd = parseInt(item.attributesValue[1]);
+                    if (checkTimestamp > timeEnd) {
+                        ret.push(item);
+                    }
+                }
+            }
+            // @ts-ignore
+            return this.response.send({status: STATUS.OK, ret: ret});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
             // @ts-ignore
