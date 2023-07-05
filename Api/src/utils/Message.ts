@@ -1171,7 +1171,8 @@ export type TraitFilters = {
     and?: object,
     is_for_sale?: boolean,
     price?: object,
-    keyword?: string
+    keyword?: string,
+    expirationTimestamp?: string,
 };
 export type ReqSearchNFTOfCollectionByTraitsType = {
     collectionAddress: string,

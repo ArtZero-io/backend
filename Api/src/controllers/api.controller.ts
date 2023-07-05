@@ -2929,6 +2929,9 @@ export class ApiController {
             if (params?.price) {
                 paramTmp = {...paramTmp, price: params.price};
             }
+            if (params?.expirationTimestamp) {
+                paramTmp = {...paramTmp, expiration_timestamp: {lt: params.expirationTimestamp}};
+            }
             if (params && params?.is_for_sale != undefined) {
                 paramTmp = {...paramTmp, is_for_sale: params.is_for_sale};
             }
