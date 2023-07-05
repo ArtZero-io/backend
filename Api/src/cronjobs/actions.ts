@@ -1240,6 +1240,7 @@ export async function check_NFT_queue(
                 // Check and update attributes
                 console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - owner: `, owner);
                 if (!owner) {
+                    send_telegram_message(`Cron azero_domain_nft_queue has error when have not owner ${azDomainName}`);
                     await nftQueueRepo.deleteAll({
                         nftContractAddress: nftContractAddress,
                         azEventName: azEventName,
