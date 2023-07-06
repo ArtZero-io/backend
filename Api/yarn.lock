@@ -2360,10 +2360,10 @@ array-union@^2.1.0:
   resolved "https://registry.yarnpkg.com/array-union/-/array-union-2.1.0.tgz#b798420adbeb1de828d84acd8a2e23d3efe85e8d"
   integrity sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==
 
-artzerocommon@^1.0.0:
+artzero@^1.0.0:
   version "1.0.0"
-  resolved "https://registry.yarnpkg.com/artzerocommon/-/artzerocommon-1.0.0.tgz#7dabdfc2d1d4e2b3f11fc411a5d8bfea7637683f"
-  integrity sha512-EQC0rNp4CcZnQ/OsJJmBs45o1TaSeoSuOx53ALkAdaOahm0ZY9+4kKnws4rjmEjHMUCEDGpoc1S4D/cZbgEAvQ==
+  resolved "https://registry.yarnpkg.com/artzero/-/artzero-1.0.0.tgz#9c26ba312742718d5a6af68bf3b68766550eed3c"
+  integrity sha512-g9pEIcAwKluZKLzu5aHqAp7Qyt9NC7WWUXly8M/F8q5cinURmf8rPaPg/wWiVvZ9yqjN/qPovJmJEoMiqtRGIw==
 
 asap@^2.0.0:
   version "2.0.6"

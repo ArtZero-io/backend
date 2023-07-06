@@ -33,7 +33,7 @@ import {launchpad_psp34_nft_standard} from "../contracts/launchpad_psp34_nft_sta
 import {ApiPromise, WsProvider} from "@polkadot/api";
 import jsonrpc from "@polkadot/types/interfaces/jsonrpc";
 import {azero_domain} from "../contracts/azns_registry";
-import {cmConvertToUTCTime} from "artzerocommon";
+import {cmConvertToUTCTime} from "artzero";
 @cronJob()
 export class CronJobAzEventsCollectorReScan implements Provider<CronJob> {
     constructor(

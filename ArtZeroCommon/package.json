@@ -1,9 +1,9 @@
 {
-  "name": "artzerocommon",
-  "version": "1.0.1",
+  "name": "artzero",
+  "version": "1.0.0",
   "description": "",
-  "main": "lib/ArtzeroCommon.js",
-  "types": "lib/ArtzeroCommon.d.ts",
+  "main": "lib/Artzero.js",
+  "types": "lib/Artzero.d.ts",
   "files": [
     "lib"
   ],
