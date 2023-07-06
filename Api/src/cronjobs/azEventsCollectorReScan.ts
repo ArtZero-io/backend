@@ -6,7 +6,6 @@ import {
 } from "../utils/constant";
 import { Provider} from '@loopback/core';
 import {CronJob, cronJob} from '@loopback/cron';
-import {convertToUTCTime} from "../utils/Tools";
 import {Abi} from "@polkadot/api-contract";
 import {global_vars, SOCKET_STATUS} from "./global";
 import {marketplace} from "../contracts/marketplace";
@@ -34,6 +33,7 @@ import {launchpad_psp34_nft_standard} from "../contracts/launchpad_psp34_nft_sta
 import {ApiPromise, WsProvider} from "@polkadot/api";
 import jsonrpc from "@polkadot/types/interfaces/jsonrpc";
 import {azero_domain} from "../contracts/azns_registry";
+import {cmConvertToUTCTime} from "artzerocommon";
 @cronJob()
 export class CronJobAzEventsCollectorReScan implements Provider<CronJob> {
     constructor(
@@ -102,7 +102,7 @@ export class CronJobAzEventsCollectorReScan implements Provider<CronJob> {
                         }
                     }
                     if (getConfig) {
-                        const currentTime = convertToUTCTime(new Date());
+                        const currentTime = cmConvertToUTCTime(new Date());
                         console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR_RESCAN} - RUN JOB AZ_EVENTS_COLLECTOR_RESCAN NOW: ${currentTime}`);
 
                         try {
