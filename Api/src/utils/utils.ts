@@ -11,11 +11,23 @@ import {ApiBase} from "@polkadot/api/base";
 import {Response} from "@loopback/rest";
 import {ProjectsSchemaRepository} from "../repositories";
 import dotenv from "dotenv";
+import moment from "moment/moment";
 // import {globalApi} from "../scripts/getTimestamp";
 dotenv.config();
 
 // @ts-ignore
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
+
+export function convertStringToDateTime(stringTimeStamp: string) {
+  let timeStamp = stringTimeStamp;
+
+  if (typeof stringTimeStamp === "string") {
+    /* eslint-disable no-useless-escape */
+    timeStamp = stringTimeStamp.replace(/\,/g, "");
+  }
+
+  return moment(parseInt(timeStamp)).format("MMM D YYYY, H:mm");
+}
 
 export async function send_message(message: string) {
     try {

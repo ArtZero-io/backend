@@ -34,6 +34,7 @@
     "is-ipfs": "^6.0.2",
     "it-to-stream": "^1.0.0",
     "mobile-detect": "^1.4.5",
+    "moment": "^2.29.4",
     "mongoose": "^6.0.11",
     "pm2": "^5.1.2",
     "save-file-by-url": "^0.4.2",

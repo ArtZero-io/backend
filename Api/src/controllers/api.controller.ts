@@ -198,6 +198,7 @@ import {convertToUTCTime} from "../utils/Tools";
 import {marketplace} from "../contracts/marketplace";
 import * as marketplace_calls from "../contracts/marketplace_calls";
 import {artzero_nft} from "../contracts/artzero_nft";
+import {azero_domains_nft} from "../contracts/azero_domains_nft";
 import * as artzero_nft_calls from "../contracts/artzero_nft_calls";
 import {launchpad_psp34_nft_standard} from "../contracts/launchpad_psp34_nft_standard";
 import * as launchpad_psp34_nft_standard_calls from "../contracts/launchpad_psp34_nft_standard_calls";
@@ -2929,9 +2930,6 @@ export class ApiController {
             if (params?.price) {
                 paramTmp = {...paramTmp, price: params.price};
             }
-            if (params?.expirationTimestamp) {
-                paramTmp = {...paramTmp, expiration_timestamp: {lt: params.expirationTimestamp}};
-            }
             if (params && params?.is_for_sale != undefined) {
                 paramTmp = {...paramTmp, is_for_sale: params.is_for_sale};
             }
@@ -2941,7 +2939,10 @@ export class ApiController {
             if (params?.keyword) {
                 paramTmp = {...paramTmp, nftName: {like: `${params.keyword}`, options: "i" }};
             }
-
+            if (collectionAddress == azero_domains_nft.CONTRACT_ADDRESS) {
+                paramTmp = {...paramTmp, expiration_timestamp: {gt: Date.now()}};
+            }
+            
             const filterData = {
                 nftContractAddress: collectionAddress,
                 ...paramTmp

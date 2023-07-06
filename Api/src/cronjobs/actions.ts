@@ -9,7 +9,8 @@ import {
     send_message,
     send_telegram_message,
     strToNumber,
-    todayFolder
+    todayFolder,
+    convertStringToDateTime
 } from "../utils/utils";
 import * as collection_manager_calls from "../contracts/collection_manager_calls";
 import * as marketplace_calls from "../contracts/marketplace_calls";
@@ -3718,13 +3719,6 @@ export async function check_new_azero_domains_nft_queue(
                     `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - Start Build Domain Data`,
                     domain
                 );
-                let metaData = {
-                    traits: {},
-                    nftName: domain.id,
-                    description: "NFT of Azero Domain",
-                    avatar: `https://tzero.id/api/v1/image/${domain.name}.tzero.png`,
-                    azDomainName: domain.name,
-                };
             
                 //Get all On-chain MetaData if exists
                 let attributes: string[] = [
@@ -3740,12 +3734,21 @@ export async function check_new_azero_domains_nft_queue(
                 for (const attr of attributesTmp) {
                     attributeValues.push(attr.replace(/,/g, ""));
                 }
+                let metaData = {
+                    traits: {},
+                    nftName: domain.id,
+                    description: "NFT of Azero Domain",
+                    avatar: `https://tzero.id/api/v1/image/${domain.name}.tzero.png`,
+                    azDomainName: domain.name,
+                    expiration_timestamp: attributeValues[1] ? attributeValues[1]  : '',
+                    registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
+                };
                 console.log("attributes", attributes);
                 console.log("attributeValues", attributeValues);
                 metaData.traits = {
                     ...metaData.traits,
-                    'Registration Time': attributeValues[0] ? attributeValues[0]  : '',
-                    'Expiration Time': attributeValues[1] ? attributeValues[1] : '',
+                    'Registration Time': convertStringToDateTime(attributeValues[0]) ? convertStringToDateTime(attributeValues[0])  : '',
+                    'Expiration Time': convertStringToDateTime(attributeValues[1]) ? convertStringToDateTime(attributeValues[1]) : '',
                 };
                 const {data: domainMetadata} = await axios({
                     url: `https://tzero.id/api/v1/metadata/${domain.name}.tzero.json`,
@@ -3760,7 +3763,6 @@ export async function check_new_azero_domains_nft_queue(
                     `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - DomainMetadata`,
                     domainMetadata
                 );
-                
 
                 if (domainMetadata) {
                     if (domainMetadata.metadata) {
