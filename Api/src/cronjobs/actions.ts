@@ -1245,10 +1245,6 @@ export async function check_NFT_queue(
                     {bytes: azDomainName}
                 );
 
-                if (forSaleInformation?.isForSale) {
-                    owner = marketplace.CONTRACT_ADDRESS;
-                }
-
                 // Check and update attributes
                 console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - owner: `, owner);
                 if (!owner) {
@@ -1283,14 +1279,6 @@ export async function check_NFT_queue(
                     continue;
                 }
 
-                // Get NFT's Attributes
-                const metaData = {
-                    traits: {},
-                    nftName: azDomainName,
-                    avatar: `https://tzero.id/api/v1/image/${azDomainName}.tzero.png`,
-                    description: `${azDomainName}.tzero, a domain on Aleph Zero's testnet issued by AZERO.ID.`
-                };
-
                 //Get all On-chain MetaData if exists
                 let attributes: string[] = [
                     'registration_timestamp',
@@ -1307,10 +1295,20 @@ export async function check_NFT_queue(
                 }
                 console.log("attributes", attributes);
                 console.log("attributeValues", attributeValues);
+                await delay(5000);
+                // Get NFT's Attributes
+                const metaData = {
+                    traits: {},
+                    nftName: azDomainName,
+                    avatar: `https://tzero.id/api/v1/image/${azDomainName}.tzero.png`,
+                    description: `${azDomainName}.tzero, a domain on Aleph Zero's testnet issued by AZERO.ID.`,
+                    expiration_timestamp: attributeValues[1] ? attributeValues[1]  : '',
+                    registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
+                };
                 metaData.traits = {
                     ...metaData.traits,
-                    registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
-                    expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
+                    'Registration Time': convertStringToDateTime(attributeValues[0]) ? convertStringToDateTime(attributeValues[0])  : '',
+                    'Expiration Time': convertStringToDateTime(attributeValues[1]) ? convertStringToDateTime(attributeValues[1]) : '',
                 };
                 try {
                     const {data: domainMetadata} = await axios({
@@ -1331,7 +1329,7 @@ export async function check_NFT_queue(
                             if (traitsData) {
                                 metaData.traits = {
                                     ...metaData.traits,
-                                    traitsData
+                                    ...traitsData
                                 };
                             }
                         }
@@ -1343,7 +1341,7 @@ export async function check_NFT_queue(
                 // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - forSaleInformation: `, forSaleInformation);
                 let obj: nfts = new nfts(
                     {
-                        owner: (forSaleInformation && forSaleInformation.isForSale) ? marketplace.CONTRACT_ADDRESS : owner,
+                        owner: owner,
                         attributes: attributes,
                         attributesValue: attributeValues,
                         listed_date: forSaleInformation
@@ -1352,9 +1350,9 @@ export async function check_NFT_queue(
                         price: forSaleInformation
                             ? parseFloat(forSaleInformation.price.replace(/,/g, ""))
                             : 0,
-                        is_for_sale: forSaleInformation ? forSaleInformation.isForSale : false,
+                        is_for_sale: (owner == marketplace.CONTRACT_ADDRESS && forSaleInformation) ? forSaleInformation.isForSale : false,
                         // nft_owner: (nft_owner) ? nft_owner : undefined,
-                        nft_owner: forSaleInformation ? forSaleInformation.nftOwner : "",
+                        nft_owner: (owner == marketplace.CONTRACT_ADDRESS && forSaleInformation) ? forSaleInformation.nftOwner : "",
                         is_locked: false,
                         isAzDomain: true,
                         azDomainName: azDomainName,
@@ -1394,6 +1392,8 @@ export async function check_NFT_queue(
                     found.nftName = (obj.nftName !== undefined || obj.nftName) ? obj.nftName : found.nftName;
                     found.description = (obj.description !== undefined || obj.description) ? obj.description : found.description;
                     found.avatar = (obj.avatar !== undefined || obj.avatar) ? obj.avatar : found.avatar;
+                    found.expiration_timestamp = (obj.expiration_timestamp !== undefined || obj.expiration_timestamp) ? obj.expiration_timestamp : found.expiration_timestamp;
+                    found.registration_timestamp = (obj.registration_timestamp !== undefined || obj.registration_timestamp) ? obj.registration_timestamp : found.registration_timestamp;
                     try {
                         console.log(found);
                         await nftRepo.updateById(found._id, found);
@@ -3682,7 +3682,7 @@ export async function check_new_azero_domains_nft_queue(
         const azero_domains_nft_contract = new ContractPromise(
             globalApi,
             azero_domains_nft.CONTRACT_ABI,
-            azero_domains_nft.CONTRACT_ADDRESS
+            '5HfQopC1yQSoG83auWgRLTxhWWFxiVQWT74LLXeXMLJDFBvP'
         );
         azero_domains_nft_calls.setContract(azero_domains_nft_contract);
         console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - Start for Azero Domains NFT Collector Queue ...`);
