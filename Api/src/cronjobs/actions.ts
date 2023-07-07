@@ -524,13 +524,6 @@ export async function check_NFT_queue_all(
                 // Check and update attributes
                 console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - nft_owner: `, nft_owner);
 
-                // Get NFT's Attributes
-                const metaData = {
-                    traits: {},
-                    nftName: azDomainName,
-                    expiration_timestamp: '',
-                };
-
                 //Get all On-chain MetaData if exists
                 let attributes: string[] = [
                     'registration_timestamp',
@@ -548,10 +541,19 @@ export async function check_NFT_queue_all(
                 console.log("attributes", attributes);
                 console.log("attributeValues", attributeValues);
 
+                // Get NFT's Attributes
+                const metaData = {
+                    traits: {},
+                    nftName: azDomainName,
+                    avatar: `https://tzero.id/api/v1/image/${azDomainName}.tzero.png`,
+                    description: `${azDomainName}.tzero, a domain on Aleph Zero's testnet issued by AZERO.ID.`,
+                    expiration_timestamp: attributeValues[1] ? attributeValues[1]  : '',
+                    registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
+                };
                 metaData.traits = {
                     ...metaData.traits,
-                    registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
-                    expiration_timestamp: attributeValues[1] ? attributeValues[1] : '',
+                    'Registration Time': convertStringToDateTime(attributeValues[0]) ? convertStringToDateTime(attributeValues[0])  : '',
+                    'Expiration Time': convertStringToDateTime(attributeValues[1]) ? convertStringToDateTime(attributeValues[1]) : '',
                 };
 
                 //Get For Sale Information
@@ -574,14 +576,13 @@ export async function check_NFT_queue_all(
                     if (domainMetadata) {
                         if (domainMetadata.metadata) {
                             metaData.nftName = domainMetadata.metadata.name;
-                            metaData.expiration_timestamp = attributeValues[1] ? attributeValues[1] : '';
                             const traitsData = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
                                 return {...p, [c.trait_type]: c.value};
                             }, {});
                             if (traitsData) {
                                 metaData.traits = {
                                     ...metaData.traits,
-                                    traitsData
+                                    ...traitsData
                                 };
                             }
                         }
@@ -592,7 +593,7 @@ export async function check_NFT_queue_all(
                 // console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - forSaleInformation: `, forSaleInformation);
                 let obj: nfts = new nfts(
                     {
-                        owner: (forSaleInformation && forSaleInformation.isForSale) ? marketplace.CONTRACT_ADDRESS : owner,
+                        owner: owner,
                         attributes: attributes,
                         attributesValue: attributeValues,
                         listed_date: forSaleInformation
@@ -601,8 +602,8 @@ export async function check_NFT_queue_all(
                         price: forSaleInformation
                             ? parseFloat(forSaleInformation.price.replace(/,/g, ""))
                             : 0,
-                        is_for_sale: forSaleInformation ? forSaleInformation.isForSale : false,
-                        nft_owner: (nft_owner) ? nft_owner : undefined,
+                        is_for_sale: (owner == marketplace.CONTRACT_ADDRESS && forSaleInformation) ? forSaleInformation.isForSale : false,
+                        nft_owner: (owner == marketplace.CONTRACT_ADDRESS && forSaleInformation) ? forSaleInformation.nftOwner : owner,
                         is_locked: false,
                         updatedTime: new Date(),
                         isAzDomain: true,
@@ -644,9 +645,11 @@ export async function check_NFT_queue_all(
                     found.nftName = (obj.nftName !== undefined || obj.nftName) ? obj.nftName : found.nftName;
                     found.description = (obj.description !== undefined || obj.description) ? obj.description : found.description;
                     found.avatar = (obj.avatar !== undefined || obj.avatar) ? obj.avatar : found.avatar;
-
+                    found.expiration_timestamp = (obj.expiration_timestamp !== undefined || obj.expiration_timestamp) ? obj.expiration_timestamp : found.expiration_timestamp;
+                    found.registration_timestamp = (obj.registration_timestamp !== undefined || obj.registration_timestamp) ? obj.registration_timestamp : found.registration_timestamp;
                     try {
-                        await nftRepo.updateById(found._id, found);
+                        await nftRepo.updateById(found._id, found)
+                        await nftQueueScanAllRepo.deleteById(queueData._id);;
                     } catch (e) {
                         console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - ERROR: ${e.message}`);
                     }
@@ -672,14 +675,10 @@ export async function check_NFT_queue_all(
                             {nft_count: nft_count},
                             {nftContractAddress: nftContractAddress}
                         );
+                        await nftQueueScanAllRepo.deleteById(queueData._id);
                     } catch (e) {
                         console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - ERROR: ${e.message}`);
                     }
-                }
-                try {
-                    await nftQueueScanAllRepo.deleteById(queueData._id);
-                } catch (e) {
-                    console.log(`${CONFIG_TYPE_NAME.AZ_PROCESSING_ALL_QUEUE_NFT} - WARNING: ${e.message}`);
                 }
             } else {
                 let tokenID = queueData.tokenID;
