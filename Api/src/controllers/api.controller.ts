@@ -2942,7 +2942,7 @@ export class ApiController {
             if (collectionAddress == azero_domains_nft.CONTRACT_ADDRESS) {
                 paramTmp = {...paramTmp, expiration_timestamp: {gt: Date.now()}};
             }
-            
+
             const filterData = {
                 nftContractAddress: collectionAddress,
                 ...paramTmp
@@ -3703,18 +3703,25 @@ export class ApiController {
     ): Promise<Response> {
         const data = await this.withdrawEventSchemaRepository.find(filter);
         const eventCount = await this.withdrawEventSchemaRepository.count(filter?.where);
-        let totalBalanceAmount = 0;
-        for(const withdrawEvent of data) {
-            if (withdrawEvent?.withdrawAmount) {
-                totalBalanceAmount += withdrawEvent.withdrawAmount;
-            }
-        }
+
+        const totalBalanceData = await this.withdrawEventSchemaRepository.find({
+            where: {...filter?.where},
+            fields: {
+                withdrawAmount: true,
+            },
+        });
+
+        const totalBalanceAmount = totalBalanceData.reduce(
+            (prev, curr) => prev + (curr?.withdrawAmount || 0),
+            0,
+        );
+
         // @ts-ignore
         return this.response.send({
             status: STATUS.OK,
             ret: data,
             totalCount: eventCount,
-            totalBalanceAmount: totalBalanceAmount
+            totalBalanceAmount
         });
     }
 
@@ -3738,6 +3745,7 @@ export class ApiController {
         // @ts-ignore
         return this.response.send({status: STATUS.OK, ret: data, totalCount: eventCount});
     }
+    
     @post('/api/launchpad-minting-event-schemas-v1')
     async getLaunchpadMintingEventV1(
         @requestBody(RequestGetLaunchpadMintingEventBody) req:ReqGetLaunchpadMintingEventType
@@ -3784,21 +3792,29 @@ export class ApiController {
             limit: limit,
             offset: offset
         });
-        let totalMintedAmount = 0;
-        for(const mintEvent of data) {
-            if (mintEvent?.mintAmount) {
-                totalMintedAmount += mintEvent.mintAmount;
-            }
-        }
+
         const eventCount = await this.launchpadMintingEventSchemaRepository.count({
             nftContractAddress: nftContractAddress
         });
+
+        const totalMintedData = await this.launchpadMintingEventSchemaRepository.find({
+            where: {...filterData},
+            fields: {
+                mintAmount: true,
+            },
+        });
+
+        const totalMintedAmount = totalMintedData.reduce(
+          (prev, curr) => prev + (curr?.mintAmount || 0),
+          0,
+        );
+
         // @ts-ignore
         return this.response.send({
             status: STATUS.OK,
             ret: data,
             totalCount: eventCount,
-            totalMintedAmount: totalMintedAmount
+            totalMintedAmount
         });
     }
 
