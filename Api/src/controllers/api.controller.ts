@@ -209,7 +209,6 @@ import Excel from 'exceljs';
 import fs from "fs";
 import path from "path";
 import BN from "bn.js";
-import {CollectionsSchema} from "../scripts/database";
 dotenv.config();
 
 const provider = new WsProvider(process.env.WSSPROVIDER_API);
