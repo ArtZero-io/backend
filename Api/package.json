@@ -78,6 +78,8 @@
     "loopback-connector-mongodb": "^5.2.3",
     "mobile-detect": "^1.4.5",
     "moment": "^2.29.4",
+    "mongodb": "^5.7.0",
+    "mongoose": "^7.3.3",
     "save-file-by-url": "^0.4.2",
     "sharp": "^0.30.4",
     "tslib": "^2.0.0",
