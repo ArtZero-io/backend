@@ -11,7 +11,7 @@ import {ApiBase} from "@polkadot/api/base";
 import {Response} from "@loopback/rest";
 import {ProjectsSchemaRepository} from "../repositories";
 import dotenv from "dotenv";
-import moment from "moment/moment";
+import moment from "moment";
 // import {globalApi} from "../scripts/getTimestamp";
 dotenv.config();
 

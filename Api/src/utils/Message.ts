@@ -1722,3 +1722,32 @@ export const RequestGetListOwnerNftBody = {
         'application/json': {schema: ReqGetListOwnerNftSchema},
     },
 };
+
+// GET COLLECTION GROUP BY CONTRACT ADDRESS
+export type ReqGetCollectionGroupByAddressType = {
+    limit?: number,
+    offset?: number,
+    sort?: number,
+};
+const ReqGetCollectionGroupByAddressSchema: SchemaObject = {
+    type: 'object',
+    required: [],
+    properties: {
+        limit: {
+            type: 'number',
+        },
+        offset: {
+            type: 'number',
+        },
+        sort: {
+            type: 'number',
+        },
+    },
+};
+export const RequestGetCollectionGroupByAddressBody = {
+    description: 'The input of getCollectionGroupByAddress function',
+    required: true,
+    content: {
+        'application/x-www-form-urlencoded': {schema: ReqGetCollectionGroupByAddressSchema},
+    },
+};

@@ -22,10 +22,33 @@ import {CronJobAzBidsMonitorAutoCheckQueue} from "./cronjobs/azBidsMonitorAutoCh
 import {CronJobAzeroDomainCollector} from "./cronjobs/azeroDomainCollector";
 import {CronJobAzEventsCollectorReScan} from "./cronjobs/azEventsCollectorReScan";
 export * from './application';
+import * as mongoDB from "mongodb";
 
 dotenv.config();
 export let globalApi: ApiPromise;
 export let localApi: ApiPromise;
+
+export const collectionsList: {
+  collectionSchema?: mongoDB.Collection,
+  nftSchema?: mongoDB.Collection,
+} = {}
+export async function connectToDatabase () {
+  dotenv.config();
+  const dbUrl:string = process.env.DB_URL ? process.env.DB_URL : `127.0.0.1:27017`;
+  const dbCollection:string = `collections`;
+  const dbNft:string = `nfts`;
+  const client: mongoDB.MongoClient = new mongoDB.MongoClient(dbUrl);
+  await client.connect();
+
+  const db: mongoDB.Db = client.db(process.env.DB_URL_NAME);
+  const collectionSchema: mongoDB.Collection = db.collection(dbCollection);
+  const nftSchema: mongoDB.Collection = db.collection(dbNft);
+  collectionsList.nftSchema = nftSchema;
+
+  console.log(`Successfully connected to database: ${db.databaseName}`);
+  console.log(`Successfully connected to collection: ${collectionSchema.collectionName}`);
+  console.log(`Successfully connected to collection: ${nftSchema.collectionName}`);
+}
 
 export async function main(options: ApplicationConfig = {}) {
   const app = new ApiApplication(options);
@@ -107,6 +130,9 @@ export async function main(options: ApplicationConfig = {}) {
     app.add(cronJobAzEventsCollectorReScan);
     app.configure(cronJobAzEventsCollectorReScan.key);
   }
+  connectToDatabase().then(() => {
+    console.log(`Connected DB`);
+  });
 
 
   const cronJobThreads = createBindingFromClass(CronJobThreads);

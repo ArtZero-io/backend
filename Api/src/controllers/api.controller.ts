@@ -147,7 +147,10 @@ import {
     ReqGetLaunchpadMintingEventType,
     RequestGetLaunchpadMintingEventBody,
     ReqGetListOwnerNftType,
-    RequestGetListOwnerNftBody, ReqGetNFTsByAttributeValueType, RequestGetNFTsByAttributeValueBody,
+    RequestGetListOwnerNftBody,
+    ReqGetNFTsByAttributeValueType,
+    RequestGetNFTsByAttributeValueBody,
+    ReqGetCollectionGroupByAddressType, RequestGetCollectionGroupByAddressBody,
 } from "../utils/Message";
 import { MESSAGE, STATUS} from "../utils/constant";
 import {
@@ -186,7 +189,7 @@ import {
     WhiteListUserData, bids
 } from "../models";
 import {global_vars, SOCKET_STATUS} from "../cronjobs/global";
-import {globalApi} from "../index";
+import {collectionsList, globalApi} from "../index";
 import {
     check_collection_queue,
     check_new_AZ_NFTs,
@@ -206,6 +209,7 @@ import Excel from 'exceljs';
 import fs from "fs";
 import path from "path";
 import BN from "bn.js";
+import {CollectionsSchema} from "../scripts/database";
 dotenv.config();
 
 const provider = new WsProvider(process.env.WSSPROVIDER_API);
@@ -5116,5 +5120,49 @@ export class ApiController {
         status: STATUS.OK,
         ret,
       });
+    }
+
+    @post('/getCollectionGroupByAddress')
+    async getCollectionGroupByAddress(
+        @requestBody(RequestGetCollectionGroupByAddressBody) req:ReqGetCollectionGroupByAddressType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            let limit = req?.limit;
+            let offset = req?.offset;
+            if (!limit) limit = 15;
+            if (!offset) offset = 0;
+            const order = (req?.sort && req?.sort == 1) ? "updatedTime ASC" : "updatedTime DESC";
+            let data: any[] = [];
+            if (collectionsList?.nftSchema) {
+                data = await collectionsList.nftSchema.aggregate([
+                    {
+                        "$group" : {
+                            _id: "$nftContractAddress",
+                            all: {
+                                $push: "$$ROOT"
+                            },
+                            count: {$sum:1}
+                        },
+                    },
+                ]).toArray();
+            }
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.OK,
+                message: MESSAGE.SUCCESS,
+                ret: data
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
     }
 }
