@@ -1232,10 +1232,19 @@ export async function check_NFT_queue(
                 console.log('nftAzDomain');
                 console.log(nftAzDomain);
                 if (nftAzDomain && nftAzDomain?.azDomainName) {
-                    owner = await azero_domains_nft_calls.ownerOf(
+                    
+                    let lockInfo = await azero_domains_nft_calls.getLockInfo(
                         global_vars.caller,
                         nftAzDomain.azDomainName
                     );
+                    if (lockInfo) {
+                        owner = lockInfo;
+                    } else {
+                        owner = await azero_domains_nft_calls.ownerOf(
+                            global_vars.caller,
+                            nftAzDomain.azDomainName
+                        );
+                    }
                 }
                 //Get For Sale Information
                 let forSaleInformation = await marketplace_calls.getNftSaleInfo(
@@ -3681,7 +3690,7 @@ export async function check_new_azero_domains_nft_queue(
         const azero_domains_nft_contract = new ContractPromise(
             globalApi,
             azero_domains_nft.CONTRACT_ABI,
-            '5HfQopC1yQSoG83auWgRLTxhWWFxiVQWT74LLXeXMLJDFBvP'
+            azero_domains_nft.CONTRACT_ADDRESS
         );
         azero_domains_nft_calls.setContract(azero_domains_nft_contract);
         console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - Start for Azero Domains NFT Collector Queue ...`);

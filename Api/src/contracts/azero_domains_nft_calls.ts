@@ -102,6 +102,38 @@ export async function ownerOf(
     return null;
 }
 
+export async function getLockInfo(
+    caller_account: string,
+    domainName: string,
+):Promise<string | null> {
+    console.log({
+        caller_account: caller_account,
+        domainName:domainName,
+        azero_domain_nft_contract: azero_domain_nft_contract
+    });
+
+    if (!azero_domain_nft_contract || !caller_account) {
+        return null;
+    }
+    const address = caller_account;
+    // @ts-ignore
+    const gasLimit = readOnlyGasLimit(azero_domain_nft_contract.api)
+    const azero_value = 0;
+    // @ts-ignore
+    const {result, output} = await azero_domain_nft_contract.query["getLockInfo"](
+        address,
+        {value: azero_value, gasLimit},
+        domainName
+    );
+    if (result.isOk && output) {
+        // @ts-ignore
+        console.log(output.toHuman());
+        // @ts-ignore
+        return output.toHuman()?.Ok;
+    }
+    return null;
+}
+
 export async function getNftOwner(
     caller_account: string,
     domainName: string,
