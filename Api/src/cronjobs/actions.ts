@@ -1232,11 +1232,12 @@ export async function check_NFT_queue(
                 console.log('nftAzDomain');
                 console.log(nftAzDomain);
                 if (nftAzDomain && nftAzDomain?.azDomainName) {
-                    
+                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - nftAzDomain.azDomainName: `, nftAzDomain.azDomainName);
                     let lockInfo = await azero_domains_nft_calls.getLockInfo(
                         global_vars.caller,
                         nftAzDomain.azDomainName
                     );
+                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - lockInfo: `, lockInfo);
                     if (lockInfo) {
                         owner = lockInfo;
                     } else {
@@ -1253,6 +1254,7 @@ export async function check_NFT_queue(
                     {bytes: azDomainName}
                 );
 
+                console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - forSaleInformation: `, forSaleInformation);
                 // Check and update attributes
                 console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - owner: `, owner);
                 if (!owner) {
@@ -3788,6 +3790,28 @@ export async function check_new_azero_domains_nft_queue(
                     }
                 }
 
+                let owner = domain.owner.id;
+                if (domain.name) {
+                    console.log(
+                        `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - Start Get Lock Info`
+                    );
+                    let lockInfo = await azero_domains_nft_calls.getLockInfo(
+                        global_vars.caller,
+                        domain.name
+                    );
+                    console.log(
+                        `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - lockInfo`,
+                        lockInfo
+                    );
+                    console.log(
+                        `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - End Get Lock Info`,
+                        lockInfo
+                    );
+                    if (lockInfo) {
+                        owner = lockInfo;
+                    }
+                }
+
                 let forSaleInformation = await marketplace_calls.getNftSaleInfo(
                     global_vars.caller,
                     azero_domains_nft.CONTRACT_ADDRESS,
@@ -3799,7 +3823,7 @@ export async function check_new_azero_domains_nft_queue(
                 );
                 let obj: nfts = new nfts(
                     {
-                        owner: (forSaleInformation && forSaleInformation.isForSale) ? marketplace.CONTRACT_ADDRESS : domain.owner.id,
+                        owner: owner,
                         attributes: attributes,
                         attributesValue: attributeValues,
                         listed_date: forSaleInformation
