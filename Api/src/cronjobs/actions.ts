@@ -1215,243 +1215,298 @@ export async function check_NFT_queue(
                 let isAzDomain = queue_data[j].isAzDomain;
                 if (!isAzDomain) continue;
                 if (!azDomainName || !azEventName) continue;
-                if (azEventName !== 'Register') continue;
-                console.log(`Get totalSupply for AzeroDomain ${nftContractAddress}`);
-                let totalSupply = await azero_domains_nft_calls.totalSupply(global_vars.caller);
-                console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - totalSupply: ${totalSupply}, azEventName: ${azEventName}, azDomainName: ${azDomainName}`);
-                // check if the token exists, if not delete from the database as token can be burnt
-                const nftAzDomain = await nftQueueRepo.findOne({
-                    where: {
-                        azEventName: azEventName,
-                        azDomainName: azDomainName,
-                        isAzDomain: true,
-                        nftContractAddress: nftContractAddress
-                    }
-                });
-                let owner;
-                console.log('nftAzDomain');
-                console.log(nftAzDomain);
-                if (nftAzDomain && nftAzDomain?.azDomainName) {
-                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - nftAzDomain.azDomainName: `, nftAzDomain.azDomainName);
-                    let lockInfo = await azero_domains_nft_calls.getLockInfo(
-                        global_vars.caller,
-                        nftAzDomain.azDomainName
-                    );
-                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - lockInfo: `, lockInfo);
-                    if (lockInfo) {
-                        owner = lockInfo;
-                    } else {
-                        owner = await azero_domains_nft_calls.ownerOf(
+                if (azEventName === 'Release') {
+                    console.log(`Release process: Get totalSupply for AzeroDomain ${nftContractAddress}`);
+                    let totalSupply = await azero_domains_nft_calls.totalSupply(global_vars.caller);
+                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Release process:: totalSupply: ${totalSupply}, azEventName: ${azEventName}, azDomainName: ${azDomainName}`);
+                    const nftAzDomain = await nftQueueRepo.findOne({
+                        where: {
+                            azEventName: azEventName,
+                            azDomainName: azDomainName,
+                            isAzDomain: true,
+                            nftContractAddress: nftContractAddress
+                        }
+                    });
+                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Release process: nftAzDomain: ${nftAzDomain}`);
+                    if (nftAzDomain && nftAzDomain?.azDomainName) {
+                        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Release process:nftAzDomain.azDomainName: `, nftAzDomain.azDomainName);
+                        let owner = await azero_domains_nft_calls.ownerOf(
                             global_vars.caller,
                             nftAzDomain.azDomainName
                         );
-                    }
-                }
-                //Get For Sale Information
-                let forSaleInformation = await marketplace_calls.getNftSaleInfo(
-                    global_vars.caller,
-                    nftContractAddress,
-                    {bytes: azDomainName}
-                );
-
-                console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - forSaleInformation: `, forSaleInformation);
-                // Check and update attributes
-                console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - owner: `, owner);
-                if (!owner) {
-                    send_telegram_message(`Cron azero_domain_nft_queue has error when have not owner ${azDomainName}`);
-                    await nftQueueRepo.deleteAll({
-                        nftContractAddress: nftContractAddress,
-                        azEventName: azEventName,
-                        azDomainName: azDomainName,
-                        isAzDomain: true,
-                    });
-                    await nftRepo.deleteAll({
-                        nftContractAddress: nftContractAddress,
-                        azEventName: azEventName,
-                        azDomainName: azDomainName,
-                        isAzDomain: true,
-                    });
-                    //update Collection nft_count
-                    let nft_count = (await nftRepo.count({
-                        nftContractAddress: nftContractAddress,
-                        isAzDomain: true
-                    })).count;
-                    try {
-                        await collectionsRepo.updateAll(
-                            {nft_count: nft_count},
-                            {
-                                nftContractAddress: nftContractAddress
-                            }
-                        );
-                    } catch (e) {
-                        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
-                    }
-                    continue;
-                }
-
-                //Get all On-chain MetaData if exists
-                let attributes: string[] = [
-                    'registration_timestamp',
-                    'expiration_timestamp'
-                ];
-                let attributeValues: string[] = [];
-                const attributesTmp: string[] = await azero_domains_nft_calls.getRegistrationPeriod(
-                    global_vars.caller,
-                    azDomainName
-                );
-                console.log({attributesTmp: attributesTmp});
-                for (const attr of attributesTmp) {
-                    attributeValues.push(attr.replace(/,/g, ""));
-                }
-                console.log("attributes", attributes);
-                console.log("attributeValues", attributeValues);
-                await delay(5000);
-                // Get NFT's Attributes
-                const metaData = {
-                    traits: {},
-                    nftName: azDomainName,
-                    avatar: `https://tzero.id/api/v1/image/${azDomainName}.tzero.png`,
-                    description: `${azDomainName}.tzero, a domain on Aleph Zero's testnet issued by AZERO.ID.`,
-                    expiration_timestamp: attributeValues[1] ? attributeValues[1]  : '',
-                    registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
-                };
-                metaData.traits = {
-                    ...metaData.traits,
-                    'Registration Time': convertStringToDateTime(attributeValues[0]) ? convertStringToDateTime(attributeValues[0])  : '',
-                    'Expiration Time': convertStringToDateTime(attributeValues[1]) ? convertStringToDateTime(attributeValues[1]) : '',
-                };
-                try {
-                    const {data: domainMetadata} = await axios({
-                        url: `https://tzero.id/api/v1/metadata/${azDomainName}.tzero.json`,
-                        method: "get",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "cache-control": "no-cache",
-                            "Access-Control-Allow-Origin": "*",
-                        },
-                    });
-                    if (domainMetadata) {
-                        if (domainMetadata.metadata) {
-                            metaData.nftName = domainMetadata.metadata.name;
-                            const traitsData = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
-                                return {...p, [c.trait_type]: c.value};
-                            }, {});
-                            if (traitsData) {
-                                metaData.traits = {
-                                    ...metaData.traits,
-                                    ...traitsData
-                                };
+                        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Release process:owner: `, owner);
+                        if (!owner) {
+                            try {
+                                await nftQueueRepo.deleteAll({
+                                    nftContractAddress: nftContractAddress,
+                                    azEventName: azEventName,
+                                    azDomainName: azDomainName,
+                                    isAzDomain: true,
+                                });
+                                await nftRepo.deleteAll({
+                                    nftContractAddress: nftContractAddress,
+                                    azDomainName: azDomainName,
+                                    isAzDomain: true,
+                                });
+                                //update Collection nft_count
+                                let nft_count = (await nftRepo.count({
+                                    nftContractAddress: nftContractAddress,
+                                    isAzDomain: true
+                                })).count;
+                                await collectionsRepo.updateAll(
+                                    {nft_count: nft_count},
+                                    {
+                                        nftContractAddress: nftContractAddress
+                                    }
+                                );
+                                
+                            } catch (e) {
+                                console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
+                                send_telegram_message(`Cron azero_domain_nft_queue has error in update data process when releasing ${azDomainName}`);
                             }
                         }
                     }
-                } catch (e) {
-                    send_telegram_message(`Cron azero_domain_nft_queue has error when fetching metadata of ${azDomainName}- ${e.message}`);
-                }
-
-                // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - forSaleInformation: `, forSaleInformation);
-                let obj: nfts = new nfts(
-                    {
-                        owner: owner,
-                        attributes: attributes,
-                        attributesValue: attributeValues,
-                        listed_date: forSaleInformation
-                            ? parseFloat(forSaleInformation.listedDate.replace(/,/g, ""))
-                            : 0,
-                        price: forSaleInformation
-                            ? parseFloat(forSaleInformation.price.replace(/,/g, ""))
-                            : 0,
-                        is_for_sale: (owner == marketplace.CONTRACT_ADDRESS && forSaleInformation) ? forSaleInformation.isForSale : false,
-                        // nft_owner: (nft_owner) ? nft_owner : undefined,
-                        nft_owner: (owner == marketplace.CONTRACT_ADDRESS && forSaleInformation) ? forSaleInformation.nftOwner : "",
-                        is_locked: false,
-                        isAzDomain: true,
-                        azDomainName: azDomainName,
-                        azEventName: azEventName,
-                        ...metaData,
+                    continue;
+                } else if (azEventName === 'Register' || azEventName === 'Transfer') {
+                    // Update Domain Data when Register or Transfer
+                    console.log(`Get totalSupply for AzeroDomain ${nftContractAddress}`);
+                    let totalSupply = await azero_domains_nft_calls.totalSupply(global_vars.caller);
+                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - totalSupply: ${totalSupply}, azEventName: ${azEventName}, azDomainName: ${azDomainName}`);
+                    // check if the token exists, if not delete from the database as token can be burnt
+                    const nftAzDomain = await nftQueueRepo.findOne({
+                        where: {
+                            azEventName: azEventName,
+                            azDomainName: azDomainName,
+                            isAzDomain: true,
+                            nftContractAddress: nftContractAddress
+                        }
+                    });
+                    let owner;
+                    console.log('nftAzDomain');
+                    console.log(nftAzDomain);
+                    if (nftAzDomain && nftAzDomain?.azDomainName) {
+                        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - nftAzDomain.azDomainName: `, nftAzDomain.azDomainName);
+                        let lockInfo = await azero_domains_nft_calls.getLockInfo(
+                            global_vars.caller,
+                            nftAzDomain.azDomainName
+                        );
+                        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - lockInfo: `, lockInfo);
+                        if (lockInfo) {
+                            owner = lockInfo;
+                        } else {
+                            owner = await azero_domains_nft_calls.ownerOf(
+                                global_vars.caller,
+                                nftAzDomain.azDomainName
+                            );
+                        }
                     }
-                );
-                let found = await nftRepo.findOne({
-                    where: {
-                        nftContractAddress: nftContractAddress,
-                        isAzDomain: true,
-                        azDomainName: azDomainName,
-                        azEventName: azEventName,
-                    }
-                });
-                console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR}:`, {found: found});
-                if (found) {
-                    console.log(
-                        `${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Updating new NFT Information to DB: `,
+                    //Get For Sale Information
+                    let forSaleInformation = await marketplace_calls.getNftSaleInfo(
+                        global_vars.caller,
                         nftContractAddress,
+                        {bytes: azDomainName}
+                    );
+
+                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - forSaleInformation: `, forSaleInformation);
+                    // Check and update attributes
+                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - owner: `, owner);
+                    if (!owner) {
+                        send_telegram_message(`Cron azero_domain_nft_queue has error when have not owner ${azDomainName}`);
+                        await nftQueueRepo.deleteAll({
+                            nftContractAddress: nftContractAddress,
+                            azEventName: azEventName,
+                            azDomainName: azDomainName,
+                            isAzDomain: true,
+                        });
+                        await nftRepo.deleteAll({
+                            nftContractAddress: nftContractAddress,
+                            azDomainName: azDomainName,
+                            isAzDomain: true,
+                        });
+                        //update Collection nft_count
+                        let nft_count = (await nftRepo.count({
+                            nftContractAddress: nftContractAddress,
+                            isAzDomain: true
+                        })).count;
+                        try {
+                            await collectionsRepo.updateAll(
+                                {nft_count: nft_count},
+                                {
+                                    nftContractAddress: nftContractAddress
+                                }
+                            );
+                        } catch (e) {
+                            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
+                        }
+                        continue;
+                    }
+
+                    //Get all On-chain MetaData if exists
+                    let attributes: string[] = [
+                        'registration_timestamp',
+                        'expiration_timestamp'
+                    ];
+                    let attributeValues: string[] = [];
+                    const attributesTmp: string[] = await azero_domains_nft_calls.getRegistrationPeriod(
+                        global_vars.caller,
                         azDomainName
                     );
-                    // TODO: Check data before updating
-                    found.owner = obj.owner ? obj.owner : found.owner;
-                    found.attributes = (obj.attributes !== undefined || obj.attributes) ? obj.attributes : found.attributes;
-                    found.attributesValue = (obj.attributesValue !== undefined || obj.attributesValue) ? obj.attributesValue : found.attributesValue;
-                    found.listed_date = (obj.listed_date !== undefined || obj.listed_date) ? obj.listed_date : found.listed_date;
-                    found.is_for_sale = (obj.is_for_sale !== undefined || obj.is_for_sale) ? obj.is_for_sale : found.is_for_sale;
-                    found.price = (obj.price !== undefined || obj.price) ? obj.price : found.price;
-                    found.nft_owner = (obj.nft_owner !== undefined || obj.nft_owner) ? obj.nft_owner : found.nft_owner;
-                    found.is_locked = (obj.is_locked !== undefined || obj.is_locked) ? obj.is_locked : found.is_locked;
-                    found.isAzDomain = (obj.isAzDomain !== undefined || obj.isAzDomain) ? obj.isAzDomain : found.isAzDomain;
-                    found.azDomainName = (obj.azDomainName !== undefined || obj.azDomainName) ? obj.azDomainName : found.azDomainName;
-                    found.azEventName = (obj.azEventName !== undefined || obj.azEventName) ? obj.azEventName : found.azEventName;
-                    found.updatedTime = new Date();
-                    found.traits = (obj.traits !== undefined || obj.traits) ? obj.traits : found.traits;
-                    found.nftName = (obj.nftName !== undefined || obj.nftName) ? obj.nftName : found.nftName;
-                    found.description = (obj.description !== undefined || obj.description) ? obj.description : found.description;
-                    found.avatar = (obj.avatar !== undefined || obj.avatar) ? obj.avatar : found.avatar;
-                    found.expiration_timestamp = (obj.expiration_timestamp !== undefined || obj.expiration_timestamp) ? obj.expiration_timestamp : found.expiration_timestamp;
-                    found.registration_timestamp = (obj.registration_timestamp !== undefined || obj.registration_timestamp) ? obj.registration_timestamp : found.registration_timestamp;
-                    try {
-                        console.log(found);
-                        await nftRepo.updateById(found._id, found);
-                        await delay(1000);
-                        await nftQueueRepo.deleteAll({
-                            nftContractAddress: nftContractAddress,
-                            azDomainName: azDomainName,
-                            isAzDomain: true
-                        });
-                    } catch (e) {
-                        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
-                        send_telegram_message(`Cron azero_domain_nft_queue has error when updating nft of ${azDomainName}- ${e.message}`);
+                    console.log({attributesTmp: attributesTmp});
+                    for (const attr of attributesTmp) {
+                        attributeValues.push(attr.replace(/,/g, ""));
                     }
-                } else {
-                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Adding new NFT to DB`);
-                    obj.nftContractAddress = nftContractAddress;
-                    obj.isAzDomain = true;
-                    obj.azDomainName = azDomainName;
-                    obj.azEventName = azEventName;
-                    obj.createdTime = new Date();
-                    obj.updatedTime = new Date();
+                    console.log("attributes", attributes);
+                    console.log("attributeValues", attributeValues);
+                    await delay(5000);
+                    // Get NFT's Attributes
+                    const metaData = {
+                        traits: {},
+                        nftName: azDomainName,
+                        avatar: `https://tzero.id/api/v1/image/${azDomainName}.tzero.png`,
+                        description: `${azDomainName}.tzero, a domain on Aleph Zero's testnet issued by AZERO.ID.`,
+                        expiration_timestamp: attributeValues[1] ? attributeValues[1]  : '',
+                        registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
+                    };
+                    metaData.traits = {
+                        ...metaData.traits,
+                        'Registration Time': convertStringToDateTime(attributeValues[0]) ? convertStringToDateTime(attributeValues[0])  : '',
+                        'Expiration Time': convertStringToDateTime(attributeValues[1]) ? convertStringToDateTime(attributeValues[1]) : '',
+                    };
                     try {
-                        await nftRepo.create(obj);
-                        await delay(1000);
-                        await nftQueueRepo.deleteAll({
-                            nftContractAddress: nftContractAddress,
-                            azDomainName: azDomainName,
-                            isAzDomain: true
+                        const {data: domainMetadata} = await axios({
+                            url: `https://tzero.id/api/v1/metadata/${azDomainName}.tzero.json`,
+                            method: "get",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "cache-control": "no-cache",
+                                "Access-Control-Allow-Origin": "*",
+                            },
                         });
+                        if (domainMetadata) {
+                            if (domainMetadata.metadata) {
+                                metaData.nftName = domainMetadata.metadata.name;
+                                const traitsData = domainMetadata?.metadata?.attributes?.reduce((p: any, c: any) => {
+                                    return {...p, [c.trait_type]: c.value};
+                                }, {});
+                                if (traitsData) {
+                                    metaData.traits = {
+                                        ...metaData.traits,
+                                        ...traitsData
+                                    };
+                                }
+                            }
+                        }
                     } catch (e) {
-                        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
-                        send_telegram_message(`Cron azero_domain_nft_queue has error when adding nft of ${azDomainName}- ${e.message}`);
+                        send_telegram_message(`Cron azero_domain_nft_queue has error when fetching metadata of ${azDomainName}- ${e.message}`);
                     }
-                    //update Collection nft_count
-                    let nft_count = (await nftRepo.count({
-                        nftContractAddress: nftContractAddress,
-                    })).count;
-                    try {
-                        await collectionsRepo.updateAll(
-                            {nft_count: nft_count},
-                            {nftContractAddress: nftContractAddress}
+
+                    // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - forSaleInformation: `, forSaleInformation);
+                    let obj: nfts = new nfts(
+                        {
+                            owner: owner,
+                            attributes: attributes,
+                            attributesValue: attributeValues,
+                            listed_date: forSaleInformation
+                                ? parseFloat(forSaleInformation.listedDate.replace(/,/g, ""))
+                                : 0,
+                            price: forSaleInformation
+                                ? parseFloat(forSaleInformation.price.replace(/,/g, ""))
+                                : 0,
+                            is_for_sale: (owner == marketplace.CONTRACT_ADDRESS && forSaleInformation) ? forSaleInformation.isForSale : false,
+                            // nft_owner: (nft_owner) ? nft_owner : undefined,
+                            nft_owner: (owner == marketplace.CONTRACT_ADDRESS && forSaleInformation) ? forSaleInformation.nftOwner : "",
+                            is_locked: false,
+                            isAzDomain: true,
+                            azDomainName: azDomainName,
+                            azEventName: azEventName,
+                            ...metaData,
+                        }
+                    );
+                    let found = await nftRepo.findOne({
+                        where: {
+                            nftContractAddress: nftContractAddress,
+                            isAzDomain: true,
+                            azDomainName: azDomainName,
+                            azEventName: azEventName,
+                        }
+                    });
+                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR}:`, {found: found});
+                    if (found) {
+                        console.log(
+                            `${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Updating new NFT Information to DB: `,
+                            nftContractAddress,
+                            azDomainName
                         );
-                    } catch (e) {
-                        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
-                        send_telegram_message(`Cron azero_domain_nft_queue has error when updating collection 's nft count of ${azDomainName}- ${e.message}`);
+                        // TODO: Check data before updating
+                        found.owner = obj.owner ? obj.owner : found.owner;
+                        found.attributes = (obj.attributes !== undefined || obj.attributes) ? obj.attributes : found.attributes;
+                        found.attributesValue = (obj.attributesValue !== undefined || obj.attributesValue) ? obj.attributesValue : found.attributesValue;
+                        found.listed_date = (obj.listed_date !== undefined || obj.listed_date) ? obj.listed_date : found.listed_date;
+                        found.is_for_sale = (obj.is_for_sale !== undefined || obj.is_for_sale) ? obj.is_for_sale : found.is_for_sale;
+                        found.price = (obj.price !== undefined || obj.price) ? obj.price : found.price;
+                        found.nft_owner = (obj.nft_owner !== undefined || obj.nft_owner) ? obj.nft_owner : found.nft_owner;
+                        found.is_locked = (obj.is_locked !== undefined || obj.is_locked) ? obj.is_locked : found.is_locked;
+                        found.isAzDomain = (obj.isAzDomain !== undefined || obj.isAzDomain) ? obj.isAzDomain : found.isAzDomain;
+                        found.azDomainName = (obj.azDomainName !== undefined || obj.azDomainName) ? obj.azDomainName : found.azDomainName;
+                        found.azEventName = (obj.azEventName !== undefined || obj.azEventName) ? obj.azEventName : found.azEventName;
+                        found.updatedTime = new Date();
+                        found.traits = (obj.traits !== undefined || obj.traits) ? obj.traits : found.traits;
+                        found.nftName = (obj.nftName !== undefined || obj.nftName) ? obj.nftName : found.nftName;
+                        found.description = (obj.description !== undefined || obj.description) ? obj.description : found.description;
+                        found.avatar = (obj.avatar !== undefined || obj.avatar) ? obj.avatar : found.avatar;
+                        found.expiration_timestamp = (obj.expiration_timestamp !== undefined || obj.expiration_timestamp) ? obj.expiration_timestamp : found.expiration_timestamp;
+                        found.registration_timestamp = (obj.registration_timestamp !== undefined || obj.registration_timestamp) ? obj.registration_timestamp : found.registration_timestamp;
+                        try {
+                            console.log(found);
+                            await nftRepo.updateById(found._id, found);
+                            await delay(1000);
+                            await nftQueueRepo.deleteAll({
+                                nftContractAddress: nftContractAddress,
+                                azDomainName: azDomainName,
+                                isAzDomain: true
+                            });
+                        } catch (e) {
+                            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
+                            send_telegram_message(`Cron azero_domain_nft_queue has error when updating nft of ${azDomainName}- ${e.message}`);
+                        }
+                    } else {
+                        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Adding new NFT to DB`);
+                        obj.nftContractAddress = nftContractAddress;
+                        obj.isAzDomain = true;
+                        obj.azDomainName = azDomainName;
+                        obj.azEventName = azEventName;
+                        obj.createdTime = new Date();
+                        obj.updatedTime = new Date();
+                        try {
+                            await nftRepo.create(obj);
+                            await delay(1000);
+                            await nftQueueRepo.deleteAll({
+                                nftContractAddress: nftContractAddress,
+                                azDomainName: azDomainName,
+                                isAzDomain: true
+                            });
+                        } catch (e) {
+                            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
+                            send_telegram_message(`Cron azero_domain_nft_queue has error when adding nft of ${azDomainName}- ${e.message}`);
+                        }
+                        //update Collection nft_count
+                        let nft_count = (await nftRepo.count({
+                            nftContractAddress: nftContractAddress,
+                        })).count;
+                        try {
+                            await collectionsRepo.updateAll(
+                                {nft_count: nft_count},
+                                {nftContractAddress: nftContractAddress}
+                            );
+                        } catch (e) {
+                            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - ERROR: ${e.message}`);
+                            send_telegram_message(`Cron azero_domain_nft_queue has error when updating collection 's nft count of ${azDomainName}- ${e.message}`);
+                        }
                     }
+                    // End Update Domain Data when Register or Transfer
+                } else {
+                    continue;
                 }
-                
             } else {
                 let tokenID = queue_data[j].tokenID;
                 if (!tokenID) continue;
