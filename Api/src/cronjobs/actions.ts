@@ -3571,6 +3571,20 @@ export async function processEventRecords(
                                     console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - WARNING: ${e.message}`);
                                 }
                                 console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - added objTransfer Event: `, objTransfer);
+                                let newNftQueue: nftqueues;
+                                try {
+                                    newNftQueue = await nftQueueSchemaRepo.create({
+                                        type: "update",
+                                        nftContractAddress: contract_address,
+                                        azDomainName: objTransfer.objTransfer?.id,
+                                        azEventName: objTransfer.eventName,
+                                        isAzDomain: true,
+                                        createdTime: new Date(),
+                                        updatedTime: new Date()
+                                    });
+                                } catch (e) {
+                                    console.log(`WARNING: ${e.message}`);
+                                }
                             }
                         }
                     } catch (e) {
