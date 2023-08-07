@@ -1311,7 +1311,7 @@ export async function check_NFT_queue(
                     // Check and update attributes
                     console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - owner: `, owner);
                     if (!owner) {
-                        send_telegram_message(`Cron azero_domain_nft_queue has error when have not owner ${azDomainName}`);
+                        send_telegram_message(`Cron azero_domain_nft_queue has error when have not owner |${azEventName}|${azDomainName}|`);
                         await nftQueueRepo.deleteAll({
                             nftContractAddress: nftContractAddress,
                             azEventName: azEventName,
@@ -3551,6 +3551,7 @@ export async function processEventRecords(
                             objTransfer.hashObject = crypto.createHash('md5').update(JSON.stringify(objTransfer.objTransfer)).digest('hex');
                             console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Event Transfer from AzeroDomain Contract...`);
                             console.log({objTransfer: objTransfer});
+
                             // TODO: Add data to database - azeroDomainEventRepo
                             let found = await azeroDomainEventRepo.findOne({
                                 where: {
@@ -3573,6 +3574,7 @@ export async function processEventRecords(
                                 console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - added objTransfer Event: `, objTransfer);
                                 let newNftQueue: nftqueues;
                                 let azDomainNameDecoded = objTransfer.objTransfer?.id ? hexToAscii(objTransfer.objTransfer.id) : undefined;
+                                send_telegram_message(`Cron azero_domain_nft_queue has error when have not owner |${azDomainNameDecoded}|${eventValues[2]}|`);
                                 try {
                                     newNftQueue = await nftQueueSchemaRepo.create({
                                         type: "update",
