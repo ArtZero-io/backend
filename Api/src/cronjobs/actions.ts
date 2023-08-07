@@ -3573,7 +3573,7 @@ export async function processEventRecords(
                                 }
                                 console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - added objTransfer Event: `, objTransfer);
                                 let newNftQueue: nftqueues;
-                                let azDomainNameDecoded = objTransfer.objTransfer?.id ? hexToAscii(objTransfer.objTransfer.id) : undefined;
+                                let azDomainNameDecoded = objTransfer.objTransfer?.id ? hexToAscii(objTransfer.objTransfer.id.slice(2)) : undefined;
                                 send_telegram_message(`Cron azero_domain_nft_queue has error when have not owner |${azDomainNameDecoded}|${eventValues[2]}|`);
                                 try {
                                     newNftQueue = await nftQueueSchemaRepo.create({
