@@ -3572,11 +3572,12 @@ export async function processEventRecords(
                                 }
                                 console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - added objTransfer Event: `, objTransfer);
                                 let newNftQueue: nftqueues;
+                                let azDomainNameDecoded = objTransfer.objTransfer?.id ? hexToAscii(objTransfer.objTransfer.id) : undefined;
                                 try {
                                     newNftQueue = await nftQueueSchemaRepo.create({
                                         type: "update",
                                         nftContractAddress: contract_address,
-                                        azDomainName: objTransfer.objTransfer?.id,
+                                        azDomainName: azDomainNameDecoded,
                                         azEventName: objTransfer.eventName,
                                         isAzDomain: true,
                                         createdTime: new Date(),
