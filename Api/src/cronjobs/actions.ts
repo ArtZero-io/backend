@@ -3573,14 +3573,15 @@ export async function processEventRecords(
                                 }
                                 console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - added objTransfer Event: `, objTransfer);
                                 let newNftQueue: nftqueues;
-                                let azDomainNameDecoded = hexToAscii(eventValues[2]);
-                                send_telegram_message(`Cron azero_domain_collection_queue debug azDomainNameDecoded |${azDomainNameDecoded}|`);
+                                let azDomainNameDecoded = eventValues[2] ? hexToAscii(JSON.parse(eventValues[2]).bytes) : '';
+                                console.log(`Cron azero_domain_collection_queue debug eventValues-azDomainNameDecoded |${eventValues[2]}|${azDomainNameDecoded}|`);
+                                send_telegram_message(`Cron azero_domain_collection_queue debug eventValues-azDomainNameDecoded |${eventValues[2]}|${azDomainNameDecoded}|`);
                                 try {
                                     newNftQueue = await nftQueueSchemaRepo.create({
                                         type: "update",
                                         nftContractAddress: contract_address,
-                                        azDomainName: azDomainNameDecoded.trim(),
-                                        azEventName: objTransfer.eventName,
+                                        azDomainName: azDomainNameDecoded,
+                                        azEventName: 'Transfer1',
                                         isAzDomain: true,
                                         createdTime: new Date(),
                                         updatedTime: new Date()
