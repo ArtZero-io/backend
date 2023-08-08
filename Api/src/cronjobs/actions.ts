@@ -3580,7 +3580,7 @@ export async function processEventRecords(
                                         type: "update",
                                         nftContractAddress: contract_address,
                                         azDomainName: azDomainNameDecoded,
-                                        azEventName: 'Transfer1',
+                                        azEventName: 'Transfer',
                                         isAzDomain: true,
                                         createdTime: new Date(),
                                         updatedTime: new Date()
