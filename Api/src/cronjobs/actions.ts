@@ -1285,7 +1285,7 @@ export async function check_NFT_queue(
                     console.log('nftAzDomain');
                     console.log(nftAzDomain);
                     if (nftAzDomain && nftAzDomain?.azDomainName) {
-                        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - nftAzDomain.azDomainName: `, nftAzDomain.azDomainName);
+                        console.log(`${f.AZ_NFT_MONITOR} - nftAzDomain.azDomainName: `, nftAzDomain.azDomainName);
                         let lockInfo = await azero_domains_nft_calls.getLockInfo(
                             global_vars.caller,
                             nftAzDomain.azDomainName
@@ -1311,7 +1311,7 @@ export async function check_NFT_queue(
                     // Check and update attributes
                     console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - owner: `, owner);
                     if (!owner) {
-                        send_telegram_message(`Cron azero_domain_nft_queue has error when have not owner |${azEventName}|${azDomainName}|`);
+                        send_telegram_message(`Crson azero_domain_nft_queue has error when have not owner |${azEventName}|${azDomainName}|`);
                         await nftQueueRepo.deleteAll({
                             nftContractAddress: nftContractAddress,
                             azEventName: azEventName,
@@ -3573,13 +3573,13 @@ export async function processEventRecords(
                                 }
                                 console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - added objTransfer Event: `, objTransfer);
                                 let newNftQueue: nftqueues;
-                                let azDomainNameDecoded = objTransfer.objTransfer?.id ? hexToAscii(objTransfer.objTransfer.id.slice(2)) : undefined;
-                                send_telegram_message(`Cron azero_domain_nft_queue has error when have not owner |${azDomainNameDecoded}|${eventValues[2]}|`);
+                                let azDomainNameDecoded = hexToAscii(eventValues[2]);
+                                send_telegram_message(`Cron azero_domain_collection_queue debug azDomainNameDecoded |${azDomainNameDecoded}|`);
                                 try {
                                     newNftQueue = await nftQueueSchemaRepo.create({
                                         type: "update",
                                         nftContractAddress: contract_address,
-                                        azDomainName: azDomainNameDecoded,
+                                        azDomainName: azDomainNameDecoded.trim(),
                                         azEventName: objTransfer.eventName,
                                         isAzDomain: true,
                                         createdTime: new Date(),
