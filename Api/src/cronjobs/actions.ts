@@ -3574,7 +3574,7 @@ export async function processEventRecords(
                                 let newNftQueue: nftqueues;
                                 let azDomainNameDecoded = eventValues[2] ? hexToAscii(JSON.parse(eventValues[2]).bytes) : '';
                                 console.log(`Cron azero_domain_collection_queue debug eventValues-azDomainNameDecoded |${eventValues[2]}|${azDomainNameDecoded}|`);
-                                send_telegram_message(`Cron azero_domain_collection_queue debug eventValues-azDomainNameDecoded |${eventValues[2]}|${azDomainNameDecoded}|`);
+                                
                                 try {
                                     newNftQueue = await nftQueueSchemaRepo.create({
                                         type: "update",
