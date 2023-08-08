@@ -1426,8 +1426,7 @@ export async function check_NFT_queue(
                         where: {
                             nftContractAddress: nftContractAddress,
                             isAzDomain: true,
-                            azDomainName: azDomainName,
-                            azEventName: azEventName,
+                            azDomainName: azDomainName
                         }
                     });
                     console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR}:`, {found: found});
