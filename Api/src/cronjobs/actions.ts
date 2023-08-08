@@ -1285,7 +1285,7 @@ export async function check_NFT_queue(
                     console.log('nftAzDomain');
                     console.log(nftAzDomain);
                     if (nftAzDomain && nftAzDomain?.azDomainName) {
-                        console.log(`${f.AZ_NFT_MONITOR} - nftAzDomain.azDomainName: `, nftAzDomain.azDomainName);
+                        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - nftAzDomain.azDomainName: `, nftAzDomain.azDomainName);
                         let lockInfo = await azero_domains_nft_calls.getLockInfo(
                             global_vars.caller,
                             nftAzDomain.azDomainName
