@@ -5174,12 +5174,6 @@ export class ApiController {
                 },
             });
             const floorPriceList =  await Promise.all(collections.map(async (collection) => {
-                let collection_data = await this.collectionsSchemaRepository.findOne({
-                where: {
-                    nftContractAddress: collection.nftContractAddress,
-                    isActive: true,
-                }
-            });
             let data = await this.nfTsSchemaRepository.find({
                 where: {
                     nftContractAddress: collection.nftContractAddress,
@@ -5198,7 +5192,7 @@ export class ApiController {
             }
         }))
             // @ts-ignore
-            return this.response.send({status: STATUS.OK, ret: data});
+            return this.response.send({status: STATUS.OK, ret: floorPriceList.filter((floorPrice) => floorPrice !== null)});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
             // @ts-ignore
