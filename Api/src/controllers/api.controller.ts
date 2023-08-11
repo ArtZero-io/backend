@@ -5185,7 +5185,7 @@ export class ApiController {
             if (data) {
                 return {
                     collection: collection.nftContractAddress,
-                    floorPrice: data.price,
+                    floorPrice: data?.[0]?.price || 0,
                 };
             } else {
                 return null;
