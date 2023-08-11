@@ -5164,4 +5164,48 @@ export class ApiController {
             });
         }
     }
+     // Get Floor Price of all
+     @post('/getAllCollectionsFloorPrice')
+     async getAllCollectionsFloorPrice(): Promise<ResponseBody> {
+        try {
+            const collections = await this.collectionsSchemaRepository.find({
+                where: {
+                    isActive: true,
+                },
+            });
+            const floorPriceList =  await Promise.all(collections.map(async (collection) => {
+                let collection_data = await this.collectionsSchemaRepository.findOne({
+                where: {
+                    nftContractAddress: collection.nftContractAddress,
+                    isActive: true,
+                }
+            });
+            let data = await this.nfTsSchemaRepository.find({
+                where: {
+                    nftContractAddress: collection.nftContractAddress,
+                    is_for_sale: true,
+                },
+                order: ["price ASC"],  // price ASC
+                limit: 1
+            });
+            if (data) {
+                return {
+                    collection: collection.nftContractAddress,
+                    floorPrice: data.price,
+                };
+            } else {
+                return null;
+            }
+        }))
+            // @ts-ignore
+            return this.response.send({status: STATUS.OK, ret: data});
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+     }
 }
