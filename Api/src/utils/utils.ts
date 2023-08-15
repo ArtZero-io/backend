@@ -11,11 +11,23 @@ import {ApiBase} from "@polkadot/api/base";
 import {Response} from "@loopback/rest";
 import {ProjectsSchemaRepository} from "../repositories";
 import dotenv from "dotenv";
+import moment from "moment";
 // import {globalApi} from "../scripts/getTimestamp";
 dotenv.config();
 
 // @ts-ignore
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
+
+export function convertStringToDateTime(stringTimeStamp: string) {
+  let timeStamp = stringTimeStamp;
+
+  if (typeof stringTimeStamp === "string") {
+    /* eslint-disable no-useless-escape */
+    timeStamp = stringTimeStamp.replace(/\,/g, "");
+  }
+
+  return moment(parseInt(timeStamp)).format("MMM D YYYY, H:mm");
+}
 
 export async function send_message(message: string) {
     try {
@@ -319,4 +331,56 @@ export async function getTimestampFromBlockNumber(api: ApiPromise, blockNumber: 
         console.log(`ERROR: getTimestampFromBlockNumber - ${e.message}`);
     }
     return timestamp;
+}
+
+export function isAzEnabled(azDomainAddress?: string): {
+    isAzDomain: boolean,
+    isEnabled: boolean
+} {
+    try {
+        if (!azDomainAddress) {
+            return {
+                isAzDomain: false,
+                isEnabled: false
+            };
+        }
+        let azeroDomainConfig = process.env.AZERO_DOMAIN_LIST;
+        if (azeroDomainConfig) {
+            azeroDomainConfig = azeroDomainConfig.replace('[','').replace(']','');
+            const tmp = azeroDomainConfig.split(',');
+            console.log(tmp);
+            for (const data of tmp) {
+                const info = data.split('-');
+                const address = info[0];
+                const isEnable = info[1] === "true";
+                console.log(`Address: ${address} isEnable: ${isEnable}`);
+                // Check and return the first address that is matched
+                if (azDomainAddress === address) {
+                    return {
+                        isAzDomain: true,
+                        isEnabled: isEnable
+                    };
+                }
+            }
+            return {
+                isAzDomain: false,
+                isEnabled: false
+            };
+        }
+    } catch (e) {
+        console.log(`ERROR - isAzEnabled: ${e.messages}`);
+    }
+    return {
+        isAzDomain: false,
+        isEnabled: false
+    };
+}
+
+export function hexToAscii(str1: string): string {
+    let hex = str1?.toString().replace(`0x`,'');
+    let str = "";
+    for (let n = 0; n < hex.length; n += 2) {
+        str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+    }
+    return str;
 }

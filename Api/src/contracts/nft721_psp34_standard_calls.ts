@@ -1,6 +1,10 @@
 import {ContractPromise} from "@polkadot/api-contract";
 import BN from "bn.js";
 import {convertNumberWithoutCommas, readOnlyGasLimit} from "../utils/utils";
+import dotenv from "dotenv";
+import {AzeroDomainEventRepository} from "../repositories";
+dotenv.config();
+
 let contract: ContractPromise;
 export const setContract = (c: ContractPromise) => {
     contract = c;
@@ -25,7 +29,7 @@ export async function getTotalSupply(nft721_psp34_standard_contract: ContractPro
     return 0;
 }
 
-export async function isLockedNft(nft721_psp34_standard_contract: ContractPromise, caller_account: string, tokenId: {u64: number}) {
+export async function isLockedNft(nft721_psp34_standard_contract: ContractPromise, caller_account: string, tokenId: {u64: number} | {bytes: string}) {
     if (!nft721_psp34_standard_contract || !caller_account) {
         return null;
     }
@@ -146,8 +150,13 @@ export async function getAttributes(
 export async function ownerOf(
     nft721_psp34_standard_contract: ContractPromise,
     caller_account: string,
-    tokenId: {u64: number}
+    tokenId: number
 ) {
+    console.log({
+        nft721_psp34_standard_contract: nft721_psp34_standard_contract,
+        caller_account: caller_account,
+        tokenId: tokenId
+    });
     if (!nft721_psp34_standard_contract || !caller_account) {
         return null;
     }
@@ -159,12 +168,13 @@ export async function ownerOf(
     const {result, output} = await nft721_psp34_standard_contract.query["psp34::ownerOf"](
         address,
         {value: azero_value, gasLimit},
-        tokenId
+        {u64: tokenId}
     );
     if (result.isOk && output) {
         // @ts-ignore
         return output.toHuman()?.Ok;
     }
+
     return null;
 }
 
@@ -182,6 +192,28 @@ export async function getLastTokenId(nft721_psp34_standard_contract: ContractPro
         {value: azero_value, gasLimit}
     );
     if (result.isOk && output) {
+        // @ts-ignore
+        return parseInt(convertNumberWithoutCommas(output.toHuman()?.Ok));
+    }
+    return null;
+}
+
+// Used for AzeroDomain only
+export async function totalSupply(nft721_psp34_standard_contract: ContractPromise, caller_account: string) {
+    if (!nft721_psp34_standard_contract || !caller_account) {
+        return null;
+    }
+    const address = caller_account;
+    // @ts-ignore
+    const gasLimit = readOnlyGasLimit(nft721_psp34_standard_contract.api)
+    const azero_value = 0;
+    // @ts-ignore
+    const {result, output} = await nft721_psp34_standard_contract.query["psp34::totalSupply"](
+        address,
+        {value: azero_value, gasLimit}
+    );
+    if (result.isOk && output) {
+        console.log(result.toHuman());
         console.log(output.toHuman());
         // @ts-ignore
         return parseInt(convertNumberWithoutCommas(output.toHuman()?.Ok));

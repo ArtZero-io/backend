@@ -55,7 +55,11 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
+<<<<<<< HEAD
 .env
+=======
+.env.mainnet.backup
+>>>>>>> mainnet-1.0_pretest
 .env.testnet
 .env.local
 .env.*

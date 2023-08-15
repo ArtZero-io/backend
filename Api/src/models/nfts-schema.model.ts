@@ -40,6 +40,31 @@ export class nfts extends Entity {
   tokenID?: number;
 
   @property({
+    type: 'string',
+  })
+  azDomainName?: string;
+
+  @property({
+    type: 'string',
+  })
+  azEventName?: string;
+
+  @property({
+    type: 'boolean',
+  })
+  isAzDomain?: boolean;
+
+  @property({
+    type: 'string',
+  })
+  expiration_timestamp?: string;
+
+  @property({
+    type: 'string',
+  })
+  registration_timestamp?: string;
+
+  @property({
     type: 'array',
     itemType: 'string',
   })

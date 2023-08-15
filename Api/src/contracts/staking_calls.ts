@@ -1,6 +1,6 @@
 import {ContractPromise} from "@polkadot/api-contract";
 import BN from "bn.js";
-import {convertNumberWithoutCommas, getGasLimit, readOnlyGasLimit} from "../utils/utils";
+import {getGasLimit, readOnlyGasLimit} from "../utils/utils";
 import {KeyringPair} from "@polkadot/keyring/types";
 
 let staking_contract: ContractPromise;
@@ -33,13 +33,13 @@ export async function getTotalStaked(caller_account: string) {
     return null;
 }
 
-export async function isClaimed(caller_account: string, account: string) {
+export async function isClaimed(caller_account: any, account: string) {
     if (!staking_contract || !caller_account) {
         console.log("invalid inputs");
         return null;
     }
     // @ts-ignore
-    const address = caller_account;
+    const address = caller_account?.address;
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
@@ -107,13 +107,12 @@ export async function getRewardStarted(caller_account: any) {
     return null;
 }
 
-export async function getTotalCountOfStakeholders(caller_account: string): Promise<number> {
+export async function getTotalCountOfStakeholders(caller_account: any): Promise<number> {
     if (!staking_contract || !caller_account) {
         console.log("invalid inputs");
         return 0;
     }
-    const address = caller_account;
-
+    const address = caller_account?.address;
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
@@ -127,7 +126,8 @@ export async function getTotalCountOfStakeholders(caller_account: string): Promi
     );
     if (result.isOk && output) {
         // @ts-ignore
-        return parseInt(convertNumberWithoutCommas(output.toHuman()?.Ok));
+        return new BN(output.toHuman()?.Ok, 10, "le").toNumber();
+        // return new BN(output, 10, "le").toNumber();
     }
     return 0;
 }
@@ -137,7 +137,7 @@ export async function getStakedAccountsAccountByIndex(caller_account: any, index
         console.log("invalid inputs");
         return null;
     }
-    const address = caller_account;
+    const address = caller_account?.address;
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
@@ -157,7 +157,7 @@ export async function getStakedAccountsAccountByIndex(caller_account: any, index
     return null;
 }
 
-export async function setClaimedStatus(keypair: KeyringPair, caller: string, account: string) {
+export async function setClaimedStatus(keypair: KeyringPair, caller:string, account: string) {
     const gasLimitResult = await getGasLimit(
         staking_contract.api,
         caller,
@@ -186,15 +186,11 @@ export async function setClaimedStatus(keypair: KeyringPair, caller: string, acc
 }
 
 export async function isAdmin(caller_account: any, account: string) {
-    console.log(staking_contract);
     if (!staking_contract || !caller_account) {
         console.log("invalid inputs");
         return null;
     }
-    const address = caller_account;
-    console.log({staking_contract_address: staking_contract.address.toString()});
-    console.log({address: address});
-    console.log({account: account});
+    const address = caller_account?.address;
     // @ts-ignore
     const gasLimit = readOnlyGasLimit(staking_contract.api);
     const azero_value = 0;
@@ -208,10 +204,7 @@ export async function isAdmin(caller_account: any, account: string) {
         '3739740293',
         account
     );
-    console.log(result.toHuman());
     if (result.isOk && output) {
-        // @ts-ignore
-        console.log(output.toHuman());
         // @ts-ignore
         return output.toHuman()?.Ok;
     }

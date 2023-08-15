@@ -102,6 +102,7 @@ export const RequestNewMintingEventBody = {
 export type ReqUpdateNftType = {
     collection_address?: string,
     token_id?: number,
+    azDomainName?: string,
 };
 const ReqUpdateNftSchema: SchemaObject = {
     type: 'object',
@@ -128,6 +129,7 @@ export type ReqUpdateBidsType = {
     collection_address?: string,
     seller?: string,
     token_id?: number,
+    azDomainName?: string,
 };
 const ReqUpdateBidsSchema: SchemaObject = {
     type: 'object',
@@ -784,17 +786,21 @@ export const RequestGetUnlistedNFTsBody = {
 // GET NFTs BY ID
 export type ReqGetNFTByIDType = {
     collection_address: string,
-    token_id: number,
+    token_id?: number,
+    azDomainName?: string,
 };
 const ReqGetNFTByIDSchema: SchemaObject = {
     type: 'object',
-    required: ['token_id'],
+    required: ['collection_address'],
     properties: {
         collection_address: {
             type: 'string',
         },
         token_id: {
             type: 'number',
+        },
+        azDomainName: {
+            type: 'string',
         },
     },
 };
@@ -873,6 +879,43 @@ export const RequestGetNFTsByOwnerAndCollectionBody = {
     required: true,
     content: {
         'application/x-www-form-urlencoded': {schema: ReqGetNFTsByOwnerAndCollectionSchema},
+    },
+};
+
+// GET NFTs BY ATTRIBUTE VALUE
+export type ReqGetNFTsByAttributeValueType = {
+    collection_address: string,
+    expiration_timestamp: string,
+    limit?: number,
+    offset?: number,
+    sort?: number,
+};
+const ReqGetNFTsByAttributeValueSchema: SchemaObject = {
+    type: 'object',
+    required: ['collection_address', 'expiration_timestamp'],
+    properties: {
+        collection_address: {
+            type: 'string',
+        },
+        expiration_timestamp: {
+            type: 'string',
+        },
+        limit: {
+            type: 'number',
+        },
+        offset: {
+            type: 'number',
+        },
+        sort: {
+            type: 'number',
+        },
+    },
+};
+export const RequestGetNFTsByAttributeValueBody = {
+    description: 'The input of getNFTsByAttributeValue function',
+    required: true,
+    content: {
+        'application/x-www-form-urlencoded': {schema: ReqGetNFTsByAttributeValueSchema},
     },
 };
 
@@ -1085,7 +1128,8 @@ export const RequestSearchCollectionsBody = {
 // GET OWNERSHIP HISTORY
 export type ReqGetOwnershipHistoryType = {
     collection_address: string,
-    token_id: number,
+    token_id?: number,
+    azDomainName?: string,
     owner: string,
 };
 const ReqGetOwnershipHistorySchema: SchemaObject = {
@@ -1127,7 +1171,8 @@ export type TraitFilters = {
     and?: object,
     is_for_sale?: boolean,
     price?: object,
-    keyword?: string
+    keyword?: string,
+    expirationTimestamp?: string,
 };
 export type ReqSearchNFTOfCollectionByTraitsType = {
     collectionAddress: string,
@@ -1295,12 +1340,12 @@ export const RequestGetPhaseInfoBody = {
 
 // REPORT NFT request
 export type ReqReportNFTType = {
-   collection_name: string, 
-   nft_name: string, 
-   message: string,
-   address: string, 
-   signature: string,
-   nft_link: string
+    collection_name: string,
+    nft_name: string,
+    message: string,
+    address: string,
+    signature: string,
+    nft_link: string
 };
 const ReqReportNFTSchema: SchemaObject = {
     type: 'object',
@@ -1473,7 +1518,7 @@ export const RequestTriggerRewardsBody = {
 // RESET ALL QUEUE
 export type ReqResetAllQueueType = {
     userName: string,
-    password: string,
+    password: string
 };
 const ReqResetAllQueueSchema: SchemaObject = {
     type: 'object',
@@ -1573,6 +1618,9 @@ const ReqAdUpdateCollectionSchema: SchemaObject = {
         nftContractAddress: {
             type: 'string',
         },
+        maxTotalSupply: {
+            type: 'number',
+        },
     },
 };
 export const RequestAdUpdateCollectionBody = {
@@ -1621,11 +1669,11 @@ export const RequestAdGetListMinterBody = {
 export type ReqGetBidByCollectionType = {
     userName: string,
     password: string,
-    nftContractAddress?: string
+    nftContractAddress: string
 };
 const ReqGetBidByCollectionSchema: SchemaObject = {
     type: 'object',
-    required: ['userName', 'password'],
+    required: ['userName', 'password', 'nftContractAddress'],
     properties: {
         userName: {
             type: 'string',
@@ -1643,5 +1691,63 @@ export const RequestGetBidByCollectionBody = {
     required: true,
     content: {
         'application/json': {schema: ReqGetBidByCollectionSchema},
+    },
+};
+
+// AD GET OWNER NFT
+export type ReqGetListOwnerNftType = {
+    userName: string,
+    password: string,
+    nftContractAddress: string
+};
+const ReqGetListOwnerNftSchema: SchemaObject = {
+    type: 'object',
+    required: ['userName', 'password', 'nftContractAddress'],
+    properties: {
+        userName: {
+            type: 'string',
+        },
+        password: {
+            type: 'string',
+        },
+        nftContractAddress: {
+            type: 'string',
+        },
+    },
+};
+export const RequestGetListOwnerNftBody = {
+    description: 'The input of getListOwnerNft function',
+    required: true,
+    content: {
+        'application/json': {schema: ReqGetListOwnerNftSchema},
+    },
+};
+
+// GET COLLECTION GROUP BY CONTRACT ADDRESS
+export type ReqGetCollectionGroupByAddressType = {
+    limit?: number,
+    offset?: number,
+    sort?: number,
+};
+const ReqGetCollectionGroupByAddressSchema: SchemaObject = {
+    type: 'object',
+    required: [],
+    properties: {
+        limit: {
+            type: 'number',
+        },
+        offset: {
+            type: 'number',
+        },
+        sort: {
+            type: 'number',
+        },
+    },
+};
+export const RequestGetCollectionGroupByAddressBody = {
+    description: 'The input of getCollectionGroupByAddress function',
+    required: true,
+    content: {
+        'application/x-www-form-urlencoded': {schema: ReqGetCollectionGroupByAddressSchema},
     },
 };

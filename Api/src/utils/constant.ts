@@ -36,6 +36,9 @@ export const EACH_30_SECONDS = '*/30 * * * * *';                // Every 30 seco
 //     SET_STAKER_CLAIMBE: EACH_3_SECONDS,
 //     THREADS: EACH_3_SECONDS,
 // };
+
+export const START_BLOCK_NUMBER = process.env.CRONJOB_TIME_AZ_EVENTS_COLLECTOR_RESCAN_START ? parseInt(process.env.CRONJOB_TIME_AZ_EVENTS_COLLECTOR_RESCAN_START) : 0;
+export const END_BLOCK_NUMBER = process.env.CRONJOB_TIME_AZ_EVENTS_COLLECTOR_RESCAN_END ? parseInt(process.env.CRONJOB_TIME_AZ_EVENTS_COLLECTOR_RESCAN_END) : 0;
 export const CRONJOB_TIME = {
     AZ_NFT_MONITOR: process.env.CRONJOB_TIME_AZ_NFT_MONITOR ?? EACH_15_SECONDS,
     AZ_NFT_MONITOR_SCAN_ALL: process.env.CRONJOB_TIME_AZ_NFT_MONITOR_SCAN_ALL ?? EACH_3_HOUR,
@@ -45,12 +48,14 @@ export const CRONJOB_TIME = {
     AZ_BIDS_MONITOR_CHECK_QUEUE: process.env.CRONJOB_TIME_AZ_BIDS_MONITOR_CHECK_QUEUE ?? EACH_MINUTE,
     AZ_CACHE_IMAGE: process.env.CRONJOB_TIME_AZ_CACHE_IMAGE ?? EACH_7_SECONDS,
     AZ_CLOUDFLARE_SYNC_MONITOR: process.env.CRONJOB_TIME_AZ_CLOUDFLARE_SYNC_MONITOR ?? EACH_3_SECONDS,
-    AZ_EVENTS_COLLECTOR: process.env.CRONJOB_TIME_AZ_EVENTS_COLLECTOR ?? EACH_3_SECONDS,
+    AZ_EVENTS_COLLECTOR: process.env.CRONJOB_TIME_AZ_EVENTS_COLLECTOR ?? EACH_3_HOUR,
+    AZ_EVENTS_COLLECTOR_RESCAN: process.env.CRONJOB_TIME_AZ_EVENTS_COLLECTOR_RESCAN ?? EACH_HOUR,
     AZ_PROJECT_MONITOR: process.env.CRONJOB_TIME_AZ_PROJECT_MONITOR ?? EACH_7_SECONDS,
     AZ_PROJECT_WHITELIST: process.env.CRONJOB_TIME_AZ_PROJECT_WHITELIST ?? EACH_15_SECONDS,
     AZ_TELEGRAM_BOT: process.env.CRONJOB_TIME_AZ_TELEGRAM_BOT ?? EACH_5_MINUTES,
     SET_STAKER_CLAIMBE: EACH_3_HOUR,
     THREADS: EACH_3_HOUR,
+    AZ_AZERO_DOMAINS_COLLECTOR: process.env.CRONJOB_TIME_AZ_AZERO_DOMAINS_COLLECTOR ?? EACH_3_HOUR,
 };
 export const IS_ENABLE_DOCS = (process.env.IS_ENABLE_DOCS == "true"); // set FALSE for disabling api explorer
 export const GET_CONFIG_FORM_DB = (process.env.GET_CONFIG_FORM_DB == "true"); // set TRUE for get config jobs from db
@@ -82,11 +87,13 @@ export const CRONJOB_ENABLE = {
     AZ_CHECKING_IMAGES_AND_JSON: (process.env.IS_ENABLE_JOB_AZ_CHECKING_IMAGES_AND_JSON == "true"),
     AZ_CLOUDFLARE_SYNC_MONITOR: (process.env.IS_ENABLE_JOB_AZ_CLOUDFLARE_SYNC_MONITOR == "true"),
     AZ_EVENTS_COLLECTOR: (process.env.IS_ENABLE_JOB_AZ_EVENTS_COLLECTOR == "true"),
+    AZ_EVENTS_COLLECTOR_RESCAN: (process.env.IS_ENABLE_JOB_AZ_EVENTS_COLLECTOR_RESCAN == "true"),
     AZ_PROJECT_MONITOR: (process.env.IS_ENABLE_JOB_AZ_PROJECT_MONITOR == "true"),
     AZ_PROJECT_WHITELIST: (process.env.IS_ENABLE_JOB_AZ_PROJECT_WHITELIST == "true"),
     AZ_TELEGRAM_BOT: (process.env.IS_ENABLE_JOB_AZ_TELEGRAM_BOT == "true"),
     SET_STAKER_CLAIMBE: false,
-    THREADS: false
+    THREADS: false,
+    AZ_AZERO_DOMAINS_COLLECTOR: (process.env.IS_ENABLE_AZ_AZERO_DOMAINS_COLLECTOR == "true"),
 };
 
 export const STATUS = {
@@ -98,6 +105,7 @@ export const MESSAGE = {
     NO_INPUT: "No Input",
     NO_ADDRESS: "No address",
     NO_TOKEN_ID: "No Token ID",
+    NO_DOMAIN_NAME: "No Domain name",
     NO_IMAGES: "No Images",
     NO_IMAGE_TYPE: "No Image Type",
     NO_METADATA: "No Metadata",
@@ -144,6 +152,7 @@ export const CONFIG_TYPE_NAME = {
     AZ_CLOUDFLARE_SYNC_MONITOR: "CronJobAzCloudflareSyncMonitor",
     AZ_COLLECTION_MONITOR: "CronJobAzCollectionMonitor",
     AZ_EVENTS_COLLECTOR: "CronJobAzEventsCollector",
+    AZ_EVENTS_COLLECTOR_RESCAN: "CronJobAzEventsCollectorReScan",
     AZ_NFT_MONITOR: "CronJobAzNftMonitor",
     AZ_NFT_MONITOR_SCAN_ALL: "CronJobAzNftMonitorScanAll",
     AZ_PROCESSING_ALL_QUEUE_NFT: "CronJobAzProcessingAllQueueNft",
@@ -151,6 +160,7 @@ export const CONFIG_TYPE_NAME = {
     AZ_PROJECT_WHITELIST: "CronJobAzProjectWhitelist",
     AZ_TELEGRAM_BOT: "CronJobAzTelegramBot",
     SET_STAKER_CLAIMBE: "CronJobSetStakerClaimbe",
+    AZ_AZERO_DOMAINS_COLLECTOR: "CronJobAzeroDomainCollector"
 };
 
 export const MAX_NFT_QUEUE_ALL_IN_PROCESSING:number = (process.env.MAX_NFT_QUEUE_ALL_IN_PROCESSING)

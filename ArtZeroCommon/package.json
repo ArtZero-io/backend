@@ -1,0 +1,21 @@
+{
+  "name": "artzero",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/Artzero.js",
+  "types": "lib/Artzero.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "prepare" : "npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  }
+}
