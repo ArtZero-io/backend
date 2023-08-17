@@ -2325,7 +2325,8 @@ export class ApiController {
             let data = await this.nfTsSchemaRepository.find({
                 where: {
                     is_for_sale: false,
-                    owner: owner
+                    owner: owner,
+                    nftContractAddress: {nin: process.env.AZERO_DOMAIN_IGNORE_ADDRESS_LIST}
                 },
                 order: [order],
                 skip: offset,
@@ -2334,7 +2335,8 @@ export class ApiController {
             let data1 = await this.nfTsSchemaRepository.find({
                 where: {
                     is_for_sale: true,
-                    nft_owner: owner
+                    nft_owner: owner,
+                    nftContractAddress: {nin: process.env.AZERO_DOMAIN_IGNORE_ADDRESS_LIST}
                 },
                 order: [order],
                 skip: offset,
