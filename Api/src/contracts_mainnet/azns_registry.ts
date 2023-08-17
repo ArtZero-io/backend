@@ -1,5 +1,5 @@
 export const azero_domain = {
-    CONTRACT_ADDRESS: "5FsB91tXSEuMj6akzdPczAtmBaVKToqHmtAwSUzXh49AYzaD",
+    CONTRACT_ADDRESS: "5CTQBfBC9SfdrCDBJdfLiyW2pg9z5W6C6Es8sK313BLnFgDf",
     CONTRACT_ABI: {
       "source": {
         "hash": "0x18b21eb7af451d3a8a4738a73a93d0ccc15e1dd2ef4baaeaf05f25a2452ce516",
