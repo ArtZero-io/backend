@@ -545,8 +545,8 @@ export async function check_NFT_queue_all(
                 const metaData = {
                     traits: {},
                     nftName: azDomainName,
-                    avatar: `https://tzero.id/api/v1/image/${azDomainName}.tzero.png`,
-                    description: `${azDomainName}.tzero, a domain on Aleph Zero's testnet issued by AZERO.ID.`,
+                    avatar: process.env.AZERO_DOMAIN_IMAGE_PREFIX_ENDPOINT + azDomainName + process.env.AZERO_DOMAIN_IMAGE_SUFFIX_ENDPOINT,
+                    description: azDomainName + process.env.AZERO_DOMAIN_DESCRIPTION,
                     expiration_timestamp: attributeValues[1] ? attributeValues[1]  : '',
                     registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
                 };
@@ -565,7 +565,7 @@ export async function check_NFT_queue_all(
 
                 try {
                     const {data: domainMetadata} = await axios({
-                        url: `https://tzero.id/api/v1/metadata/${azDomainName}.tzero.json`,
+                        url: process.env.AZERO_DOMAIN_JSON_API_PREFIX_ENDPOINT + azDomainName + process.env.AZERO_DOMAIN_JSON_API_SUFFIX_ENDPOINT,
                         method: "get",
                         headers: {
                             "Content-Type": "application/json",
@@ -1362,8 +1362,8 @@ export async function check_NFT_queue(
                     const metaData = {
                         traits: {},
                         nftName: azDomainName,
-                        avatar: `https://tzero.id/api/v1/image/${azDomainName}.tzero.png`,
-                        description: `${azDomainName}.tzero, a domain on Aleph Zero's testnet issued by AZERO.ID.`,
+                        avatar: process.env.AZERO_DOMAIN_IMAGE_PREFIX_ENDPOINT + azDomainName + process.env.AZERO_DOMAIN_IMAGE_SUFFIX_ENDPOINT,
+                        description: azDomainName + process.env.AZERO_DOMAIN_DESCRIPTION,
                         expiration_timestamp: attributeValues[1] ? attributeValues[1]  : '',
                         registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
                     };
@@ -1374,7 +1374,7 @@ export async function check_NFT_queue(
                     };
                     try {
                         const {data: domainMetadata} = await axios({
-                            url: `https://tzero.id/api/v1/metadata/${azDomainName}.tzero.json`,
+                            url: process.env.AZERO_DOMAIN_JSON_API_PREFIX_ENDPOINT + azDomainName + process.env.AZERO_DOMAIN_JSON_API_SUFFIX_ENDPOINT,
                             method: "get",
                             headers: {
                                 "Content-Type": "application/json",
@@ -3786,7 +3786,7 @@ export async function check_new_azero_domains_nft_queue(
 
         const { data } = await axios({
             method: 'post',
-            url: 'https://squid.subsquid.io/azns-testnet/graphql',
+            url: process.env.AZERO_DOMAIN_INDEXER_ENDPOINT,
             headers: {
                 "Content-Type": "application/json",
                 "cache-control": "no-cache",
@@ -3819,8 +3819,8 @@ export async function check_new_azero_domains_nft_queue(
                 let metaData = {
                     traits: {},
                     nftName: domain.id,
-                    description: "NFT of Azero Domain",
-                    avatar: `https://tzero.id/api/v1/image/${domain.name}.tzero.png`,
+                    description: domain.name + process.env.AZERO_DOMAIN_DESCRIPTION,
+                    avatar: process.env.AZERO_DOMAIN_IMAGE_PREFIX_ENDPOINT + domain.name + process.env.AZERO_DOMAIN_IMAGE_SUFFIX_ENDPOINT,
                     azDomainName: domain.name,
                     expiration_timestamp: attributeValues[1] ? attributeValues[1]  : '',
                     registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
@@ -3833,7 +3833,7 @@ export async function check_new_azero_domains_nft_queue(
                     'Expiration Time': convertStringToDateTime(attributeValues[1]) ? convertStringToDateTime(attributeValues[1]) : '',
                 };
                 const {data: domainMetadata} = await axios({
-                    url: `https://tzero.id/api/v1/metadata/${domain.name}.tzero.json`,
+                    url: process.env.AZERO_DOMAIN_JSON_API_PREFIX_ENDPOINT + domain.name + process.env.AZERO_DOMAIN_JSON_API_SUFFIX_ENDPOINT,
                     method: "get",
                     headers: {
                         "Content-Type": "application/json",
