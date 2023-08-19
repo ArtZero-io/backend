@@ -2326,7 +2326,7 @@ export class ApiController {
                 where: {
                     is_for_sale: false,
                     owner: owner,
-                    nftContractAddress: {nin: process.env.AZERO_DOMAIN_IGNORE_ADDRESS_LIST}
+                    nftContractAddress: {nin: ['5EKDyn7uy1jVQnAhsCz2ySrR5g89nvTYreoMHCMAKb9C5rQn', '5HfQopC1yQSoG83auWgRLTxhWWFxiVQWT74LLXeXMLJDFBvP']}
                 },
                 order: [order],
                 skip: offset,
@@ -2336,7 +2336,7 @@ export class ApiController {
                 where: {
                     is_for_sale: true,
                     nft_owner: owner,
-                    nftContractAddress: {nin: process.env.AZERO_DOMAIN_IGNORE_ADDRESS_LIST}
+                    nftContractAddress: {nin: ['5EKDyn7uy1jVQnAhsCz2ySrR5g89nvTYreoMHCMAKb9C5rQn', '5HfQopC1yQSoG83auWgRLTxhWWFxiVQWT74LLXeXMLJDFBvP']}
                 },
                 order: [order],
                 skip: offset,
