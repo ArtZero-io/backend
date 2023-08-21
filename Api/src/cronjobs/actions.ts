@@ -435,7 +435,6 @@ export async function check_NFT_queue_all(
             if (!nftContractAddress) continue;
             const azChecking = isAzEnabled(nftContractAddress);
             if (azChecking.isAzDomain) {
-                continue;
                 if (!azChecking.isEnabled) {
                     continue;
                 }
