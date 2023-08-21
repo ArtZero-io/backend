@@ -433,6 +433,7 @@ export async function check_NFT_queue_all(
         for (const queueData of queue_data) {
             let nftContractAddress = queueData.nftContractAddress;
             if (!nftContractAddress) continue;
+            if (nftContractAddress == azero_domains_nft.CONTRACT_ADDRESS || azero_domains_nft.AZERO_DOMAIN_IGNORE_ADDRESS_LIST.includes(nftContractAddress)) continue;
             const azChecking = isAzEnabled(nftContractAddress);
             if (azChecking.isAzDomain) {
                 if (!azChecking.isEnabled) {

@@ -1,4 +1,5 @@
 export const azero_domains_nft = {
+    AZERO_DOMAIN_IGNORE_ADDRESS_LIST: ["5EKDyn7uy1jVQnAhsCz2ySrR5g89nvTYreoMHCMAKb9C5rQn", "5HfQopC1yQSoG83auWgRLTxhWWFxiVQWT74LLXeXMLJDFBvP"],
     CONTRACT_ADDRESS: "5FsB91tXSEuMj6akzdPczAtmBaVKToqHmtAwSUzXh49AYzaD",
     CONTRACT_ABI: {
       "source": {
