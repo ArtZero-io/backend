@@ -1283,8 +1283,7 @@ export async function check_NFT_queue(
                         }
                     });
                     let owner;
-                    console.log('nftAzDomain');
-                    console.log(nftAzDomain);
+                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - nftAzDomain: `, nftAzDomain);
                     if (nftAzDomain && nftAzDomain?.azDomainName) {
                         console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - nftAzDomain.azDomainName: `, nftAzDomain.azDomainName);
                         let lockInfo = await azero_domains_nft_calls.getLockInfo(
@@ -1295,12 +1294,14 @@ export async function check_NFT_queue(
                         if (lockInfo) {
                             owner = lockInfo;
                             console.log(`Crson azero_domain_nft_queue has error when have not owner - lockInfo: `, lockInfo);
+                            send_telegram_message(`Crson azero_domain_nft_queue has error when have not owner |${lockInfo}|`);
                         } else {
                             owner = await azero_domains_nft_calls.ownerOf(
                                 global_vars.caller,
                                 nftAzDomain.azDomainName
                             );
                             console.log(`Crson azero_domain_nft_queue has error when have not owner - owner: `, owner);
+                            send_telegram_message(`Crson azero_domain_nft_queue has error when have not owner |${owner}|`);
                         }
                     }
                     //Get For Sale Information
@@ -1314,7 +1315,9 @@ export async function check_NFT_queue(
                     // Check and update attributes
                     console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - owner: `, owner);
                     if (!owner) {
-                        send_telegram_message(`Crson azero_domain_nft_queue has error when have not owner |${azEventName}|${azDomainName}|`);
+                        send_telegram_message(`Crson azero_domain_nft_queue has error when have not owner |${azEventName}|${azDomainName}|${owner}|`);
+                        console.log(`Crson azero_domain_nft_queue has error when have not owner |${azEventName}|${azDomainName}|`);
+                        
                         await nftQueueRepo.deleteAll({
                             nftContractAddress: nftContractAddress,
                             azEventName: azEventName,
