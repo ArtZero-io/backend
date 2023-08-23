@@ -676,12 +676,14 @@ export class ApiController {
                 where: {
                     nftContractAddress: collection_address,
                     azDomainName: azDomainName
-                });
+                }
+                 });
              } else {
                 queue_data = await this.nftQueueSchemaRepository.findOne({
                 where: {
                     nftContractAddress: collection_address,
                     tokenID: tokenID
+                }
                 });
              }
             if (!queue_data) {
