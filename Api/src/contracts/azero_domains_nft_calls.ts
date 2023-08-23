@@ -123,7 +123,7 @@ export async function getLockInfo(
         // @ts-ignore
         console.log(output.toHuman());
         // @ts-ignore
-        return output.toHuman()?.Ok?.Ok;
+        return output.toHuman()?.Ok;
     }
     return null;
 }
