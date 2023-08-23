@@ -3927,7 +3927,24 @@ export async function check_new_azero_domains_nft_queue(
                     );
                     try {
                         console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - Start update NFT to DB`);
-                        obj.updatedTime = new Date();
+                        found.owner = obj.owner ? obj.owner : found.owner;
+                        found.attributes = (obj.attributes !== undefined || obj.attributes) ? obj.attributes : found.attributes;
+                        found.attributesValue = (obj.attributesValue !== undefined || obj.attributesValue) ? obj.attributesValue : found.attributesValue;
+                        found.listed_date = (obj.listed_date !== undefined || obj.listed_date) ? obj.listed_date : found.listed_date;
+                        found.is_for_sale = (obj.is_for_sale !== undefined || obj.is_for_sale) ? obj.is_for_sale : found.is_for_sale;
+                        found.price = (obj.price !== undefined || obj.price) ? obj.price : found.price;
+                        found.nft_owner = (obj.nft_owner !== undefined || obj.nft_owner) ? obj.nft_owner : found.nft_owner;
+                        found.is_locked = (obj.is_locked !== undefined || obj.is_locked) ? obj.is_locked : found.is_locked;
+                        found.isAzDomain = (obj.isAzDomain !== undefined || obj.isAzDomain) ? obj.isAzDomain : found.isAzDomain;
+                        found.azDomainName = (obj.azDomainName !== undefined || obj.azDomainName) ? obj.azDomainName : found.azDomainName;
+                        found.azEventName = (obj.azEventName !== undefined || obj.azEventName) ? obj.azEventName : found.azEventName;
+                        found.updatedTime = new Date();
+                        found.traits = (obj.traits !== undefined || obj.traits) ? obj.traits : found.traits;
+                        found.nftName = (obj.nftName !== undefined || obj.nftName) ? obj.nftName : found.nftName;
+                        found.description = (obj.description !== undefined || obj.description) ? obj.description : found.description;
+                        found.avatar = (obj.avatar !== undefined || obj.avatar) ? obj.avatar : found.avatar;
+                        found.expiration_timestamp = (obj.expiration_timestamp !== undefined || obj.expiration_timestamp) ? obj.expiration_timestamp : found.expiration_timestamp;
+                        found.registration_timestamp = (obj.registration_timestamp !== undefined || obj.registration_timestamp) ? obj.registration_timestamp : found.registration_timestamp;
                         console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - NFT Data: `, obj);
                         await nftRepo.updateById(found._id, obj);
                         console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - End update NFT to DB`);
