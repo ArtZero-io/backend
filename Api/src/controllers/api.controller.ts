@@ -670,12 +670,20 @@ export class ApiController {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NOT_EXIST_ADDRESS});
             }
-            let queue_data = await this.nftQueueSchemaRepository.findOne({
+            let queue_data: any;
+             if (azChecking.isAzDomain) {
+                 queue_data = await this.nftQueueSchemaRepository.findOne({
+                where: {
+                    nftContractAddress: collection_address,
+                    azDomainName: azDomainName
+                });
+             } else {
+                queue_data = await this.nftQueueSchemaRepository.findOne({
                 where: {
                     nftContractAddress: collection_address,
                     tokenID: tokenID
-                }
-            });
+                });
+             }
             if (!queue_data) {
                 let newNftQueue: nftqueues | undefined = undefined;
                 try {
