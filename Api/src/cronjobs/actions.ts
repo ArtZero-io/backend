@@ -3898,8 +3898,8 @@ export async function check_new_azero_domains_nft_queue(
                         price: forSaleInformation
                             ? parseFloat(forSaleInformation.price.replace(/,/g, ""))
                             : 0,
-                        is_for_sale: forSaleInformation ? forSaleInformation.isForSale : false,
-                        nft_owner: forSaleInformation ? forSaleInformation.nftOwner : "",
+                        is_for_sale: (owner == marketplace.CONTRACT_ADDRESS && forSaleInformation) ? forSaleInformation.isForSale : false,
+                        nft_owner: (owner == marketplace.CONTRACT_ADDRESS && forSaleInformation) ? forSaleInformation.nftOwner : "",
                         is_locked: false,
                         isAzDomain: true,
                         azEventName: 'Register',
@@ -3946,7 +3946,7 @@ export async function check_new_azero_domains_nft_queue(
                         found.expiration_timestamp = (obj.expiration_timestamp !== undefined || obj.expiration_timestamp) ? obj.expiration_timestamp : found.expiration_timestamp;
                         found.registration_timestamp = (obj.registration_timestamp !== undefined || obj.registration_timestamp) ? obj.registration_timestamp : found.registration_timestamp;
                         console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - NFT Data: `, obj);
-                        await nftRepo.updateById(found._id, obj);
+                        await nftRepo.updateById(found._id, found);
                         console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - End update NFT to DB`);
                     } catch (e) {
                         console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - ERROR when updating NFT to DB: ${e.message}`);
