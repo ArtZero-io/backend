@@ -1294,11 +1294,13 @@ export async function check_NFT_queue(
                         console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - lockInfo: `, lockInfo);
                         if (lockInfo) {
                             owner = lockInfo;
+                            console.log(`Crson azero_domain_nft_queue has error when have not owner - lockInfo: `, lockInfo);
                         } else {
                             owner = await azero_domains_nft_calls.ownerOf(
                                 global_vars.caller,
                                 nftAzDomain.azDomainName
                             );
+                            console.log(`Crson azero_domain_nft_queue has error when have not owner - owner: `, owner);
                         }
                     }
                     //Get For Sale Information
