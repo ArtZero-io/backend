@@ -553,8 +553,8 @@ export async function check_NFT_queue_all(
                 };
                 metaData.traits = {
                     ...metaData.traits,
-                    'Registration Time': convertStringToDateTime(attributeValues[0]) ? convertStringToDateTime(attributeValues[0])  : '',
-                    'Expiration Time': convertStringToDateTime(attributeValues[1]) ? convertStringToDateTime(attributeValues[1]) : '',
+                    'Registration Time': attributeValues[0] ? attributeValues[0]  : '',
+                    'Expiration Time': attributeValues[1] ? attributeValues[1] : '',
                 };
 
                 //Get For Sale Information
@@ -1363,8 +1363,8 @@ export async function check_NFT_queue(
                     };
                     metaData.traits = {
                         ...metaData.traits,
-                        'Registration Time': convertStringToDateTime(attributeValues[0]) ? convertStringToDateTime(attributeValues[0])  : '',
-                        'Expiration Time': convertStringToDateTime(attributeValues[1]) ? convertStringToDateTime(attributeValues[1]) : '',
+                        'Registration Time': attributeValues[0] ? attributeValues[0] : '',
+                        'Expiration Time': attributeValues[1] ? attributeValues[1] : '',
                     };
                     try {
                         const {data: domainMetadata} = await axios({
@@ -3823,8 +3823,8 @@ export async function check_new_azero_domains_nft_queue(
                 console.log("attributeValues", attributeValues);
                 metaData.traits = {
                     ...metaData.traits,
-                    'Registration Time': convertStringToDateTime(attributeValues[0]) ? convertStringToDateTime(attributeValues[0])  : '',
-                    'Expiration Time': convertStringToDateTime(attributeValues[1]) ? convertStringToDateTime(attributeValues[1]) : '',
+                    'Registration Time': attributeValues[0] ? attributeValues[0]  : '',
+                    'Expiration Time': attributeValues[1] ? attributeValues[1] : '',
                 };
                 const {data: domainMetadata} = await axios({
                     url: process.env.AZERO_DOMAIN_JSON_API_PREFIX_ENDPOINT + domain.name + process.env.AZERO_DOMAIN_JSON_API_SUFFIX_ENDPOINT,
