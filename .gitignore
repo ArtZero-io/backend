@@ -108,3 +108,4 @@ dist
 
 ._*
 !/Api/.env
+Api/src/contracts
