@@ -5257,7 +5257,7 @@ export class ApiController {
 
         const sliceRet = ret.slice(filter?.offset, filter?.limit);
 
-        Promise.all(
+        ret = await Promise.all(
             sliceRet.map(async (event:any) => {
                 const { nftContractAddress, tokenID, azDomainName } = event;
 
@@ -5293,6 +5293,8 @@ export class ApiController {
         return this.response.send({
             status: STATUS.OK,
             ret,
+            eventData,
+            eventDataType
         });
     }
 }
