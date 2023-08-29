@@ -5283,7 +5283,6 @@ export class ApiController {
                     ...event,
                     avatar: nftInfo?.avatar,
                     nftName: nftInfo?.nftName,
-                    eventData,
                     eventDataType
                 };
             }),
@@ -5293,8 +5292,6 @@ export class ApiController {
         return this.response.send({
             status: STATUS.OK,
             ret,
-            eventData,
-            eventDataType
         });
     }
 }
