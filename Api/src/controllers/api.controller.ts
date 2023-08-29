@@ -5255,41 +5255,40 @@ export class ApiController {
         const eventData = filter?.where as eventType;
         const eventDataType = eventData?.seller ? 'seller' : eventData?.buyer ? 'buyer' : 'n/a';
 
-        ret = ret.slice(filter?.offset, filter?.limit);
+        const sliceRet = ret.slice(filter?.offset, filter?.limit);
 
-        ret.map((events: any) => {
-            return Promise.all(
-                events.map(async (event:any) => {
-                    const { nftContractAddress, tokenID, azDomainName } = event;
+        Promise.all(
+            sliceRet.map(async (event:any) => {
+                const { nftContractAddress, tokenID, azDomainName } = event;
 
-                    const azChecking = isAzEnabled(nftContractAddress);
+                const azChecking = isAzEnabled(nftContractAddress);
 
-                    let where: any = { nftContractAddress };
+                let where: any = { nftContractAddress };
 
-                    if (azChecking?.isAzDomain) {
-                        where.azDomainName = azDomainName
-                    } else{
-                        where.tokenID = tokenID
-                    }
+                if (azChecking?.isAzDomain) {
+                    where.azDomainName = azDomainName
+                } else{
+                    where.tokenID = tokenID
+                }
 
-                   const nftInfo = await this.nfTsSchemaRepository.findOne({
-                        where,
-                        fields: {
-                            avatar: true,
-                            nftName: true,
-                        },
-                    });
+                const nftInfo = await this.nfTsSchemaRepository.findOne({
+                    where,
+                    fields: {
+                        avatar: true,
+                        nftName: true,
+                    },
+                });
 
-                    return {
-                        ...event,
-                        avatar: nftInfo?.avatar,
-                        nftName: nftInfo?.nftName,
-                        eventData,
-                        eventDataType
-                    };
-                }),
-            ).then(resultArr => ret = resultArr);
-        });
+                return {
+                    ...event,
+                    avatar: nftInfo?.avatar,
+                    nftName: nftInfo?.nftName,
+                    eventData,
+                    eventDataType
+                };
+            }),
+        ).then(resultArr => ret = resultArr);
+
 
         return this.response.send({
             status: STATUS.OK,
