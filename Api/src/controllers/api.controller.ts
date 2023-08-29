@@ -5125,7 +5125,7 @@ export class ApiController {
 
         ret = ret
            .sort((a, b) => (b?.price || 0) - (a?.price || 0))
-           .slice(0, filter?.limit);
+            .slice(filter?.offset, filter?.limit);
 
         return this.response.send({
         status: STATUS.OK,
