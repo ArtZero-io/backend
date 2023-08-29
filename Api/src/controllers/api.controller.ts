@@ -5255,7 +5255,8 @@ export class ApiController {
         const eventData = filter?.where as eventType;
         const eventDataType = eventData?.seller ? 'seller' : eventData?.buyer ? 'buyer' : 'n/a';
 
-        const sliceRet = ret.slice(filter?.offset, filter?.limit);
+        // @ts-ignore
+        const sliceRet = ret.slice(filter?.offset, filter?.offset ?? 0 + filter?.limit ?? 0);
 
         ret = await Promise.all(
             sliceRet.map(async (event:any) => {
