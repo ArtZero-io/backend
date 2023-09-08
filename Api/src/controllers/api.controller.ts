@@ -5202,4 +5202,87 @@ export class ApiController {
             });
         }
      }
+
+    @get('/api/user-buy-sell-event')
+    @response(200, {
+        description: 'Array of purchaseEventSchema model instances',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'array',
+                    items: getModelSchemaRef(purchaseevents, { includeRelations: true }),
+                },
+            },
+        },
+    })
+    async getUserBuySellEvent(
+        @param.filter(purchaseevents) filter?: Filter<purchaseevents>,
+    ): Promise<Response> {
+
+        const purchaseEventData = await this.purchaseEventSchemaRepository
+            .find({ ...filter, offset: 0, limit : 9999999})
+
+        const bidWinEventData = await this.bidWinEventSchemaRepository
+            .find({ ...filter, offset: 0, limit: 9999999 })
+
+        let ret = [...purchaseEventData, ...bidWinEventData]
+
+        const order = filter?.order;
+
+        if (order?.length) {
+            if (order[0] === "blockNumber DESC") {
+                ret = ret.sort((a, b) => (b?.blockNumber || 0) - (a?.blockNumber || 0))
+            }
+        }
+
+        type eventType = {
+            seller?: string;
+            buyer?: string;
+        };
+
+        const eventData = filter?.where as eventType;
+        const eventDataType = eventData?.seller ? 'seller' : eventData?.buyer ? 'buyer' : 'n/a';
+
+        const offset = filter?.offset ?? 0;
+        const limit = filter?.limit ?? 0;
+
+        const sliceRet = ret.slice(offset, offset + limit);
+        
+        ret = await Promise.all(
+            sliceRet.map(async (event:any) => {
+                const { nftContractAddress, tokenID, azDomainName } = event;
+
+                const azChecking = isAzEnabled(nftContractAddress);
+
+                let where: any = { nftContractAddress };
+
+                if (azChecking?.isAzDomain) {
+                    where.azDomainName = azDomainName
+                } else{
+                    where.tokenID = tokenID
+                }
+
+                const nftInfo = await this.nfTsSchemaRepository.findOne({
+                    where,
+                    fields: {
+                        avatar: true,
+                        nftName: true,
+                    },
+                });
+
+                return {
+                    ...event,
+                    avatar: nftInfo?.avatar,
+                    nftName: nftInfo?.nftName,
+                    eventDataType
+                };
+            }),
+        ).then(resultArr => ret = resultArr);
+
+
+        return this.response.send({
+            status: STATUS.OK,
+            ret,
+        });
+    }
 }
