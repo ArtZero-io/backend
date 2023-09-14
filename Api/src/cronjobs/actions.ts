@@ -1109,7 +1109,7 @@ export async function check_NFT_queue(
                     tokenID: tokenID,
                 }
             });
-            // console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR}:`, {found: found});
+            console.log(`***${CONFIG_TYPE_NAME.AZ_NFT_MONITOR}:`, {found: found});
             if (found) {
                 console.log(
                     `${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - Updating new NFT Information to DB: `,
@@ -1130,8 +1130,8 @@ export async function check_NFT_queue(
                 found.nftName = (obj.nftName !== undefined || obj.nftName) ? obj.nftName : found.nftName;
                 found.description = (obj.description !== undefined || obj.description) ? obj.description : found.description;
                 found.avatar = (obj.avatar !== undefined || obj.avatar) ? obj.avatar : found.avatar;
-
-                try {
+                console.log("***foundNFT", found)
+                try {   
                     // await nftRepo.updateAll(
                     //     obj,
                     //     {nftContractAddress: nftContractAddress, tokenID: tokenID},
