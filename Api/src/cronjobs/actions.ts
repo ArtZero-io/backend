@@ -861,7 +861,6 @@ export async function check_NFT_queue(
         console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - NFT Queue length: `, records_length);
         for (let j = 0; j < records_length; j++) {
             let nftContractAddress: string | undefined = queue_data[j].nftContractAddress;
-            console.log("***nftContractAddress", nftContractAddress)
             if (!nftContractAddress) continue;
             let tokenID = queue_data[j].tokenID;
             if (!tokenID) continue;
@@ -896,7 +895,6 @@ export async function check_NFT_queue(
             nft721_psp34_standard_calls.setContract(nft_contract);
             //Check is Locked
             let is_locked = false;
-            console.log('***found_collection.showOnChainMetadata', found_collection.showOnChainMetadata)
             if (found_collection.showOnChainMetadata) {
                 is_locked = await nft721_psp34_standard_calls.isLockedNft(
                     nft_contract,
@@ -1037,7 +1035,6 @@ export async function check_NFT_queue(
                     {u64: tokenID},
                     ["metadata"]
                 );
-                console.log("*******nft attribute", res)
                 if (res && res[0]) {
                     const nftInfo = await APICall.getNftInfoByHash({
                         hash: res[0],
