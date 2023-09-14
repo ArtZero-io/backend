@@ -976,6 +976,7 @@ export async function check_NFT_queue(
                         {value: 0, gasLimit: await readOnlyGasLimit(api)},
                         1
                     );
+                    console.log("***NFT contract:", result, output?.toHuman())
                     if (result.isOk && output) {
                         // @ts-ignore
                         tokenUri = output.toHuman()?.Ok?.replace("1.json", "");
@@ -994,6 +995,7 @@ export async function check_NFT_queue(
                     metaData.nftName = offChainData?.name;
                     metaData.description = offChainData?.description;
                     metaData.avatar = offChainData?.image;
+                    console.log("***metaData", metaData)
                 } catch (error) {
                     console.log(`${CONFIG_TYPE_NAME.AZ_NFT_MONITOR} - xx>> psp34Traits::tokenUri error.message: ${error.message}`);
                     send_telegram_message(
