@@ -175,6 +175,7 @@ export async function client(
 export const APICall = {
     getMetadataOffChain: async (param: { tokenUri:string, tokenID: number }) => {
         try {
+            console.log(`*** get server json: /getJSON?input=${param.tokenUri}${param.tokenID}.json`)
             const ret = await client(
                 "GET",
                 `/getJSON?input=${param.tokenUri}${param.tokenID}.json`,
@@ -190,6 +191,7 @@ export const APICall = {
     // @ts-ignore
     getNftInfoByHash: async ({ hash }) => {
         try {
+            console.log(`*** getNftInfoByHash: /${hash}`)
             return await client("GET", `/${hash}`, {}, process.env.IPFS_BASE_URL);
         } catch (e) {
             return null;
