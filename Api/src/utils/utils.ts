@@ -181,7 +181,7 @@ export const APICall = {
                 `/getJSON?input=${param.tokenUri}${param.tokenID}.json`,
                 {}
             );
-            // console.log("getMetadataOffChain ret", ret);
+            console.log("getMetadataOffChain ret", ret);
             return ret;
         } catch (e) {
             return null;
