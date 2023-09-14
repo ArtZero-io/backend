@@ -1187,18 +1187,15 @@ export class ApiController {
                     message: MESSAGE.INVALID_INPUT
                 });
             }
-            console.log("*** GET JSON: input", input)
             input = input.replace("ipfs://", "/ipfs/");
             let input_data = await this.jsonSchemaRepository.findOne({
                 where: {
                     input: input
                 }
             });
-            console.log("*** GET JSON: input_data", input_data)
             if (!input_data) {
                 return {status: STATUS.FAILED, message: MESSAGE.JSON_NOT_EXIST};
             } else if (input_data?.location) {
-                console.log("*** GET JSON: getFile", input_data.location)
                 return getFile(input_data.location, this.response);
             }
         } catch (e) {
