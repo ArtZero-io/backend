@@ -4402,6 +4402,78 @@ export async function push_to_cloudflare(
     global_vars.is_push_to_cloudflare_status = false;
 }
 
+export async function claimRewardByAdmin(
+    globalApi: ApiPromise
+):Promise<object> {
+    logger.warn(`Run setClaimedStatus now!`);
+    try {
+        if (!process.env.CALLER) return {
+            count: 0,
+            listAddress: []
+        };
+        const staking_contract = new ContractPromise(
+            globalApi,
+            staking.CONTRACT_ABI,
+            staking.CONTRACT_ADDRESS
+        );
+        staking_calls.setContract(staking_contract);
+        let is_locked = await staking_calls.getIsLocked(process.env.CALLER);
+        logger.warn(`is_locked: ${is_locked}`);
+        let is_reward_started = await staking_calls.getRewardStarted(process.env.CALLER);
+        logger.warn(`is_reward_started: ${is_reward_started}`);
+        logger.warn(`is_reward_started must be FALSE and is_locked must be TRUE to set Claimable`);
+        const keyring = new Keyring({type: 'sr25519'});
+        // const keypair = keyring.createFromUri((process.env.PHRASE) ? process.env.PHRASE : '');
+        const jsonString = fs.readFileSync("file_account.json");
+        const keypair = keyring.createFromJson(JSON.parse(jsonString.toString()) as KeyringPair$Json, false);
+
+        logger.warn(keypair);
+        // logger.warn(`Caller: ${keypair.address}`);
+        let is_admin = await staking_calls.isAdmin(process.env.CALLER, keypair.address);
+        logger.warn(`is_admin: ${is_admin}`);
+        logger.warn(`process.env.CALLER: ${process.env.CALLER}`);
+        if (!is_admin) {
+            logger.warn(`Caller: ${keypair.address} is not admin`);
+            return {
+                count: 0,
+                listAddress: []
+            };
+        }
+        if (is_locked && !is_reward_started) {
+            let listAddress: string[] = [];
+            let staker_count = await staking_calls.getTotalCountOfStakeholders(process.env.CALLER);
+            logger.warn(`staker_count: ${staker_count}`);
+            for (let i = 1; i < 2; i++) {
+                try {
+                    let staker = await staking_calls.getStakedAccountsAccountByIndex(process.env.CALLER, i);
+                    logger.warn(`staker: ${staker}`);
+                    let isClaimed = await staking_calls.isClaimed(process.env.CALLER, staker);
+                    logger.warn(`setClaimedStatus: ${i + 1} staker: ${staker} is claimed ${isClaimed}`);
+                    logger.warn(`setClaimedStatus - set isClaimed to FALSE for ${staker}`);
+                    
+                    if (staker) {
+                        listAddress.push(staker);
+                    }
+                    await sleep(1700);
+                } catch (e) {
+                    logger.error(`ERROR: ${e.messages}`);
+                }
+            }
+            logger.warn(`Process ${staker_count} accounts -  COMPLETED!`);
+            return {
+                count: staker_count,
+                listAddress: listAddress
+            }
+        }
+    } catch (e) {
+        logger.error(`ERROR: ${e.messages}`);
+    }
+    return {
+        count: 0,
+        listAddress: []
+    }
+}
+
 export async function setClaimedStatus(
     globalApi: ApiPromise
 ):Promise<object> {
