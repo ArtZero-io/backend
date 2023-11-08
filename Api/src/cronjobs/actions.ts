@@ -4405,7 +4405,7 @@ export async function push_to_cloudflare(
 export async function autoClaimReward(
     globalApi: ApiPromise
 ):Promise<object> {
-    logger.warn(`Run setClaimedStatus now!`);
+    logger.warn(`Run auto claim reward now!`);
     try {
         if (!process.env.CALLER) return {
             count: 0,
@@ -4421,7 +4421,7 @@ export async function autoClaimReward(
         logger.warn(`is_locked: ${is_locked}`);
         let is_reward_started = await staking_calls.getRewardStarted(process.env.CALLER);
         logger.warn(`is_reward_started: ${is_reward_started}`);
-        logger.warn(`is_reward_started must be FALSE and is_locked must be TRUE to set Claimable`);
+        logger.warn(`is_reward_started must be FALSE and is_locked must be TRUE to auto claim reward`);
         const keyring = new Keyring({type: 'sr25519'});
         // const keypair = keyring.createFromUri((process.env.PHRASE) ? process.env.PHRASE : '');
         const jsonString = fs.readFileSync("file_account.json");
@@ -4448,13 +4448,14 @@ export async function autoClaimReward(
                     let staker = await staking_calls.getStakedAccountsAccountByIndex(process.env.CALLER, i);
                     logger.warn(`staker: ${staker}`);
                     let isClaimed = await staking_calls.isClaimed(process.env.CALLER, staker);
-                    logger.warn(`setClaimedStatus: ${i + 1} staker: ${staker} is claimed ${isClaimed}`);
+                    logger.warn(`Start claiming reward: ${i} staker: ${staker} is claimed ${isClaimed}`);
                     if (!isClaimed) {
-
                         await staking_calls.claimReward(process.env.CALLER, staker);
                         if (staker) {
                             listAddress.push(staker);
                         }
+                        logger.warn(`Auto Claim Reward successfully ${staker}`);
+                    } else {
                         logger.warn(`Auto Claim Reward - set isClaimed to FALSE for ${staker}`);
                     }
                     
