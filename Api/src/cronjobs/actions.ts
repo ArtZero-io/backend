@@ -4402,7 +4402,7 @@ export async function push_to_cloudflare(
     global_vars.is_push_to_cloudflare_status = false;
 }
 
-export async function claimRewardByAdmin(
+export async function autoClaimReward(
     globalApi: ApiPromise
 ):Promise<object> {
     logger.warn(`Run setClaimedStatus now!`);
@@ -4443,17 +4443,21 @@ export async function claimRewardByAdmin(
             let listAddress: string[] = [];
             let staker_count = await staking_calls.getTotalCountOfStakeholders(process.env.CALLER);
             logger.warn(`staker_count: ${staker_count}`);
-            for (let i = 1; i < 2; i++) {
+            for (let i = 1; i <= staker_count; i++) {
                 try {
                     let staker = await staking_calls.getStakedAccountsAccountByIndex(process.env.CALLER, i);
                     logger.warn(`staker: ${staker}`);
                     let isClaimed = await staking_calls.isClaimed(process.env.CALLER, staker);
                     logger.warn(`setClaimedStatus: ${i + 1} staker: ${staker} is claimed ${isClaimed}`);
-                    logger.warn(`setClaimedStatus - set isClaimed to FALSE for ${staker}`);
-                    
-                    if (staker) {
-                        listAddress.push(staker);
+                    if (!isClaimed) {
+
+                        await staking_calls.claimReward(process.env.CALLER, staker);
+                        if (staker) {
+                            listAddress.push(staker);
+                        }
+                        logger.warn(`Auto Claim Reward - set isClaimed to FALSE for ${staker}`);
                     }
+                    
                     await sleep(1700);
                 } catch (e) {
                     logger.error(`ERROR: ${e.messages}`);

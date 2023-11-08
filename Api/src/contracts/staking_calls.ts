@@ -185,6 +185,34 @@ export async function setClaimedStatus(keypair: KeyringPair, caller:string, acco
         .catch((e) => console.log("e", e));
 }
 
+export async function claimReward(keypair: KeyringPair, caller:string, account: string) {
+    const gasLimitResult = await getGasLimit(
+        staking_contract.api,
+        caller,
+        "claimReward",
+        staking_contract,
+        {},
+        [account]
+    );
+    if (!gasLimitResult.ok) {
+        // @ts-ignore
+        console.log('gasLimitResult.error', gasLimitResult?.error);
+        return;
+    }
+    const { value: gasLimit } = gasLimitResult;
+    const value = 0;
+    // @ts-ignore
+    await staking_contract.tx.claimReward({ gasLimit, value },account)
+        .signAndSend(keypair, result => {
+            if (result.status.isInBlock) {
+                console.log('in a block');
+            } else if (result.status.isFinalized) {
+                console.log('finalized');
+            }
+        })
+        .catch((e) => console.log("e", e));
+}
+
 export async function isAdmin(caller_account: any, account: string) {
     if (!staking_contract || !caller_account) {
         console.log("invalid inputs");
