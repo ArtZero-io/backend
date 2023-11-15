@@ -4419,12 +4419,10 @@ export async function autoClaimRewardByAdmin(
         staking_calls.setContract(staking_contract);
         let is_locked = await staking_calls.getIsLocked(process.env.CALLER);
         logger.warn(`is_locked: ${is_locked}`);
-        
         const keyring = new Keyring({type: 'sr25519'});
         const keypair = keyring.createFromUri((process.env.PHRASE) ? process.env.PHRASE : '');
         // const jsonString = fs.readFileSync("file_account.json");
         // const keypair = keyring.createFromJson(JSON.parse(jsonString.toString()) as KeyringPair$Json, false);
-
         logger.warn(keypair);
         // logger.warn(`Caller: ${keypair.address}`);
         let is_admin = await staking_calls.isAdmin(process.env.CALLER, keypair.address);
@@ -4470,8 +4468,6 @@ export async function autoClaimRewardByAdmin(
                     } else {
                         logger.warn(`Auto Claim Reward - staked nft count invalid for ${staker}`);
                     }
-                    
-                    
                     await sleep(1700);
                 } catch (e) {
                     logger.error(`ERROR: ${e.messages}`);

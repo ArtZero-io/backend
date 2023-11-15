@@ -10,23 +10,24 @@ export let global_vars = {
 }
 
 async function autoClaimReward() {
- try {
-     connect();
+    try {
+        connect();
 
-     let count = 0;
-     while ((global_vars.socketStatus == SOCKET_STATUS.ERROR) && (count < 10)) {
-         count++;
-         await delay(1700);
-         logger.info(count);
-     }
+        let count = 0;
+        while ((global_vars.socketStatus == SOCKET_STATUS.ERROR) && (count < 10)) {
+            count++;
+            await delay(1700);
+            logger.info(count);
+        }
 
-     if ((global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) {
-         await autoClaimRewardByAdmin(globalApi);
-     }
- } catch (e) {
-     logger.error(`doSetClaimed - ERROR: ${e.message}`);
- }
+        if ((global_vars.socketStatus == SOCKET_STATUS.CONNECTED && globalApi)) {
+            await autoClaimRewardByAdmin(globalApi);
+        }
+    } catch (e) {
+        logger.error(`doSetClaimed - ERROR: ${e.message}`);
+    }
 }
+
 function connect() {
     try {
         const provider = new WsProvider(process.env.WSSPROVIDER);
