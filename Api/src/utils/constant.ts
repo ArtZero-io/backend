@@ -56,6 +56,7 @@ export const CRONJOB_TIME = {
     SET_STAKER_CLAIMBE: EACH_3_HOUR,
     THREADS: EACH_3_HOUR,
     AZ_AZERO_DOMAINS_COLLECTOR: process.env.CRONJOB_TIME_AZ_AZERO_DOMAINS_COLLECTOR ?? EACH_3_HOUR,
+    AZ_NFT_TRANSFER_COLLECTOR: process.env.CRONJOB_TIME_AZ_NFT_TRANSFER_COLLECTOR ?? EACH_3_HOUR,
 };
 export const IS_ENABLE_DOCS = (process.env.IS_ENABLE_DOCS == "true"); // set FALSE for disabling api explorer
 export const GET_CONFIG_FORM_DB = (process.env.GET_CONFIG_FORM_DB == "true"); // set TRUE for get config jobs from db
@@ -94,6 +95,7 @@ export const CRONJOB_ENABLE = {
     SET_STAKER_CLAIMBE: false,
     THREADS: false,
     AZ_AZERO_DOMAINS_COLLECTOR: (process.env.IS_ENABLE_AZ_AZERO_DOMAINS_COLLECTOR == "true"),
+    AZ_NFT_TRANSFER_COLLECTOR: (process.env.IS_ENABLE_JOB_AZ_NFT_TRANSFER_COLLECTOR == "true"),
 };
 
 export const STATUS = {
@@ -160,7 +162,8 @@ export const CONFIG_TYPE_NAME = {
     AZ_PROJECT_WHITELIST: "CronJobAzProjectWhitelist",
     AZ_TELEGRAM_BOT: "CronJobAzTelegramBot",
     SET_STAKER_CLAIMBE: "CronJobSetStakerClaimbe",
-    AZ_AZERO_DOMAINS_COLLECTOR: "CronJobAzeroDomainCollector"
+    AZ_AZERO_DOMAINS_COLLECTOR: "CronJobAzeroDomainCollector",
+    AZ_NFT_TRANSFER_COLLECTOR: "CronJobAzNftTransferCollector"
 };
 
 export const MAX_NFT_QUEUE_ALL_IN_PROCESSING:number = (process.env.MAX_NFT_QUEUE_ALL_IN_PROCESSING)
