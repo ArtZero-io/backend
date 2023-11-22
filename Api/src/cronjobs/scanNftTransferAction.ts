@@ -97,7 +97,8 @@ export async function scanNftTransferAction(
     blocknumber: number,
     api: ApiPromise,
     abi_nft721_psp34_standard: Abi,
-    collectionsRepo: CollectionsSchemaRepository
+    collectionsRepo: CollectionsSchemaRepository,
+    nftQueueSchemaRepo: NftQueueSchemaRepository
 ) {
     if (global_vars.isScanning) {
         //This to make sure always process the latest block in case still scanning old blocks
@@ -111,7 +112,8 @@ export async function scanNftTransferAction(
             eventRecords,
             blocknumber,
             abi_nft721_psp34_standard,
-            collectionsRepo
+            collectionsRepo,
+            nftQueueSchemaRepo
         );
         console.log(`${CONFIG_TYPE_NAME.AZ_NFT_TRANSFER_COLLECTOR} - Stop processEventRecords at ${blocknumber} now: ${convertToUTCTime(new Date())}`);
         return;
@@ -123,7 +125,8 @@ export async function processEventRecords(
     eventRecords: any,
     to_scan: number,
     abi_nft721_psp34_standard: Abi,
-    collectionsRepo: CollectionsSchemaRepository
+    collectionsRepo: CollectionsSchemaRepository,
+    nftQueueSchemaRepo: NftQueueSchemaRepository
 ) {
     try {
         for (const record of eventRecords) {
@@ -133,17 +136,42 @@ export async function processEventRecords(
                 const [accId, bytes] = data.map((data: any, _: any) => data).slice(0, 2);
                 const contract_address = accId.toString();
                 console.log(`${CONFIG_TYPE_NAME.AZ_NFT_TRANSFER_COLLECTOR} - Contract Address ${contract_address}`);
-                let collection = await collectionsRepo.count({nftContractAddress: contract_address});
+                let collection = await collectionsRepo.findOne({
+                    where: {
+                        nftContractAddress: contract_address,
+                    }
+                });
                 if (collection) {
+                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_TRANSFER_COLLECTOR} - ${contract_address} is collection in ArtZero System`);
                     const decodedEvent = abi_nft721_psp34_standard.decodeEvent(bytes);
                     let event_name = decodedEvent.event.identifier;
+                    console.log(`${CONFIG_TYPE_NAME.AZ_NFT_TRANSFER_COLLECTOR} - Event Name ${event_name}`);
                     const eventValues = [];
                     for (let i = 0; i < decodedEvent.args.length; i++) {
                         const value = decodedEvent.args[i];
                         eventValues.push(value.toString());
                     }
                     if (event_name == 'Transfer') {
-
+                        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_TRANSFER_COLLECTOR} - Transfer Event starting caching process - data ${eventValues}`);
+                        let tokenID:any = JSON.parse(eventValues[2]).u64; 
+                        console.log(`${CONFIG_TYPE_NAME.AZ_NFT_TRANSFER_COLLECTOR} - Transfer Event starting caching process - tokenID ${tokenID}`);
+                        let queue_data = await nftQueueSchemaRepo.findOne({
+                            where: {
+                                nftContractAddress: contract_address,
+                                tokenID: tokenID
+                            }
+                        });
+                        if (!queue_data) {
+                            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_TRANSFER_COLLECTOR} - Transfer Event starting caching process`);
+                            await nftQueueSchemaRepo.create({
+                                type: "update",
+                                nftContractAddress: contract_address,
+                                tokenID: tokenID,
+                                createdTime: new Date(),
+                                updatedTime: new Date()
+                            });
+                            console.log(`${CONFIG_TYPE_NAME.AZ_NFT_TRANSFER_COLLECTOR} - Cached data ${contract_address} - ${eventValues[2]}`);
+                        }
                     }
                 }
             }

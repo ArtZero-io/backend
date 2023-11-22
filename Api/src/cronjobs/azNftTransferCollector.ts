@@ -47,6 +47,8 @@ export class CronJobAzNftTransferCollector implements Provider<CronJob> {
         public collectionsSchemaRepository: CollectionsSchemaRepository,
         @repository(ConfigRepository)
         public configRepository: ConfigRepository,
+        @repository(NftQueueSchemaRepository)
+        public nftQueueSchemaRepository: NftQueueSchemaRepository,
     ) {
     }
 
@@ -86,6 +88,7 @@ export class CronJobAzNftTransferCollector implements Provider<CronJob> {
                         try {
                             const scannedBlocksRepo = this.scannedBlocksSchemaRepository;
                             const collectionsRepo = this.collectionsSchemaRepository;
+                            const nftQueueSchemaRepo = this.nftQueueSchemaRepository;
                             const rpc = process.env.WSSPROVIDER;
                             if (!rpc) {
                                 console.log(`RPC not found! ${rpc}`);
@@ -126,7 +129,8 @@ export class CronJobAzNftTransferCollector implements Provider<CronJob> {
                                                 parseInt(header.number.toString()),
                                                 eventApi,
                                                 abi_nft721_psp34_standard,
-                                                collectionsRepo
+                                                collectionsRepo,
+                                                nftQueueSchemaRepo
                                             );
                                         } catch (e) {
                                             console.log(`${CONFIG_TYPE_NAME.AZ_NFT_TRANSFER_COLLECTOR} - ERROR: ${e.message}`);
