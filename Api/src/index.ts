@@ -21,6 +21,7 @@ import {CronJobThreads} from "./cronjobs/checkThread";
 import {CronJobAzBidsMonitorAutoCheckQueue} from "./cronjobs/azBidsMonitorAutoCheckQueue";
 import {CronJobAzeroDomainCollector} from "./cronjobs/azeroDomainCollector";
 import {CronJobAzEventsCollectorReScan} from "./cronjobs/azEventsCollectorReScan";
+import {CronJobAzNftTransferCollector} from "./cronjobs/azNftTransferCollector";
 export * from './application';
 import * as mongoDB from "mongodb";
 
@@ -130,6 +131,13 @@ export async function main(options: ApplicationConfig = {}) {
     app.add(cronJobAzEventsCollectorReScan);
     app.configure(cronJobAzEventsCollectorReScan.key);
   }
+
+  if (CRONJOB_ENABLE.AZ_NFT_TRANSFER_COLLECTOR) {
+    const cronJobAzNftTransferCollector = createBindingFromClass(CronJobAzNftTransferCollector);
+    app.add(cronJobAzNftTransferCollector);
+    app.configure(cronJobAzNftTransferCollector.key);
+  }
+
   connectToDatabase().then(() => {
     console.log(`Connected DB`);
   });
