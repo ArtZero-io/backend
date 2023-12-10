@@ -4419,11 +4419,21 @@ export async function autoClaimRewardByAdmin(
         staking_calls.setContract(staking_contract);
         let is_locked = await staking_calls.getIsLocked(process.env.CALLER);
         logger.warn(`is_locked: ${is_locked}`);
-        const keyring = new Keyring({type: 'sr25519'});
-        const keypair = keyring.createFromUri((process.env.PHRASE) ? process.env.PHRASE : '');
-        // const jsonString = fs.readFileSync("file_account.json");
-        // const keypair = keyring.createFromJson(JSON.parse(jsonString.toString()) as KeyringPair$Json, false);
-        logger.warn(keypair);
+        //const keyring = new Keyring({type: 'sr25519'});
+        const keyring = new Keyring({ ss58Format: 42, type: 'sr25519' });
+        //const keypair = keyring.createFromUri((process.env.PHRASE) ? process.env.PHRASE : '');
+        
+        // @ts-ignore
+        const jsonString = fs.readFileSync(process.env.KEYFILE);
+        const keypair = keyring.createFromJson(JSON.parse(jsonString.toString()) as KeyringPair$Json, false);
+     
+        console.log(keypair,keypair.isLocked)
+        
+        if (keypair.isLocked) {
+            logger.warn(`keypair unlocking...`);
+            keypair.decodePkcs8(process.env.PASSWORD);
+        }
+
         // logger.warn(`Caller: ${keypair.address}`);
         let is_admin = await staking_calls.isAdmin(process.env.CALLER, keypair.address);
         logger.warn(`is_admin: ${is_admin}`);
@@ -4437,16 +4447,18 @@ export async function autoClaimRewardByAdmin(
         }
         let is_reward_started = await staking_calls.getRewardStarted(process.env.CALLER);
         logger.warn(`is_reward_started: ${is_reward_started}`);
-        logger.warn(`is_reward_started must be FALSE and is_locked must be TRUE to auto claim reward`);
+        logger.warn(`is_reward_started must be TRUE and is_locked must be TRUE to auto claim reward`);
         if (!is_reward_started) {
             await staking_calls.startRewardDistribution(keypair, process.env.CALLER);
         }
         is_reward_started = await staking_calls.getRewardStarted(process.env.CALLER);
+        return {}
         if (is_locked && is_reward_started) {
             let listAddress: string[] = [];
             let staker_count = await staking_calls.getTotalCountOfStakeholders(process.env.CALLER);
             logger.warn(`staker_count: ${staker_count}`);
-            for (let i = 1; i <= staker_count; i++) {
+            
+            for (let i = 0; i < staker_count; i++) {
                 try {
                     let staker = await staking_calls.getStakedAccountsAccountByIndex(process.env.CALLER, i);
                     logger.warn(`staker: ${staker}`);
@@ -4457,6 +4469,7 @@ export async function autoClaimRewardByAdmin(
                     
                     if (stakedNftNum > 0) {
                         if (!isClaimed) {
+                            // @ts-ignore
                             await staking_calls.claimReward(keypair, process.env.CALLER, staker);
                             if (staker) {
                                 listAddress.push(staker);
@@ -4464,9 +4477,13 @@ export async function autoClaimRewardByAdmin(
                             logger.warn(`Auto Claim Reward successfully ${staker}`);
                         } else {
                             logger.warn(`Auto Claim Reward - set isClaimed to FALSE for ${staker}`);
+                            await sleep(500);
+                            continue;
                         }
                     } else {
                         logger.warn(`Auto Claim Reward - staked nft count invalid for ${staker}`);
+                        await sleep(500);
+                        continue;
                     }
                     await sleep(1700);
                 } catch (e) {
@@ -4508,12 +4525,21 @@ export async function setClaimedStatus(
         let is_reward_started = await staking_calls.getRewardStarted(process.env.CALLER);
         logger.warn(`is_reward_started: ${is_reward_started}`);
         logger.warn(`is_reward_started must be FALSE and is_locked must be TRUE to set Claimable`);
-        const keyring = new Keyring({type: 'sr25519'});
-        // const keypair = keyring.createFromUri((process.env.PHRASE) ? process.env.PHRASE : '');
-        const jsonString = fs.readFileSync("file_account.json");
+        //const keyring = new Keyring({type: 'sr25519'});
+        const keyring = new Keyring({ ss58Format: 42, type: 'sr25519' });
+        //const keypair = keyring.createFromUri((process.env.PHRASE) ? process.env.PHRASE : '');
+        
+        // @ts-ignore
+        const jsonString = fs.readFileSync(process.env.KEYFILE);
         const keypair = keyring.createFromJson(JSON.parse(jsonString.toString()) as KeyringPair$Json, false);
+     
+        console.log(keypair,keypair.isLocked)
+        
+        if (keypair.isLocked) {
+            logger.warn(`keypair unlocking...`);
+            keypair.decodePkcs8(process.env.PASSWORD);
+        }
 
-        logger.warn(keypair);
         // logger.warn(`Caller: ${keypair.address}`);
         let is_admin = await staking_calls.isAdmin(process.env.CALLER, keypair.address);
         logger.warn(`is_admin: ${is_admin}`);
@@ -4529,22 +4555,32 @@ export async function setClaimedStatus(
             let listAddress: string[] = [];
             let staker_count = await staking_calls.getTotalCountOfStakeholders(process.env.CALLER);
             logger.warn(`staker_count: ${staker_count}`);
-            for (let i = 1; i < 2; i++) {
+            for (let i = 0; i < staker_count; i++) {
                 try {
                     let staker = await staking_calls.getStakedAccountsAccountByIndex(process.env.CALLER, i);
                     logger.warn(`staker: ${staker}`);
+                    // @ts-ignore
                     let isClaimed = await staking_calls.isClaimed(process.env.CALLER, staker);
                     logger.warn(`setClaimedStatus: ${i + 1} staker: ${staker} is claimed ${isClaimed}`);
-                    logger.warn(`setClaimedStatus - set isClaimed to FALSE for ${staker}`);
+                    
                     if (isClaimed) {
+                        logger.warn(`setClaimedStatus - set isClaimed to FALSE for ${staker}`);
+                        // @ts-ignore
                         await staking_calls.setClaimedStatus(keypair, process.env.CALLER, staker);
+                        // @ts-ignore
+                        isClaimed = await staking_calls.isClaimed(process.env.CALLER, staker);
+                        logger.warn(`setClaimedStatus: ${i + 1} staker: ${staker} is claimed ${isClaimed}`);
+                        await sleep(1700);
                     }
-                    isClaimed = await staking_calls.isClaimed(process.env.CALLER, staker);
-                    logger.warn(`setClaimedStatus: ${i + 1} staker: ${staker} is claimed ${isClaimed}`);
+                    else{
+                        await sleep(500);
+                    }
+                    
+                    
                     if (staker) {
                         listAddress.push(staker);
                     }
-                    await sleep(1700);
+                    
                 } catch (e) {
                     logger.error(`ERROR: ${e.messages}`);
                 }

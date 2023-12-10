@@ -59,6 +59,8 @@ import {
     RequestUpdateBidsBody,
     ReqGetBidsByBidderAddressType,
     RequestGetBidsByBidderAddressBody,
+    ReqGetBidsBySellerAddressType,
+    RequestGetBidsBySellerAddressBody,
     ReqCacheImageType,
     RequestCacheImageBody,
     ReqCacheImagesType,
@@ -896,6 +898,54 @@ export class ApiController {
             return this.response.send({
                 status: STATUS.FAILED,
                 message: MESSAGE.DUPLICATED_RECORD,
+            });
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    // Get Bids from DB by Seller Address
+    @post('/getBidsBySellerAddress')
+    async getBidsBySellerAddress(
+        @requestBody(RequestGetBidsBySellerAddressBody) req:ReqGetBidsBySellerAddressType
+    ): Promise<ResponseBody | Response> {
+        try {
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+            let seller = req?.seller;
+            let limit = req?.limit;
+            let offset = req?.offset;
+            if (!limit) limit = 15;
+            if (!offset) offset = 0;
+            const order = (req?.sort && req?.sort == 1) ? "bid_date ASC" : "bid_date DESC";
+            if (!seller) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_ADDRESS});
+            }
+            if (!isValidAddressPolkadotAddress(seller)) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
+            }
+            let data = await this.bidsSchemaRepository.find({
+                where: {
+                    seller: seller
+                },
+                limit: limit,
+                skip: offset,
+                order: [order]
+            });
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.OK,
+                message: MESSAGE.SUCCESS,
+                ret: data
             });
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
@@ -4986,6 +5036,153 @@ export class ApiController {
       });
     }
 
+    @get('/getRecentTrades')
+    @response(200, {
+      description: 'Array of purchaseEventSchema model instances',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'array',
+            items: getModelSchemaRef(purchaseevents, {includeRelations: true}),
+          },
+        },
+      },
+    })
+    async getRecentTrades(
+      @param.filter(purchaseevents) filter?: Filter<purchaseevents>,
+    ): Promise<Response> {
+
+        const purchaseEventData = await this.purchaseEventSchemaRepository
+        .find(filter)
+        .then(events => {
+          return Promise.all(
+            events.map(async event => {
+              const {nftContractAddress, tokenID, azDomainName} = event;
+
+              const azChecking = isAzEnabled(nftContractAddress);
+
+              let nftInfo;
+
+              if (azChecking?.isAzDomain) {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
+                  where: {
+                    azDomainName,
+                    nftContractAddress,
+                  },
+                  fields: {
+                    avatar: true,
+                    nftName: true,
+                  },
+                });
+              } else {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
+                  where: {
+                    tokenID,
+                    nftContractAddress,
+                  },
+                  fields: {
+                    avatar: true,
+                    nftName: true,
+                  },
+                });
+              }
+
+              // Temp disable due to no use collectio info
+              //   let collectionInfo =
+              //     await this.collectionsSchemaRepository.findOne({
+              //       where: {
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         name: true,
+              //         avatarImage: true,
+              //       },
+              //     });
+
+              return {
+                ...event,
+                avatar: nftInfo?.avatar,
+                nftName: nftInfo?.nftName,
+                eventDataType: 'purchase',
+
+                // collectionName: collectionInfo?.name,
+                // collectionAvatar: collectionInfo?.avatarImage,
+              };
+            }),
+          );
+        });
+
+        const bidWinEventData = await this.bidWinEventSchemaRepository
+        .find(filter)
+        .then(events => {
+          return Promise.all(
+            events.map(async event => {
+              const {nftContractAddress, tokenID, azDomainName} = event;
+
+              const azChecking = isAzEnabled(nftContractAddress);
+
+              let nftInfo;
+
+              if (azChecking?.isAzDomain) {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
+                  where: {
+                    azDomainName,
+                    nftContractAddress,
+                  },
+                  fields: {
+                    avatar: true,
+                    nftName: true,
+                  },
+                });
+              } else {
+                nftInfo = await this.nfTsSchemaRepository.findOne({
+                  where: {
+                    tokenID,
+                    nftContractAddress,
+                  },
+                  fields: {
+                    avatar: true,
+                    nftName: true,
+                  },
+                });
+              }
+
+              // Temp disable due to no use collectio info
+              //   let collectionInfo =
+              //     await this.collectionsSchemaRepository.findOne({
+              //       where: {
+              //         nftContractAddress,
+              //       },
+              //       fields: {
+              //         name: true,
+              //         avatarImage: true,
+              //       },
+              //     });
+
+              return {
+                ...event,
+                avatar: nftInfo?.avatar,
+                nftName: nftInfo?.nftName,
+                eventDataType:'bid win'
+                // collectionName: collectionInfo?.name,
+                // collectionAvatar: collectionInfo?.avatarImage,
+              };
+            }),
+          );
+        });
+
+        let ret = [...purchaseEventData, ...bidWinEventData]
+
+        ret = ret
+           .sort((a, b) => (b?.blockNumber || 0) - (a?.blockNumber || 0))
+            .slice(filter?.offset, filter?.limit);
+
+        return this.response.send({
+        status: STATUS.OK,
+        ret,
+      });
+    }
+    
     @get('/api/top-nft-trades')
     @response(200, {
       description: 'Array of purchaseEventSchema model instances',
