@@ -154,6 +154,39 @@ export const RequestUpdateBidsBody = {
     },
 };
 
+// GET BIDS BY SELLER ADDRESS
+export type ReqGetBidsBySellerAddressType = {
+    seller?: string,
+    limit?: number,
+    offset?: number,
+    sort?: number,
+};
+const ReqGetBidsBySellerAddressSchema: SchemaObject = {
+    type: 'object',
+    required: ['seller'],
+    properties: {
+        seller: {
+            type: 'string',
+        },
+        limit: {
+            type: 'number',
+        },
+        offset: {
+            type: 'number',
+        },
+        sort: {
+            type: 'number',
+        },
+    },
+};
+export const RequestGetBidsBySellerAddressBody = {
+    description: 'The input of getBidsBySellerAddress function',
+    required: true,
+    content: {
+        'application/x-www-form-urlencoded': {schema: ReqGetBidsBySellerAddressSchema},
+    },
+};
+
 // GET BIDS BY BIDDER ADDRESS
 export type ReqGetBidsByBidderAddressType = {
     bidder?: string,
