@@ -188,8 +188,9 @@ if (process.env.RUN_TELEGRAM_BOT == 'true') {
           case '/help':
             const helpMessage =
               'Welcome! Here are the available commands:\n\n' +
-              '<code>/last10trade</code> - Show the top 10 items\n' +
-              '<code>/floorPrice</code> - Display the current floor price\n';
+              '<code>/recentTrade</code> - Show last 5 trades\n' +
+              '<code>/floorPrice</code> - Display the current floor price of 6 trending collection\n' +
+              '<code>/floorPrice &lt;NFTaddress&gt;</code> - Display the current floor price\n';
             send_telegram_bot(helpMessage, chatId, threadId);
             break;
           case '/recenttrade':
@@ -198,8 +199,9 @@ if (process.env.RUN_TELEGRAM_BOT == 'true') {
                 purchaseEventSchemaRepository,
                 nfTsSchemaRepository,
                 bidWinEventSchemaRepository,
-              )}\n\nTo see more, <a href="https://a0.artzero.io/stats">Click here</a>` ||
-                '',
+              )}\n\nTo see more, <a href="${
+                process.env.FRONTEND_URL
+              }/stats">Click here</a>` || '',
               chatId,
               threadId,
             );
