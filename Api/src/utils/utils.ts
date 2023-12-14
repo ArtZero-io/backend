@@ -73,6 +73,36 @@ export function send_telegram_message(message: string) {
     }
 }
 
+export function send_telegram_bot(
+  message: string,
+  chatid: string,
+  threadid: string,
+) {
+  try {
+    new Promise(async () => {
+      await axios({
+        baseURL: `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_NOTIFY_TOKEN}`,
+        url: '/sendMessage',
+        method: 'post',
+        data: {
+          chat_id: chatid,
+          text: message,
+          message_thread_id: threadid,
+          parse_mode: 'html',
+          disable_web_page_preview: true,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'cache-control': 'no-cache',
+          'Access-Control-Allow-Origin': '*',
+        },
+      });
+    }).then(() => {});
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export function send_report_telegram_message(message: string) {
     try {
         new Promise(async () => {
@@ -348,12 +378,10 @@ export function isAzEnabled(azDomainAddress?: string): {
         if (azeroDomainConfig) {
             azeroDomainConfig = azeroDomainConfig.replace('[','').replace(']','');
             const tmp = azeroDomainConfig.split(',');
-            console.log(tmp);
             for (const data of tmp) {
                 const info = data.split('-');
                 const address = info[0];
                 const isEnable = info[1] === "true";
-                console.log(`Address: ${address} isEnable: ${isEnable}`);
                 // Check and return the first address that is matched
                 if (azDomainAddress === address) {
                     return {
