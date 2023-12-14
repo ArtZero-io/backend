@@ -8,6 +8,10 @@ import {
   PurchaseEventSchemaRepository,
 } from '../repositories';
 import {ArtZeroDbDataSource} from '../datasources';
+import * as staking_calls from '../contracts/staking_calls';
+import {ContractPromise} from '@polkadot/api-contract';
+import {globalApi, localApi} from '../index';
+import {staking} from '../contracts/staking';
 dotenv.config();
 
 const fetchLast6CollectionToString = async (
@@ -155,10 +159,41 @@ const getRecentTrades = async (
   }
 };
 
+const getNFTStaked = async (staker: string | undefined) => {
+  try {
+    if (!staking_calls.getContract()) {
+      const staking_contract = new ContractPromise(
+        globalApi,
+        staking.CONTRACT_ABI,
+        staking.CONTRACT_ADDRESS,
+      );
+      staking_calls.setContract(staking_contract);
+    }
+    if (staker) {
+      let stakedNftNum = await staking_calls.getTotalStakedByAccount(
+        process.env.CALLER,
+        staker,
+      );
+      return `<b>Account address:</b>
+<code>${staker}</code>
+PMP Staking amount: <b>${stakedNftNum}</b>`;
+    } else {
+      const totalStaked = await staking_calls.getTotalStaked(
+        process.env.CALLER || '',
+      );
+      return `<b>Platform total staking PMP amount:</b> <code>${totalStaked}</code>`;
+    }
+  } catch (error) {
+    console.log('TELEGRAM BOT ERROR: get nft staked', error);
+  }
+};
+
 if (process.env.RUN_TELEGRAM_BOT == 'true') {
   const bot = new TelegramBot(process.env.TELEGRAM_BOT_NOTIFY_TOKEN || '', {
     polling: true,
   });
+  if (bot) console.log('TELEGRAM BOT TRADE: LISTENING');
+
   const collectionsSchemaRepository = new CollectionsSchemaRepository(
     new ArtZeroDbDataSource(),
   );
@@ -174,8 +209,6 @@ if (process.env.RUN_TELEGRAM_BOT == 'true') {
 
   bot.on('message', msg => {
     (async () => {
-      console.log(msg);
-
       const chatId = msg?.chat?.id || '';
       const threadId = msg?.message_thread_id?.toString() || '';
       const messageText = msg?.text || '';
@@ -232,6 +265,11 @@ if (process.env.RUN_TELEGRAM_BOT == 'true') {
             }
             break;
           case '/totalstaked':
+            send_telegram_bot(
+              (await getNFTStaked(param)) || '',
+              chatId,
+              threadId,
+            );
             break;
         }
       }

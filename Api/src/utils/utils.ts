@@ -75,8 +75,8 @@ export function send_telegram_message(message: string) {
 
 export function send_telegram_bot(
   message: string,
-  chatid: string,
-  threadid: string,
+  chatid: string | undefined,
+  threadid: string | undefined,
 ) {
   try {
     new Promise(async () => {

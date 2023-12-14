@@ -5,7 +5,7 @@ import {
     ClaimRewardEventSchemaRepository,
     CollectionEventSchemaRepository, ConfigRepository,
     LaunchpadMintingEventSchemaRepository,
-    NewListEventSchemaRepository, NftQueueScanAllSchemaRepository, NftQueueSchemaRepository, ProjectsSchemaRepository,
+    NewListEventSchemaRepository, NftQueueScanAllSchemaRepository, NftQueueSchemaRepository, NftsSchemaRepository, ProjectsSchemaRepository,
     PurchaseEventSchemaRepository,
     ScannedBlocksSchemaRepository,
     StakingEventSchemaRepository,
@@ -55,6 +55,8 @@ export class ScanBlock {
         public nftQueueScanAllSchemaRepository: NftQueueScanAllSchemaRepository,
         @repository(NftQueueSchemaRepository)
         public nftQueueSchemaRepository: NftQueueSchemaRepository,
+        @repository(NftsSchemaRepository)
+        public nftRepo: NftsSchemaRepository,
         @repository(ConfigRepository)
         public configRepository: ConfigRepository,
     ) {
@@ -85,6 +87,7 @@ export class ScanBlock {
             const azeroDomainEventRepo = this.azeroDomainEventRepository;
             const nftQueueScanAllRepo = this.nftQueueScanAllSchemaRepository;
             const nftQueueSchemaRepo = this.nftQueueSchemaRepository;
+            const nftRepo = this.nftRepo;
 
             // TODO: Start scanBlocks
             await scanBlocks(
@@ -109,7 +112,8 @@ export class ScanBlock {
                 projectsRepo,
                 azeroDomainEventRepo,
                 nftQueueScanAllRepo,
-                nftQueueSchemaRepo
+                nftQueueSchemaRepo,
+                nftRepo
             );
         } catch (e) {
             console.log(`ERRPR: ${e.messages}`);
