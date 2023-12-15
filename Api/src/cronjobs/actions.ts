@@ -10,7 +10,8 @@ import {
     send_telegram_message,
     strToNumber,
     todayFolder,
-    convertStringToDateTime
+    convertStringToDateTime,
+    send_telegram_bot
 } from "../utils/utils";
 import * as collection_manager_calls from "../contracts/collection_manager_calls";
 import * as marketplace_calls from "../contracts/marketplace_calls";
@@ -2676,6 +2677,7 @@ export async function scanBlocks(
     azeroDomainEventRepo: AzeroDomainEventRepository,
     nftQueueScanAllRepo: NftQueueScanAllSchemaRepository,
     nftQueueSchemaRepo: NftQueueSchemaRepository,
+    nftRepo: NftsSchemaRepository
 ) {
     if (global_vars.isScanning) {
         //This to make sure always process the latest block in case still scanning old blocks
@@ -2687,6 +2689,7 @@ export async function scanBlocks(
         // console.log({eventRecords: eventRecords});
         await processEventRecords(
             eventRecords,
+            true,
             blocknumber,
             api_azero_doman,
             api_launchpad_psp34_nft_standard,
@@ -2706,7 +2709,8 @@ export async function scanBlocks(
             projectsRepo,
             azeroDomainEventRepo,
             nftQueueScanAllRepo,
-            nftQueueSchemaRepo
+            nftQueueSchemaRepo,
+            nftRepo
         );
         console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Stop processEventRecords at ${blocknumber} now: ${convertToUTCTime(new Date())}`);
         return;
@@ -2749,6 +2753,7 @@ export async function scanBlocks(
                 console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Start processEventRecords at ${to_scan} now: ${convertToUTCTime(new Date())}`);
                 await processEventRecords(
                     eventRecords,
+                    false,
                     to_scan,
                     api_azero_doman,
                     api_launchpad_psp34_nft_standard,
@@ -2768,7 +2773,8 @@ export async function scanBlocks(
                     projectsRepo,
                     azeroDomainEventRepo,
                     nftQueueScanAllRepo,
-                    nftQueueSchemaRepo
+                    nftQueueSchemaRepo,
+                    nftRepo
                 );
                 console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Stop processEventRecords at ${to_scan} now: ${convertToUTCTime(new Date())}`);
                 try {
@@ -2812,6 +2818,7 @@ export async function reScanBlocks(
     azeroDomainEventRepo: AzeroDomainEventRepository,
     nftQueueScanAllRepo: NftQueueScanAllSchemaRepository,
     nftQueueSchemaRepo: NftQueueSchemaRepository,
+    nftRepo: NftsSchemaRepository
 ) {
     if (startBlocknumber > endBlocknumber) return;
     if (global_vars.isReScanning) {
@@ -2821,6 +2828,7 @@ export async function reScanBlocks(
         console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR_RESCAN} - Start processEventRecords at ${endBlocknumber} now: ${convertToUTCTime(new Date())}`);
         await processEventRecords(
             eventRecords,
+            false,
             endBlocknumber,
             api_azero_doman,
             api_launchpad_psp34_nft_standard,
@@ -2840,7 +2848,8 @@ export async function reScanBlocks(
             projectsRepo,
             azeroDomainEventRepo,
             nftQueueScanAllRepo,
-            nftQueueSchemaRepo
+            nftQueueSchemaRepo,
+            nftRepo
         );
         console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR_RESCAN} - Stop processEventRecords at ${endBlocknumber} now: ${convertToUTCTime(new Date())}`);
         return;
@@ -2873,6 +2882,7 @@ export async function reScanBlocks(
                 console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR_RESCAN} - Start processEventRecords at ${to_scan} now: ${convertToUTCTime(new Date())}`);
                 await processEventRecords(
                     eventRecords,
+                    false,
                     to_scan,
                     api_azero_doman,
                     api_launchpad_psp34_nft_standard,
@@ -2892,7 +2902,8 @@ export async function reScanBlocks(
                     projectsRepo,
                     azeroDomainEventRepo,
                     nftQueueScanAllRepo,
-                    nftQueueSchemaRepo
+                    nftQueueSchemaRepo,
+                    nftRepo
                 );
                 console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR_RESCAN} - Stop processEventRecords at ${to_scan} now: ${convertToUTCTime(new Date())}`);
                 try {
@@ -2914,6 +2925,7 @@ export async function reScanBlocks(
 
 export async function processEventRecords(
     eventRecords: any,
+    isNewBlock: boolean,
     to_scan: number,
     api_azero_doman: Abi,
     api_launchpad_psp34_nft_standard: Abi,
@@ -2934,6 +2946,7 @@ export async function processEventRecords(
     azeroDomainEventRepo: AzeroDomainEventRepository,
     nftQueueScanAllRepo: NftQueueScanAllSchemaRepository,
     nftQueueSchemaRepo: NftQueueSchemaRepository,
+    nftRepo: NftsSchemaRepository
 ) {
     try {
         for (const record of eventRecords) {
@@ -3056,6 +3069,26 @@ export async function processEventRecords(
                                         platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 12 : 0,
                                         royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 12 : 0,
                                     }
+                                    let nftInfo = await nftRepo.findOne({
+                                        where: {
+                                            nftContractAddress: eventValues[2],
+                                            azDomainName: azDomainNameDecoded ?? undefined,
+                                        },
+                                    });
+                                    if (isNewBlock)
+                                  send_telegram_bot(
+                                    `🛒<b>${
+                                      nftInfo?.nftName
+                                    }</b> [<code>PURCHASE</code>]
+<b>NFT address:</b> <code>${eventValues[2]}</code>
+<b>Price:</b> <code>${
+eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0
+} Azero</code>
+<b>Seller:</b> <code>${eventValues[1]}</code>
+<b>Buyer:</b> <code>${eventValues[0]}</code>`,
+                                    process.env.TELEGRAM_ID_CHAT,
+                                    process.env.TELEGRAM_GROUP_FEED_THREAD_ID,
+                                  );
                                 }
                             } else {
                                 obj = {
@@ -3068,6 +3101,26 @@ export async function processEventRecords(
                                     platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 12 : 0,
                                     royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 12 : 0,
                                 }
+                                let nftInfo = await nftRepo.findOne({
+                                    where: {
+                                        nftContractAddress: eventValues[2],
+                                        tokenID: eventValues[3] ? JSON.parse(eventValues[3]).u64 : 0,
+                                    },
+                                });
+                                if (isNewBlock)
+                                  send_telegram_bot(
+                                    `🛒<b>${
+                                      nftInfo?.nftName
+                                    }</b> [<code>PURCHASE</code>]
+  <b>NFT address:</b> <code>${eventValues[2]}</code>
+  <b>Price:</b> <code>${
+    eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0
+  } Azero</code>
+  <b>Seller:</b> <code>${eventValues[1]}</code>
+  <b>Buyer:</b> <code>${eventValues[0]}</code>`,
+                                    process.env.TELEGRAM_ID_CHAT,
+                                    process.env.TELEGRAM_GROUP_FEED_THREAD_ID,
+                                  );
                             }
                             console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - eventValues: `, eventValues);
                             console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - objValues: `, obj);
@@ -3094,17 +3147,52 @@ export async function processEventRecords(
                                 if (!azChecking.isEnabled) {
                                     isValidated = false;
                                 } else {
-                                    let azDomainNameDecoded = eventValues[3] ? hexToAscii(JSON.parse(eventValues[3]).bytes) : undefined;
-                                    obj = {
-                                        blockNumber: to_scan,
-                                        buyer: eventValues[0],
-                                        seller: eventValues[1],
-                                        nftContractAddress: eventValues[2],
-                                        azDomainName: azDomainNameDecoded ? azDomainNameDecoded : undefined,
-                                        price: eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0,
-                                        platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 12 : 0,
-                                        royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 12 : 0,
-                                    };
+                                  let azDomainNameDecoded = eventValues[3]
+                                    ? hexToAscii(
+                                        JSON.parse(eventValues[3]).bytes,
+                                      )
+                                    : undefined;
+                                  obj = {
+                                    blockNumber: to_scan,
+                                    buyer: eventValues[0],
+                                    seller: eventValues[1],
+                                    nftContractAddress: eventValues[2],
+                                    azDomainName: azDomainNameDecoded
+                                      ? azDomainNameDecoded
+                                      : undefined,
+                                    price: eventValues[4]
+                                      ? parseFloat(eventValues[4]) / 10 ** 12
+                                      : 0,
+                                    platformFee: eventValues[5]
+                                      ? parseFloat(eventValues[5]) / 10 ** 12
+                                      : 0,
+                                    royaltyFee: eventValues[6]
+                                      ? parseFloat(eventValues[6]) / 10 ** 12
+                                      : 0,
+                                  };
+                                  let nftInfo = await nftRepo.findOne({
+                                    where: {
+                                      nftContractAddress: eventValues[2],
+                                      tokenID: eventValues[3] ? JSON.parse(eventValues[3]).u64 : 0,
+                                    },
+                                  });
+                                  if (isNewBlock)
+                                    send_telegram_bot(
+                                      `🎉<b>${
+                                        nftInfo?.nftName
+                                      }</b> [<code>BIDWIN</code>]
+<b>NFT address:</b> <code>${eventValues[2]}</code>
+<b>Price:</b> <code>${
+                                        eventValues[4]
+                                          ? parseFloat(eventValues[4]) /
+                                            10 ** 12
+                                          : 0
+                                      } Azero</code>
+<b>Seller:</b> <code>${eventValues[1]}</code>
+<b>Buyer:</b> <code>${eventValues[0]}</code>`,
+                                      process.env.TELEGRAM_ID_CHAT,
+                                      process.env.TELEGRAM_GROUP_FEED_THREAD_ID,
+                                    );
                                 }
                             } else {
                                 obj = {
@@ -3117,6 +3205,26 @@ export async function processEventRecords(
                                     platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 12 : 0,
                                     royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 12 : 0,
                                 };
+                                let nftInfo = await nftRepo.findOne({
+                                    where: {
+                                        nftContractAddress: eventValues[2],
+                                        tokenID: eventValues[3] ? JSON.parse(eventValues[3]).u64 : 0,
+                                    },
+                                });
+                                if (isNewBlock)
+                                  send_telegram_bot(
+                                    `🎉<b>${
+                                      nftInfo?.nftName
+                                    }</b> [<code>BIDWIN</code>]
+<b>NFT address:</b> <code>${eventValues[2]}</code>
+<b>Price:</b> <code>${
+eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0
+} Azero</code>
+<b>Seller:</b> <code>${eventValues[1]}</code>
+<b>Buyer:</b> <code>${eventValues[0]}</code>`,
+                                    process.env.TELEGRAM_ID_CHAT,
+                                    process.env.TELEGRAM_GROUP_FEED_THREAD_ID,
+                                  );
                             }
                             let found = await bidWinEventRepo.findOne({
                                 where: obj
@@ -3148,6 +3256,28 @@ export async function processEventRecords(
                         for (let i = 0; i < decodedEvent.args.length; i++) {
                             const value = decodedEvent.args[i];
                             eventValues.push(value.toString());
+                        }
+                        if (
+                          isNewBlock &&
+                          ['NewStakeEvent', 'UnstakeEvent'].includes(event_name)
+                        ) {
+                          const eventNameMap: Record<string, string> = {
+                            UnstakeEvent: '😮PMP Unstaking Event',
+                            NewStakeEvent: '🚀PMP Staking Event',
+                          };
+
+                          const eventName: string =
+                            eventNameMap[event_name] || 'Unknow Event';
+                          const message: string = `<b>${eventName}</b>
+<b>Staker:</b>
+<code>${eventValues[0] || '***'}</code>
+<b>NFT TokenID:</b>
+<code>${eventValues[1]}</code>`;
+                          send_telegram_bot(
+                            message,
+                            process.env.TELEGRAM_ID_CHAT,
+                            process.env.TELEGRAM_GROUP_FEED_THREAD_ID,
+                          );
                         }
                         if (event_name == 'NewStakeEvent') {
                             let obj = {

@@ -27,7 +27,7 @@ import {
     ConfigRepository,
     ProjectsSchemaRepository,
     AzeroDomainEventRepository,
-    NftQueueScanAllSchemaRepository, NftQueueSchemaRepository, ReScannedBlocksSchemaRepository
+    NftQueueScanAllSchemaRepository, NftQueueSchemaRepository, ReScannedBlocksSchemaRepository, NftsSchemaRepository
 } from "../repositories";
 import {launchpad_psp34_nft_standard} from "../contracts/launchpad_psp34_nft_standard";
 import {ApiPromise, WsProvider} from "@polkadot/api";
@@ -67,6 +67,8 @@ export class CronJobAzEventsCollectorReScan implements Provider<CronJob> {
         public nftQueueScanAllSchemaRepository: NftQueueScanAllSchemaRepository,
         @repository(NftQueueSchemaRepository)
         public nftQueueSchemaRepository: NftQueueSchemaRepository,
+        @repository(NftsSchemaRepository)
+        public nftRepo: NftsSchemaRepository,
         @repository(ConfigRepository)
         public configRepository: ConfigRepository,
     ) {
@@ -121,6 +123,7 @@ export class CronJobAzEventsCollectorReScan implements Provider<CronJob> {
                             const azeroDomainEventRepo = this.azeroDomainEventRepository;
                             const nftQueueScanAllRepo = this.nftQueueScanAllSchemaRepository;
                             const nftQueueSchemaRepo = this.nftQueueSchemaRepository;
+                            const nftRepo = this.nftRepo;
 
                             const rpc = process.env.WSSPROVIDER;
                             if (!rpc) {
@@ -198,7 +201,8 @@ export class CronJobAzEventsCollectorReScan implements Provider<CronJob> {
                                                 projectsRepo,
                                                 azeroDomainEventRepo,
                                                 nftQueueScanAllRepo,
-                                                nftQueueSchemaRepo
+                                                nftQueueSchemaRepo,
+                                                nftRepo
                                             );
                                         } catch (e) {
                                             console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR_RESCAN} - ERROR: ${e.message}`);
