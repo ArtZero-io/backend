@@ -9,6 +9,10 @@ export function setContract(c: ContractPromise) {
     staking_contract = c;
 }
 
+export function getContract() {
+    return staking_contract
+}
+
 export async function getTotalStaked(caller_account: string) {
     if (!staking_contract || !caller_account) {
         console.log("invalid inputs");
