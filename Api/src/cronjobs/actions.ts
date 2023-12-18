@@ -3112,12 +3112,12 @@ eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0
                                     `🛒<b>${
                                       nftInfo?.nftName
                                     }</b> [<code>PURCHASE</code>]
-  <b>NFT address:</b> <code>${eventValues[2]}</code>
-  <b>Price:</b> <code>${
-    eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0
-  } Azero</code>
-  <b>Seller:</b> <code>${eventValues[1]}</code>
-  <b>Buyer:</b> <code>${eventValues[0]}</code>`,
+<b>NFT address:</b> <code>${eventValues[2]}</code>
+<b>Price:</b> <code>${
+eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0
+} Azero</code>
+<b>Seller:</b> <code>${eventValues[1]}</code>
+<b>Buyer:</b> <code>${eventValues[0]}</code>`,
                                     process.env.TELEGRAM_ID_CHAT,
                                     process.env.TELEGRAM_GROUP_FEED_THREAD_ID,
                                   );
@@ -3271,8 +3271,7 @@ eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0
                           const message: string = `<b>${eventName}</b>
 <b>Staker:</b>
 <code>${eventValues[0] || '***'}</code>
-<b>NFT TokenID:</b>
-<code>${eventValues[1]}</code>`;
+<b>NFT TokenID:</b> <code>#${eventValues[1]}</code>`;
                           send_telegram_bot(
                             message,
                             process.env.TELEGRAM_ID_CHAT,
