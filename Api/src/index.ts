@@ -24,7 +24,7 @@ import {CronJobAzEventsCollectorReScan} from "./cronjobs/azEventsCollectorReScan
 import {CronJobAzNftTransferCollector} from "./cronjobs/azNftTransferCollector";
 export * from './application';
 import * as mongoDB from "mongodb";
-import "./utils/telegramBot";
+import "./utils/telegram/bot";
 
 dotenv.config();
 export let globalApi: ApiPromise;

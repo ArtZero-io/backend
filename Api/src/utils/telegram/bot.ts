@@ -1,17 +1,17 @@
 import dotenv from 'dotenv';
 import TelegramBot from 'node-telegram-bot-api';
-import {isAzEnabled, send_telegram_bot} from './utils';
+import {send_telegram_bot, isAzEnabled} from '../utils';
 import {
   BidWinEventSchemaRepository,
   CollectionsSchemaRepository,
   NftsSchemaRepository,
   PurchaseEventSchemaRepository,
-} from '../repositories';
-import {ArtZeroDbDataSource} from '../datasources';
-import * as staking_calls from '../contracts/staking_calls';
+} from '../../repositories';
+import {ArtZeroDbDataSource} from '../../datasources';
+import * as staking_calls from '../../contracts/staking_calls';
 import {ContractPromise} from '@polkadot/api-contract';
-import {globalApi, localApi} from '../index';
-import {staking} from '../contracts/staking';
+import {globalApi, localApi} from '../../index';
+import {staking} from '../../contracts/staking';
 dotenv.config();
 
 const fetchLast6CollectionToString = async (
