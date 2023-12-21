@@ -11,7 +11,6 @@ import {
     strToNumber,
     todayFolder,
     convertStringToDateTime,
-    send_telegram_bot
 } from "../utils/utils";
 import * as collection_manager_calls from "../contracts/collection_manager_calls";
 import * as marketplace_calls from "../contracts/marketplace_calls";
@@ -91,6 +90,9 @@ import * as crypto from "crypto";
 import {azero_domains_nft} from "../contracts/azero_domains_nft";
 import {getRegistrationPeriod} from "../contracts/azero_domains_nft_calls";
 import { KeyringPair$Json } from "@polkadot/keyring/types";
+import { EventTeleQueueSchemaRepository } from "../repositories/event-tele-schema.repository";
+import { ArtZeroDbDataSource } from "../datasources";
+import { create_event_db } from "../utils/telegram/events";
 
 dotenv.config();
 
@@ -2677,7 +2679,7 @@ export async function scanBlocks(
     azeroDomainEventRepo: AzeroDomainEventRepository,
     nftQueueScanAllRepo: NftQueueScanAllSchemaRepository,
     nftQueueSchemaRepo: NftQueueSchemaRepository,
-    nftRepo: NftsSchemaRepository
+    nftRepo: NftsSchemaRepository,
 ) {
     if (global_vars.isScanning) {
         //This to make sure always process the latest block in case still scanning old blocks
@@ -2710,7 +2712,7 @@ export async function scanBlocks(
             azeroDomainEventRepo,
             nftQueueScanAllRepo,
             nftQueueSchemaRepo,
-            nftRepo
+            nftRepo,
         );
         console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Stop processEventRecords at ${blocknumber} now: ${convertToUTCTime(new Date())}`);
         return;
@@ -2949,6 +2951,9 @@ export async function processEventRecords(
     nftRepo: NftsSchemaRepository
 ) {
     try {
+        const eventTeleQueueRepo = new EventTeleQueueSchemaRepository(
+          new ArtZeroDbDataSource(),
+        );
         for (const record of eventRecords) {
             // Extract the phase, event and the event types
             const {phase, event: {data, method, section}} = record;
@@ -3069,28 +3074,17 @@ export async function processEventRecords(
                                         platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 12 : 0,
                                         royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 12 : 0,
                                     }
-                                    let nftInfo = await nftRepo.findOne({
-                                        where: {
-                                            nftContractAddress: eventValues[2],
-                                            azDomainName: azDomainNameDecoded ?? undefined,
-                                        },
-                                    });
                                     if (isNewBlock)
-                                  send_telegram_bot(
-                                    `🛒<b>${
-                                      nftInfo?.nftName
-                                    }</b> [<code>PURCHASE</code>]
-<b>NFT address:</b> <code>${eventValues[2]}</code>
-<b>Price:</b> <code>${
-eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0
-} Azero</code>
-<b>Seller:</b> <code>${eventValues[1]}</code>
-<b>Buyer:</b> <code>${eventValues[0]}</code>`,
-                                    process.env.TELEGRAM_ID_CHAT,
-                                    process.env.TELEGRAM_GROUP_FEED_THREAD_ID,
-                                  );
+                                      create_event_db(
+                                        {
+                                          ...obj,
+                                          eventName: event_name,
+                                        },
+                                        eventTeleQueueRepo,
+                                        nftRepo
+                                      );
                                 }
-                            } else {
+                            } else {                                
                                 obj = {
                                     blockNumber: to_scan,
                                     buyer: eventValues[0],
@@ -3101,25 +3095,14 @@ eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0
                                     platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 12 : 0,
                                     royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 12 : 0,
                                 }
-                                let nftInfo = await nftRepo.findOne({
-                                    where: {
-                                        nftContractAddress: eventValues[2],
-                                        tokenID: eventValues[3] ? JSON.parse(eventValues[3]).u64 : 0,
-                                    },
-                                });
                                 if (isNewBlock)
-                                  send_telegram_bot(
-                                    `🛒<b>${
-                                      nftInfo?.nftName
-                                    }</b> [<code>PURCHASE</code>]
-<b>NFT address:</b> <code>${eventValues[2]}</code>
-<b>Price:</b> <code>${
-eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0
-} Azero</code>
-<b>Seller:</b> <code>${eventValues[1]}</code>
-<b>Buyer:</b> <code>${eventValues[0]}</code>`,
-                                    process.env.TELEGRAM_ID_CHAT,
-                                    process.env.TELEGRAM_GROUP_FEED_THREAD_ID,
+                                  create_event_db(
+                                    {
+                                      ...obj,
+                                      eventName: event_name,
+                                    },
+                                    eventTeleQueueRepo,
+                                    nftRepo
                                   );
                             }
                             console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - eventValues: `, eventValues);
@@ -3170,28 +3153,15 @@ eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0
                                       ? parseFloat(eventValues[6]) / 10 ** 12
                                       : 0,
                                   };
-                                  let nftInfo = await nftRepo.findOne({
-                                    where: {
-                                      nftContractAddress: eventValues[2],
-                                      tokenID: eventValues[3] ? JSON.parse(eventValues[3]).u64 : 0,
-                                    },
-                                  });
+                                  
                                   if (isNewBlock)
-                                    send_telegram_bot(
-                                      `🎉<b>${
-                                        nftInfo?.nftName
-                                      }</b> [<code>BIDWIN</code>]
-<b>NFT address:</b> <code>${eventValues[2]}</code>
-<b>Price:</b> <code>${
-                                        eventValues[4]
-                                          ? parseFloat(eventValues[4]) /
-                                            10 ** 12
-                                          : 0
-                                      } Azero</code>
-<b>Seller:</b> <code>${eventValues[1]}</code>
-<b>Buyer:</b> <code>${eventValues[0]}</code>`,
-                                      process.env.TELEGRAM_ID_CHAT,
-                                      process.env.TELEGRAM_GROUP_FEED_THREAD_ID,
+                                    create_event_db(
+                                      {
+                                        ...obj,
+                                        eventName: event_name,
+                                      },
+                                      eventTeleQueueRepo,
+                                      nftRepo,
                                     );
                                 }
                             } else {
@@ -3205,25 +3175,14 @@ eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0
                                     platformFee: eventValues[5] ? parseFloat(eventValues[5]) / 10 ** 12 : 0,
                                     royaltyFee: eventValues[6] ? parseFloat(eventValues[6]) / 10 ** 12 : 0,
                                 };
-                                let nftInfo = await nftRepo.findOne({
-                                    where: {
-                                        nftContractAddress: eventValues[2],
-                                        tokenID: eventValues[3] ? JSON.parse(eventValues[3]).u64 : 0,
-                                    },
-                                });
                                 if (isNewBlock)
-                                  send_telegram_bot(
-                                    `🎉<b>${
-                                      nftInfo?.nftName
-                                    }</b> [<code>BIDWIN</code>]
-<b>NFT address:</b> <code>${eventValues[2]}</code>
-<b>Price:</b> <code>${
-eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0
-} Azero</code>
-<b>Seller:</b> <code>${eventValues[1]}</code>
-<b>Buyer:</b> <code>${eventValues[0]}</code>`,
-                                    process.env.TELEGRAM_ID_CHAT,
-                                    process.env.TELEGRAM_GROUP_FEED_THREAD_ID,
+                                  create_event_db(
+                                    {
+                                      ...obj,
+                                      eventName: event_name,
+                                    },
+                                    eventTeleQueueRepo,
+                                    nftRepo,
                                   );
                             }
                             let found = await bidWinEventRepo.findOne({
@@ -3257,25 +3216,16 @@ eventValues[4] ? parseFloat(eventValues[4]) / 10 ** 12 : 0
                             const value = decodedEvent.args[i];
                             eventValues.push(value.toString());
                         }
-                        if (
-                          isNewBlock &&
-                          ['NewStakeEvent', 'UnstakeEvent'].includes(event_name)
-                        ) {
-                          const eventNameMap: Record<string, string> = {
-                            UnstakeEvent: '😮PMP Unstaking Event',
-                            NewStakeEvent: '🚀PMP Staking Event',
-                          };
-
-                          const eventName: string =
-                            eventNameMap[event_name] || 'Unknow Event';
-                          const message: string = `<b>${eventName}</b>
-<b>Staker:</b>
-<code>${eventValues[0] || '***'}</code>
-<b>NFT TokenID:</b> <code>#${eventValues[1]}</code>`;
-                          send_telegram_bot(
-                            message,
-                            process.env.TELEGRAM_ID_CHAT,
-                            process.env.TELEGRAM_GROUP_FEED_THREAD_ID,
+                        if (isNewBlock) {
+                          create_event_db(
+                            {
+                              blockNumber: to_scan,
+                              staker: eventValues[0],
+                              eventName: event_name,
+                              tokenID: eventValues[1],
+                            },
+                            eventTeleQueueRepo,
+                            nftRepo
                           );
                         }
                         if (event_name == 'NewStakeEvent') {
