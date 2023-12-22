@@ -22,6 +22,7 @@ import {collection_manager} from "../contracts/collection_manager";
 import {launchpad_psp34_nft_standard} from "../contracts/launchpad_psp34_nft_standard";
 import {ApiPromise} from "@polkadot/api";
 import {inject} from "@loopback/core";
+import { EventTeleQueueSchemaRepository } from "../repositories/event-tele-schema.repository";
 
 export class ScanBlock {
     constructor(
@@ -55,6 +56,8 @@ export class ScanBlock {
         public nftQueueScanAllSchemaRepository: NftQueueScanAllSchemaRepository,
         @repository(NftQueueSchemaRepository)
         public nftQueueSchemaRepository: NftQueueSchemaRepository,
+        @repository(EventTeleQueueSchemaRepository)
+        public eventTeleQueueRepo: EventTeleQueueSchemaRepository,
         @repository(NftsSchemaRepository)
         public nftRepo: NftsSchemaRepository,
         @repository(ConfigRepository)
@@ -87,6 +90,7 @@ export class ScanBlock {
             const azeroDomainEventRepo = this.azeroDomainEventRepository;
             const nftQueueScanAllRepo = this.nftQueueScanAllSchemaRepository;
             const nftQueueSchemaRepo = this.nftQueueSchemaRepository;
+            const eventTeleQueueRepo = this.eventTeleQueueRepo;
             const nftRepo = this.nftRepo;
 
             // TODO: Start scanBlocks
@@ -113,7 +117,8 @@ export class ScanBlock {
                 azeroDomainEventRepo,
                 nftQueueScanAllRepo,
                 nftQueueSchemaRepo,
-                nftRepo
+                nftRepo,
+                eventTeleQueueRepo
             );
         } catch (e) {
             console.log(`ERRPR: ${e.messages}`);
