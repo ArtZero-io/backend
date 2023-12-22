@@ -2,7 +2,7 @@ import {NftsSchemaRepository} from '../../repositories';
 import {EventTeleQueueSchemaRepository} from '../../repositories/event-tele-schema.repository';
 import {resolveDomainAzeroID, send_telegram_bot} from '../utils';
 
-const stakeEvent = ['NewStakeEvent', 'UnstakeEvent', 'PurchaseEvent'];
+const stakeEvent = ['NewStakeEvent', 'UnstakeEvent'];
 const tradeEvent = ['PurchaseEvent', 'BidWinEvent'];
 export const create_event_db = async (
   data: any,
@@ -68,15 +68,18 @@ export const create_event_db = async (
           let nftInfo = await nftRepo.findOne({
             where: {
               nftContractAddress: data?.nftContractAddress,
-              tokenID: 27,
+              tokenID: data?.tokenID,
             },
           });
+
           const eventName = data?.eventName;
           switch (eventName) {
             case 'PurchaseEvent':
               send_telegram_bot(
                 `🛒<b>${nftInfo?.nftName}</b> [<code>PURCHASE</code>]
-<b>NFT address:</b> <code>${data?.nftContractAddress}</code>
+<b>NFT Collection:</b> <a href="${process.env.FRONTEND_URL}/collection/${
+                  data?.nftContractAddress
+                }">${data?.nftContractAddress}</a>
 <b>Price :</b> <code>${data?.price} Azero</code>
 <b>Seller:</b> <code>${
                   (await resolveDomainAzeroID(data?.seller)) || '***'
@@ -91,7 +94,9 @@ export const create_event_db = async (
             case 'BidWinEvent':
               send_telegram_bot(
                 `🎉<b>${nftInfo?.nftName}</b> [<code>BIDWIN</code>]
-<b>NFT address:</b> <code>${data?.nftContractAddress}</code>
+<b>NFT Collection:</b> <a href="${process.env.FRONTEND_URL}/collection/${
+                  data?.nftContractAddress
+                }">${data?.nftContractAddress}</a>
 <b>Price :</b> <code>${data?.price} Azero</code>
 <b>Seller:</b> <code>${
                   (await resolveDomainAzeroID(data?.seller)) || '***'
