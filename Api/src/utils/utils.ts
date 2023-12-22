@@ -12,7 +12,7 @@ import {Response} from "@loopback/rest";
 import {ProjectsSchemaRepository} from "../repositories";
 import dotenv from "dotenv";
 import moment from "moment";
-import ex from '../utils/azns/index';
+import ex from '../../azns/index';
 // import {globalApi} from "../scripts/getTimestamp";
 dotenv.config();
 
@@ -417,16 +417,15 @@ export function hexToAscii(str1: string): string {
 export const resolveDomainAzeroID = async (
   address: string,
 ): Promise<string | undefined> => {
-  // try {
-  //   const res: any = await ex.Pe(address, {
-  //     debug: true,
-  //     chainId:
-  //       process.env.IS_MAINNET == 'true' ? 'alephzero' : 'alephzero-testnet',
-  //   });
-  //   return res?.primaryDomain || address;
-  // } catch (error) {
-  //   console.log('resolveDomain error', error);
-  //   return address;
-  // }
-  return address;
+  try {
+    const res: any = await ex.Pe(address, {
+      debug: true,
+      chainId:
+        process.env.IS_MAINNET == 'true' ? 'alephzero' : 'alephzero-testnet',
+    });
+    return res?.primaryDomain || address;
+  } catch (error) {
+    console.log('resolveDomain error', error);
+    return address;
+  }
 };

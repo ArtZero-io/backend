@@ -2,7 +2,7 @@ import {NftsSchemaRepository} from '../../repositories';
 import {EventTeleQueueSchemaRepository} from '../../repositories/event-tele-schema.repository';
 import {resolveDomainAzeroID, send_telegram_bot} from '../utils';
 
-const stakeEvent = ['NewStakeEvent', 'UnstakeEvent', 'PurchaseEvent'];
+const stakeEvent = ['NewStakeEvent', 'UnstakeEvent'];
 const tradeEvent = ['PurchaseEvent', 'BidWinEvent'];
 export const create_event_db = async (
   data: any,
@@ -26,8 +26,9 @@ export const create_event_db = async (
               case 'NewStakeEvent':
                 send_telegram_bot(
                   `<b>🚀PMP Staking Event</b>
-<b>Staker:</b>
-<code>${(await resolveDomainAzeroID(data?.staker)) || '***'}</code>
+<b>Staker:</b> <code>${
+                    (await resolveDomainAzeroID(data?.staker)) || '***'
+                  }</code>
 <b>NFT TokenID:</b> <code>#${data?.tokenID}</code>`,
                   process.env.TELEGRAM_ID_CHAT,
                   process.env.TELEGRAM_GROUP_FEED_THREAD_ID,
@@ -36,8 +37,9 @@ export const create_event_db = async (
               case 'UnstakeEvent':
                 send_telegram_bot(
                   `<b>😮PMP Unstaking Event</b>
-<b>Staker:</b>
-<code>${(await resolveDomainAzeroID(data?.staker)) || '***'}</code>
+<b>Staker:</b> <code>${
+                    (await resolveDomainAzeroID(data?.staker)) || '***'
+                  }</code>
 <b>NFT TokenID:</b> <code>#${data?.tokenID}</code>`,
                   process.env.TELEGRAM_ID_CHAT,
                   process.env.TELEGRAM_GROUP_FEED_THREAD_ID,
@@ -66,18 +68,25 @@ export const create_event_db = async (
           let nftInfo = await nftRepo.findOne({
             where: {
               nftContractAddress: data?.nftContractAddress,
-              tokenID: 27,
+              tokenID: data?.tokenID,
             },
           });
+
           const eventName = data?.eventName;
           switch (eventName) {
             case 'PurchaseEvent':
               send_telegram_bot(
                 `🛒<b>${nftInfo?.nftName}</b> [<code>PURCHASE</code>]
-<b>NFT address:</b> <code>${data?.nftContractAddress}</code>
-<b>Price:</b> <code>${data?.price} Azero</code>
-<b>Seller:</b> <code>${data?.seller}</code>
-<b>Buyer:</b> <code>${data?.buyer}</code>`,
+<b>NFT Collection:</b> <a href="${process.env.FRONTEND_URL}/collection/${
+                  data?.nftContractAddress
+                }">${data?.nftContractAddress}</a>
+<b>Price :</b> <code>${data?.price} Azero</code>
+<b>Seller:</b> <code>${
+                  (await resolveDomainAzeroID(data?.seller)) || '***'
+                }</code>
+<b>Buyer :</b> <code>${
+                  (await resolveDomainAzeroID(data?.buyer)) || '***'
+                }</code>`,
                 process.env.TELEGRAM_ID_CHAT,
                 process.env.TELEGRAM_GROUP_FEED_THREAD_ID,
               );
@@ -85,10 +94,16 @@ export const create_event_db = async (
             case 'BidWinEvent':
               send_telegram_bot(
                 `🎉<b>${nftInfo?.nftName}</b> [<code>BIDWIN</code>]
-<b>NFT address:</b> <code>${data?.nftContractAddress}</code>
-<b>Price:</b> <code>${data?.price} Azero</code>
-<b>Seller:</b> <code>${data?.seller}</code>
-<b>Buyer:</b> <code>${data?.buyer}</code>`,
+<b>NFT Collection:</b> <a href="${process.env.FRONTEND_URL}/collection/${
+                  data?.nftContractAddress
+                }">${data?.nftContractAddress}</a>
+<b>Price :</b> <code>${data?.price} Azero</code>
+<b>Seller:</b> <code>${
+                  (await resolveDomainAzeroID(data?.seller)) || '***'
+                }</code>
+<b>Buyer :</b> <code>${
+                  (await resolveDomainAzeroID(data?.buyer)) || '***'
+                }</code>`,
                 process.env.TELEGRAM_ID_CHAT,
                 process.env.TELEGRAM_GROUP_FEED_THREAD_ID,
               );

@@ -76,6 +76,7 @@
     "ipfs-http-client": "^56.0.2",
     "is-ipfs": "^6.0.2",
     "it-to-stream": "^1.0.0",
+    "loglevel": "^1.8.1",
     "loopback-connector-mongodb": "^5.2.3",
     "mobile-detect": "^1.4.5",
     "moment": "^2.29.4",
