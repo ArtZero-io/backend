@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import TelegramBot from 'node-telegram-bot-api';
-import {send_telegram_bot, isAzEnabled} from '../utils';
+import {send_telegram_bot, isAzEnabled, resolveDomainAzeroID} from '../utils';
 import {
   BidWinEventSchemaRepository,
   CollectionsSchemaRepository,
@@ -54,8 +54,6 @@ const fetchFloorPrice = async (
   address: any,
   nfTsSchemaRepository: NftsSchemaRepository,
 ) => {
-  console.log(address);
-
   let data = await nfTsSchemaRepository.find({
     where: {
       nftContractAddress: address,
@@ -191,9 +189,8 @@ PMP Staking amount: <b>${stakedNftNum}</b>`;
 if (process.env.RUN_TELEGRAM_BOT == 'true') {
   const bot = new TelegramBot(process.env.TELEGRAM_BOT_NOTIFY_TOKEN || '', {
     polling: true,
-  });
+  });  
   if (bot) console.log('TELEGRAM BOT TRADE: LISTENING');
-
   const collectionsSchemaRepository = new CollectionsSchemaRepository(
     new ArtZeroDbDataSource(),
   );
