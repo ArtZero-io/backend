@@ -2680,6 +2680,7 @@ export async function scanBlocks(
     nftQueueScanAllRepo: NftQueueScanAllSchemaRepository,
     nftQueueSchemaRepo: NftQueueSchemaRepository,
     nftRepo: NftsSchemaRepository,
+    eventTeleQueueRepo: EventTeleQueueSchemaRepository
 ) {
     if (global_vars.isScanning) {
         //This to make sure always process the latest block in case still scanning old blocks
@@ -2713,6 +2714,7 @@ export async function scanBlocks(
             nftQueueScanAllRepo,
             nftQueueSchemaRepo,
             nftRepo,
+            eventTeleQueueRepo
         );
         console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Stop processEventRecords at ${blocknumber} now: ${convertToUTCTime(new Date())}`);
         return;
@@ -2776,7 +2778,8 @@ export async function scanBlocks(
                     azeroDomainEventRepo,
                     nftQueueScanAllRepo,
                     nftQueueSchemaRepo,
-                    nftRepo
+                    nftRepo,
+                    eventTeleQueueRepo
                 );
                 console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR} - Stop processEventRecords at ${to_scan} now: ${convertToUTCTime(new Date())}`);
                 try {
@@ -2820,7 +2823,8 @@ export async function reScanBlocks(
     azeroDomainEventRepo: AzeroDomainEventRepository,
     nftQueueScanAllRepo: NftQueueScanAllSchemaRepository,
     nftQueueSchemaRepo: NftQueueSchemaRepository,
-    nftRepo: NftsSchemaRepository
+    nftRepo: NftsSchemaRepository,
+    eventTeleQueueRepo: EventTeleQueueSchemaRepository
 ) {
     if (startBlocknumber > endBlocknumber) return;
     if (global_vars.isReScanning) {
@@ -2851,7 +2855,8 @@ export async function reScanBlocks(
             azeroDomainEventRepo,
             nftQueueScanAllRepo,
             nftQueueSchemaRepo,
-            nftRepo
+            nftRepo,
+            eventTeleQueueRepo
         );
         console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR_RESCAN} - Stop processEventRecords at ${endBlocknumber} now: ${convertToUTCTime(new Date())}`);
         return;
@@ -2905,7 +2910,8 @@ export async function reScanBlocks(
                     azeroDomainEventRepo,
                     nftQueueScanAllRepo,
                     nftQueueSchemaRepo,
-                    nftRepo
+                    nftRepo,
+                    eventTeleQueueRepo
                 );
                 console.log(`${CONFIG_TYPE_NAME.AZ_EVENTS_COLLECTOR_RESCAN} - Stop processEventRecords at ${to_scan} now: ${convertToUTCTime(new Date())}`);
                 try {
@@ -2948,12 +2954,10 @@ export async function processEventRecords(
     azeroDomainEventRepo: AzeroDomainEventRepository,
     nftQueueScanAllRepo: NftQueueScanAllSchemaRepository,
     nftQueueSchemaRepo: NftQueueSchemaRepository,
-    nftRepo: NftsSchemaRepository
+    nftRepo: NftsSchemaRepository,
+    eventTeleQueueRepo: EventTeleQueueSchemaRepository
 ) {
     try {
-        const eventTeleQueueRepo = new EventTeleQueueSchemaRepository(
-          new ArtZeroDbDataSource(),
-        );
         for (const record of eventRecords) {
             // Extract the phase, event and the event types
             const {phase, event: {data, method, section}} = record;
