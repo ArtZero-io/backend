@@ -842,11 +842,13 @@ export async function check_NFT_queue_all(
                          *     "Hair": "Yellow",
                          *   }
                          */
-                        const traits = [...attrsArr].reduce(
-                            (p, c) => (!!c ? {...p, [c.name]: c.value} : p),
-                            {}
-                        );
-                        metaData.traits = traits;
+                        if (Array.isArray(attrsArr)) {
+                            const traits = [...attrsArr].reduce(
+                                (p, c) => (!!c ? {...p, [c.name]: c.value} : p),
+                                {}
+                            );
+                            metaData.traits = traits;
+                        }
                         // END - Reformat metaData & traits for rarity & filter
                     }
                 }
