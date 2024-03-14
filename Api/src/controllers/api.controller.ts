@@ -152,7 +152,8 @@ import {
     RequestGetListOwnerNftBody,
     ReqGetNFTsByAttributeValueType,
     RequestGetNFTsByAttributeValueBody,
-    ReqGetCollectionGroupByAddressType, RequestGetCollectionGroupByAddressBody,
+    ReqGetCollectionGroupByAddressType, RequestGetCollectionGroupByAddressBody, RequestGetMyNftsCollectedBody,
+    ReqGetMyNftsCollectedBodyType,
 } from "../utils/Message";
 import { MESSAGE, STATUS} from "../utils/constant";
 import {
@@ -2438,6 +2439,7 @@ export class ApiController {
                 // @ts-ignore
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
             }
+
             let owner = req?.owner;
             let collection_address = req?.collection_address;
             let limit = req?.limit;
@@ -2451,6 +2453,32 @@ export class ApiController {
                 return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
             }
             const order = (req?.sort && req?.sort == 1) ? "tokenID ASC" : "tokenID DESC";
+            let queryClause: any = {} ;
+
+            queryClause.and = [
+              {
+                or: [
+                  {
+                    is_for_sale: false,
+                    owner: owner,
+                    nftContractAddress: collection_address,
+                  },
+                  {
+                    is_for_sale: true,
+                    nft_owner: owner,
+                    nftContractAddress: collection_address,
+                  },
+                ],
+              },
+            ];
+
+            let retTest = await this.nfTsSchemaRepository.find({
+              where: queryClause,
+              order: [order],
+              skip: offset,
+              limit: limit,
+            });
+
             let data = await this.nfTsSchemaRepository.find({
                 where: {
                     is_for_sale: false,
@@ -2486,7 +2514,53 @@ export class ApiController {
                     .slice(0, limit);
             }
             // @ts-ignore
-            return this.response.send({status: STATUS.OK, ret: result});
+            return this.response.send({status: STATUS.OK, ret: result, retTest});
+        } catch (e) {
+            console.log(`ERROR: ${e.message}`);
+            // @ts-ignore
+            return this.response.send({
+                status: STATUS.FAILED,
+                message: e.message
+            });
+        }
+    }
+
+    // Get NFTs by  Owner and Collection
+    @post('/getMyNftsByCollection')
+    async getMyNftsByCollection(
+        @requestBody(RequestGetMyNftsCollectedBody) req:ReqGetMyNftsCollectedBodyType
+    ): Promise<ResponseBody | Response> {
+        try {
+
+            if (!req) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.NO_INPUT});
+            }
+
+            let {owner, collection_address, limit= 15, offset=0, sort = -1, is_for_sale} = req;
+
+            if (!owner || !collection_address) {
+                // @ts-ignore
+                return this.response.send({status: STATUS.FAILED, message: MESSAGE.INVALID_ADDRESS});
+            }
+
+            const order = (sort == 1) ? "tokenID ASC" : "tokenID DESC";
+            const query = {
+              is_for_sale,
+              [is_for_sale ? 'nft_owner' : 'owner']: owner,
+              nftContractAddress: collection_address,
+            };
+
+
+            let ret = await this.nfTsSchemaRepository.find({
+                where: query,
+                order: [order],
+                skip: offset,
+                limit: limit
+            })
+
+            // @ts-ignore
+            return this.response.send({status: STATUS.OK, ret});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
             // @ts-ignore
@@ -5182,7 +5256,7 @@ export class ApiController {
         ret,
       });
     }
-    
+
     @get('/api/top-nft-trades')
     @response(200, {
       description: 'Array of purchaseEventSchema model instances',
@@ -5456,7 +5530,7 @@ export class ApiController {
         const limit = filter?.limit ?? 0;
 
         const sliceRet = ret.slice(offset, offset + limit);
-        
+
         ret = await Promise.all(
             sliceRet.map(async (event:any) => {
                 const { nftContractAddress, tokenID, azDomainName } = event;

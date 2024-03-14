@@ -907,12 +907,55 @@ const ReqGetNFTsByOwnerAndCollectionSchema: SchemaObject = {
         },
     },
 };
+
 export const RequestGetNFTsByOwnerAndCollectionBody = {
     description: 'The input of getNFTsByOwnerAndCollection function',
     required: true,
     content: {
         'application/x-www-form-urlencoded': {schema: ReqGetNFTsByOwnerAndCollectionSchema},
     },
+};
+
+const ReqGetMyNftsCollectedSchema: SchemaObject = {
+    type: 'object',
+    required: ['owner', 'collection_address'],
+    properties: {
+        owner: {
+            type: 'string',
+        },
+        collection_address: {
+            type: 'string',
+        },
+        limit: {
+            type: 'number',
+        },
+        offset: {
+            type: 'number',
+        },
+        sort: {
+            type: 'number',
+        },
+        is_for_sale: {
+            type: 'boolean',
+        },
+    },
+};
+
+export const RequestGetMyNftsCollectedBody = {
+    description: 'The input of GetMyNftsCollected function',
+    required: true,
+    content: {
+        'application/x-www-form-urlencoded': {schema: ReqGetMyNftsCollectedSchema},
+    },
+};
+
+export type ReqGetMyNftsCollectedBodyType = {
+  owner: string;
+  collection_address: string;
+  limit?: number;
+  offset?: number;
+  sort?: number;
+  is_for_sale?: boolean;
 };
 
 // GET NFTs BY ATTRIBUTE VALUE
