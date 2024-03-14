@@ -9,6 +9,10 @@ export function setContract(c: ContractPromise) {
     staking_contract = c;
 }
 
+export function getContract() {
+    return staking_contract
+}
+
 export async function getTotalStaked(caller_account: string) {
     if (!staking_contract || !caller_account) {
         console.log("invalid inputs");
@@ -45,6 +49,32 @@ export async function isClaimed(caller_account: any, account: string) {
     const azero_value = 0;
     // @ts-ignore
     const {result, output} = await staking_contract.query["artZeroStakingTrait::isClaimed"](
+        address,
+        {
+            value: azero_value,
+            gasLimit,
+        },
+        account
+    );
+    if (result.isOk && output) {
+        // @ts-ignore
+        return output.toHuman()?.Ok;
+    }
+    return null;
+}
+
+export async function getTotalStakedByAccount(caller_account: any, account: string) {
+    if (!staking_contract || !caller_account) {
+        console.log("invalid inputs");
+        return null;
+    }
+    // @ts-ignore
+    const address = caller_account?.address;
+    // @ts-ignore
+    const gasLimit = readOnlyGasLimit(staking_contract.api);
+    const azero_value = 0;
+    // @ts-ignore
+    const {result, output} = await staking_contract.query["artZeroStakingTrait::getTotalStakedByAccount"](
         address,
         {
             value: azero_value,
@@ -155,6 +185,34 @@ export async function getStakedAccountsAccountByIndex(caller_account: any, index
         return output.toHuman()?.Ok;
     }
     return null;
+}
+
+export async function startRewardDistribution(keypair: KeyringPair, caller:string) {
+    const gasLimitResult = await getGasLimit(
+        staking_contract.api,
+        caller,
+        "artZeroStakingTrait::startRewardDistribution",
+        staking_contract,
+        {},
+        []
+    );
+    if (!gasLimitResult.ok) {
+        // @ts-ignore
+        console.log('gasLimitResult.error', gasLimitResult?.error);
+        return;
+    }
+    const { value: gasLimit } = gasLimitResult;
+    const value = 0;
+    // @ts-ignore
+    await staking_contract.tx["artZeroStakingTrait::startRewardDistribution"]({ gasLimit, value })
+        .signAndSend(keypair, result => {
+            if (result.status.isInBlock) {
+                console.log('in a block');
+            } else if (result.status.isFinalized) {
+                console.log('finalized');
+            }
+        })
+        .catch((e) => console.log("e", e));
 }
 
 export async function setClaimedStatus(keypair: KeyringPair, caller:string, account: string) {
