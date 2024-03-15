@@ -2559,8 +2559,12 @@ export class ApiController {
                 limit: limit
             })
 
+            let totalCount = await this.nfTsSchemaRepository.count({
+                ...query
+            })
+
             // @ts-ignore
-            return this.response.send({status: STATUS.OK, ret});
+            return this.response.send({status: STATUS.OK, ret, totalCount});
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
             // @ts-ignore
