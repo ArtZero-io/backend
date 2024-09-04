@@ -3823,6 +3823,43 @@ export async function auto_check_queue(
     global_vars.is_auto_check_Bid = false;
 }
 
+export async function check_expired_azero_domain_nft_queue(
+    nftRepo: NftsSchemaRepository,
+    collectionsRepo: CollectionsSchemaRepository
+) {
+    if (global_vars.is_check_expired_domain) return;
+    global_vars.is_check_expired_domain = true;
+    try {
+        let azeroDomains = await nftRepo.find({
+            where: {
+                nftContractAddress: azero_domains_nft.CONTRACT_ADDRESS,
+                is_for_sale: true
+            }
+        });
+
+        for (const azeroDomain of azeroDomains) {
+            if (azeroDomain.azDomainName) {
+                const registrationPeriodData: string[] = await azero_domains_nft_calls.getRegistrationPeriod(
+                    global_vars.caller,
+                    azeroDomain.azDomainName
+                );
+                if (registrationPeriodData[1]) {
+                    const expiredTime:number = Number(registrationPeriodData[1].replace(/,/g, ""));
+                    const currentTime: number = Date.now();
+                    const twoMonthsInMs: number = 60.88 * 24 * 60 * 60 * 1000;
+                    if (expiredTime < currentTime + twoMonthsInMs) {
+                        await nftRepo.updateById(azeroDomain._id, {is_for_sale: false});
+                    }
+                }
+            }
+            console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - End update NFT to DB`);
+        }
+    } catch (e) {
+
+    }
+    global_vars.is_check_expired_domain = false;
+}
+
 export async function check_new_azero_domains_nft_queue(
     bidsRepo: BidsSchemaRepository,
     bidQueueRepo: BidQueueSchemaRepository,
@@ -3874,11 +3911,6 @@ export async function check_new_azero_domains_nft_queue(
 
         if (data.data && data.data.totalDomains && data.data.domains) {
             for (const domain of data.data.domains) {
-                console.log(
-                    `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - Start Build Domain Data`,
-                    domain
-                );
-            
                 //Get all On-chain MetaData if exists
                 let attributes: string[] = [
                     'registration_timestamp',
@@ -3889,7 +3921,6 @@ export async function check_new_azero_domains_nft_queue(
                     global_vars.caller,
                     domain.name
                 );
-                console.log({attributesTmp: attributesTmp});
                 for (const attr of attributesTmp) {
                     attributeValues.push(attr.replace(/,/g, ""));
                 }
@@ -3902,8 +3933,6 @@ export async function check_new_azero_domains_nft_queue(
                     expiration_timestamp: attributeValues[1] ? attributeValues[1]  : '',
                     registration_timestamp: attributeValues[0] ? attributeValues[0] : '',
                 };
-                console.log("attributes", attributes);
-                console.log("attributeValues", attributeValues);
                 metaData.traits = {
                     ...metaData.traits,
                     'Registration Time': attributeValues[0] ? attributeValues[0]  : '',
@@ -3918,11 +3947,6 @@ export async function check_new_azero_domains_nft_queue(
                         "Access-Control-Allow-Origin": "*",
                     },
                 });
-                console.log(
-                    `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - DomainMetadata`,
-                    domainMetadata
-                );
-
                 if (domainMetadata) {
                     if (domainMetadata.metadata) {
                         metaData.nftName = domainMetadata.metadata.name;
@@ -3941,20 +3965,9 @@ export async function check_new_azero_domains_nft_queue(
 
                 let owner = domain.owner.id;
                 if (domain.name) {
-                    console.log(
-                        `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - Start Get Lock Info`
-                    );
                     let lockInfo = await azero_domains_nft_calls.getLockInfo(
                         global_vars.caller,
                         domain.name
-                    );
-                    console.log(
-                        `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - lockInfo`,
-                        lockInfo
-                    );
-                    console.log(
-                        `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - End Get Lock Info`,
-                        lockInfo
                     );
                     if (lockInfo) {
                         owner = lockInfo;
@@ -3966,10 +3979,7 @@ export async function check_new_azero_domains_nft_queue(
                     azero_domains_nft.CONTRACT_ADDRESS,
                     {bytes: domain.name}
                 );
-                console.log(
-                    `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - forSaleInformation`,
-                    forSaleInformation
-                );
+
                 let obj: nfts = new nfts(
                     {
                         owner: owner,
@@ -3989,10 +3999,6 @@ export async function check_new_azero_domains_nft_queue(
                         ...metaData,
                     }
                 );
-                console.log(
-                    `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - obj`,
-                    obj
-                );
                 let found = await nftRepo.findOne({
                     where: {
                         nftContractAddress: azero_domains_nft.CONTRACT_ADDRESS,
@@ -4003,13 +4009,7 @@ export async function check_new_azero_domains_nft_queue(
                 });
 
                 if (found) {
-                    console.log(
-                        `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - NFT is exist!`,
-                        azero_domains_nft.CONTRACT_ADDRESS,
-                        domain.name
-                    );
                     try {
-                        console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - Start update NFT to DB`);
                         found.owner = obj.owner ? obj.owner : found.owner;
                         found.attributes = (obj.attributes !== undefined || obj.attributes) ? obj.attributes : found.attributes;
                         found.attributesValue = (obj.attributesValue !== undefined || obj.attributesValue) ? obj.attributesValue : found.attributesValue;
@@ -4028,19 +4028,11 @@ export async function check_new_azero_domains_nft_queue(
                         found.avatar = (obj.avatar !== undefined || obj.avatar) ? obj.avatar : found.avatar;
                         found.expiration_timestamp = (obj.expiration_timestamp !== undefined || obj.expiration_timestamp) ? obj.expiration_timestamp : found.expiration_timestamp;
                         found.registration_timestamp = (obj.registration_timestamp !== undefined || obj.registration_timestamp) ? obj.registration_timestamp : found.registration_timestamp;
-                        console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - NFT Data: `, obj);
                         await nftRepo.updateById(found._id, found);
-                        console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - End update NFT to DB`);
                     } catch (e) {
                         console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - ERROR when updating NFT to DB: ${e.message}`);
                     }
                 } else {
-                    console.log(
-                        `${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - NFT not exist!`,
-                        azero_domains_nft.CONTRACT_ADDRESS,
-                        domain.name
-                    );
-                    console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - Start update new NFT to DB`);
                     try {
                         obj.nftContractAddress = azero_domains_nft.CONTRACT_ADDRESS;
                         obj.isAzDomain = true;
@@ -4048,10 +4040,7 @@ export async function check_new_azero_domains_nft_queue(
                         obj.azEventName = 'Register';
                         obj.createdTime = new Date();
                         obj.updatedTime = new Date();
-                        console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - Start add new NFT to DB`);
-                        console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - NFT Data: `, obj);
                         await nftRepo.create(obj);
-                        console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - End add new NFT to DB`);
                     } catch (e) {
                         console.log(`${CONFIG_TYPE_NAME.AZ_AZERO_DOMAINS_COLLECTOR} - ERROR when adding new NFT to DB: ${e.message}`);
                     }
@@ -4111,7 +4100,7 @@ export async function check_bid_queue(
             let seller = queue_data[j].seller;
             let tokenID = queue_data[j].tokenID;
             let azDomainName = queue_data[j].azDomainName;
-            console.log(` - ${nftContractAddress} ${seller} ${tokenID}`);
+            
             let ret:any;
             const azChecking = isAzEnabled(nftContractAddress);
             if (azChecking.isAzDomain) {
