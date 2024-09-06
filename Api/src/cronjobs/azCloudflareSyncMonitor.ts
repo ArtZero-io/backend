@@ -22,6 +22,7 @@ export class CronJobAzCloudflareSyncMonitor implements Provider<CronJob> {
     }
 
     value() {
+        console.log("AZ CloudFlare Sync Monitor", CRONJOB_TIME.AZ_CLOUDFLARE_SYNC_MONITOR);
         return new CronJob({
             cronTime: CRONJOB_TIME.AZ_CLOUDFLARE_SYNC_MONITOR,
             name: CONFIG_TYPE_NAME.AZ_CLOUDFLARE_SYNC_MONITOR,

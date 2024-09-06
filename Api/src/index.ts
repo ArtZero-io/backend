@@ -20,6 +20,7 @@ import {CronJobAzProcessingAllQueueNft} from "./cronjobs/azProcessingAllQueueNft
 import {CronJobThreads} from "./cronjobs/checkThread";
 import {CronJobAzBidsMonitorAutoCheckQueue} from "./cronjobs/azBidsMonitorAutoCheckQueue";
 import {CronJobAzeroDomainCollector} from "./cronjobs/azeroDomainCollector";
+import {CronJobAzExpiredDomainsMonitor} from "./cronjobs/azExpiredDomainsMonitor";
 import {CronJobAzEventsCollectorReScan} from "./cronjobs/azEventsCollectorReScan";
 import {CronJobAzNftTransferCollector} from "./cronjobs/azNftTransferCollector";
 export * from './application';
@@ -56,6 +57,11 @@ export async function main(options: ApplicationConfig = {}) {
   const app = new ApiApplication(options);
 
   console.log('main file: CRONJOB_ENABLE.AZ_AZERO_DOMAINS_COLLECTOR', CRONJOB_ENABLE.AZ_AZERO_DOMAINS_COLLECTOR);
+  if (CRONJOB_ENABLE.AZ_AZERO_DOMAINS_EXPIRED_DOMAIN_MONITOR) {
+    const cronJobAzExpiredDomainsMonitor = createBindingFromClass(CronJobAzExpiredDomainsMonitor);
+    app.add(cronJobAzExpiredDomainsMonitor);
+    app.configure(cronJobAzExpiredDomainsMonitor.key);
+  }
   if (CRONJOB_ENABLE.AZ_AZERO_DOMAINS_COLLECTOR) {
     const cronJobAzeroDomainCollector = createBindingFromClass(CronJobAzeroDomainCollector);
     app.add(cronJobAzeroDomainCollector);
