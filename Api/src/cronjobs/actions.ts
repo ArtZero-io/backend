@@ -3839,14 +3839,30 @@ export async function check_expired_azero_domain_nft_queue(
 
         for (const azeroDomain of azeroDomains) {
             if (azeroDomain.azDomainName) {
-                const registrationPeriodData: string[] = await azero_domains_nft_calls.getRegistrationPeriod(
-                    global_vars.caller,
-                    azeroDomain.azDomainName
-                );
-                if (registrationPeriodData[1]) {
-                    const expiredTime:number = Number(registrationPeriodData[1].replace(/,/g, ""));
+                var requestData = JSON.stringify({
+                    query: `query MyQuery {
+                        domainById(id: "${azeroDomain.nftName}") {
+                            expiresAt
+                        }
+                    }`,
+                    variables: {}
+                });
+                const { data } = await axios({
+                    method: 'post',
+                    url: process.env.AZERO_DOMAIN_INDEXER_ENDPOINT,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "cache-control": "no-cache",
+                        "Access-Control-Allow-Origin": "*",
+                    },
+                    data : requestData
+                });
+                console.log(data);
+                if (data.data && data.data.domainById) {
+                    const expiredDate = new Date(data.data.domainById.expiresAt);
+                    const expiredTime: number = expiredDate.getTime();
                     const currentTime: number = Date.now();
-                    const twoMonthsInMs: number = 60.88 * 24 * 60 * 60 * 1000;
+                    const twoMonthsInMs: number = 60 * 24 * 60 * 60 * 1000;
                     if (expiredTime < currentTime + twoMonthsInMs) {
                         await nftRepo.updateById(azeroDomain._id, {is_for_sale: false});
                     }
